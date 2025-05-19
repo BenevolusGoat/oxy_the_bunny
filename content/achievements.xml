@@ -1,0 +1,4 @@
+
+<achievements gfxroot="gfx/ui/achievement/">
+	<achievement name="The Inhabited" gfx="achievement_taintedoxy.png" />
+</achievements>

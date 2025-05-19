@@ -1,0 +1,16 @@
+<players root="gfx/characters/costumes/" 
+         portraitroot="gfx/ui/stage/" 
+         nameimageroot="gfx/ui/boss/">
+	<player name="Oxy" skin="character_oxy.png" costumeSuffix="oxy" skinColor="0" modcostume="0"
+		heartcontainers="4" redhearts="4" soulhearts="2" keys="1"
+		speedmodifier="0.3" luckmodifier="1"
+		pocketActive="Oxy Swap"
+		nameimage="playername_oxy.png" portrait="playerportrait_oxy.png"
+		birthright="Turn up the charm" />
+	<player name="Oxy" bSkinParent="Oxy" skin="character_oxy_b.png" costumeSuffix="oxy_b" skinColor="1" modcostume="1"
+		blackhearts="4" healthtype="1"
+		pocketActive="Specter"
+		nameimage="playername_oxy.png" portrait="playerportrait_oxy_b.png"
+		birthright="???"
+		achievement="The Inhabited" />
+</players>

@@ -1,0 +1,4 @@
+<items gfxroot="gfx/items/" version="1" deathanm2="gfx/death items.anm2">
+	<active id="0" name="Oxy Swap" description="Shwueush" gfx="oxy_swapf.png" quality="0" />
+	<active id="1" name="Specter" description="Spooky" gfx="oxy_swapf.png" quality="0" />
+</items>

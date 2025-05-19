@@ -1,2 +1,3 @@
-/.luarc.json
-/.vscode
+.vscode
+disable.it
+.luarc.json

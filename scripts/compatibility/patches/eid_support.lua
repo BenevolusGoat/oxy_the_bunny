@@ -12,7 +12,6 @@ if not EID then
 end
 
 local Item = Mod.Item
-local Trinket = Mod.Trinket
 
 ---@param entity Entity
 ---@return EntityPlayer

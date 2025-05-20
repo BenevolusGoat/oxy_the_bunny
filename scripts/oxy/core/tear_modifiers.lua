@@ -1,6 +1,6 @@
 --Full credit to Epiphany which I was granted permission to use
 local Mod = OxyTheBunny
-local modInitial = "FR_"
+local modInitial = "OXY_"
 local game = Mod.Game
 
 local function getData(ent)

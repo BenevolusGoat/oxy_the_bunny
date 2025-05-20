@@ -93,7 +93,7 @@ end
 
 -- Creates a new multiple-choice setting.
 ---@param category string @The category the setting falls under.
----@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with Furtherance.GetSetting()
+---@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with OxyTheBunny.GetSetting()
 ---@param settingDescription any @The description of the setting. This is what will be displayed in the settings menu.
 ---@param possibleValues string[] @Array of possible values
 ---@param defaultValue number? @The index of the possibleValues array that is the default value. If this is nil, the first value in the array will be used.
@@ -120,7 +120,7 @@ function SettingsHelper.AddChoiceSetting(category, settingName, settingDescripti
 end
 
 ---@param category string @The category the setting falls under.
----@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with Furtherance.GetSetting()
+---@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with OxyTheBunny.GetSetting()
 ---@param settingDescription any @The description of the setting. This is what will be displayed in the settings menu.
 ---@param defaultValue boolean
 ---@param condition function? @A function that returns a boolean. If this function returns false, the setting will not be displayed.
@@ -144,7 +144,7 @@ end
 
 -- Creates a new keybind setting.
 ---@param category string @The category the setting falls under.
----@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with Furtherance.GetSetting()
+---@param settingName string @The name of the setting. This is what will be displayed in the settings menu and how you'll get it with OxyTheBunny.GetSetting()
 ---@param settingDescription any @The description of the setting. This is what will be displayed in the settings menu.
 ---@param defaultKey Keyboard @The default key for the setting.
 ---@param condition function? @A function that returns a boolean. If this function returns false, the setting will not be displayed.

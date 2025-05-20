@@ -7,19 +7,19 @@
 function OxyTheBunny:Log(...)
 	local str = ""
 	if debug then               -- only passes if luadebug is on
-		local info = debug.getinfo(2) -- get info on the function that called Furtherance:Log
+		local info = debug.getinfo(2) -- get info on the function that called OxyTheBunny:Log
 		if info.func == OxyTheBunny.DebugLog then
 			info = debug.getinfo(3)
 		end
 		local file = info.short_src
 		file = file:match("^.+/(.+)$") -- get full path to the file and trim it to just the filename.lua
-		if file then             -- file may be nil after match if Furtherance:Log was called from console
+		if file then             -- file may be nil after match if OxyTheBunny:Log was called from console
 			local funcName = info.name
 			funcName = (funcName or tostring(info.func):gsub("^function: ", "f:")) .. ":" .. info.currentline
 			str = string.format("[%s:%s] ", file, info.currentline)
 		end
 	else
-		str = str .. "[Furtherance] "
+		str = str .. "[OxyTheBunny] "
 	end
 	local args = { ... }
 	for i = 1, #args do
@@ -30,7 +30,7 @@ function OxyTheBunny:Log(...)
 	Isaac.DebugString(str)
 end
 
----Equivalent to Furtherance:Log, but only prints if Mod.FLAGS.Debug is set to true.
+---Equivalent to OxyTheBunny:Log, but only prints if Mod.FLAGS.Debug is set to true.
 ---@function
 function OxyTheBunny:DebugLog(...)
 	if OxyTheBunny.FLAGS.Debug then

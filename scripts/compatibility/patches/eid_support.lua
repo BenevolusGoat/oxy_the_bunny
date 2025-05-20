@@ -403,4 +403,4 @@ EID:addDescriptionModifier(
 	end
 )
 
-EID._currentMod = "OxyTheBunny_reserved" -- to prevent other mods overriding Furtherance mod items
+EID._currentMod = "OxyTheBunny_reserved" -- to prevent other mods overriding this mod's items

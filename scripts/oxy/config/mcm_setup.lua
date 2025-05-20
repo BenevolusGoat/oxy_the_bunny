@@ -1,11 +1,11 @@
 local Mod = OxyTheBunny
 local SettingsHelper = Mod.SettingsHelper
 
-if ModConfigMenu and not ModConfigMenu.GetCategoryIDByName("Furtherance") then
-	ModConfigMenu.SetCategoryInfo("Furtherance", "Furtherance config settings")
+if ModConfigMenu and not ModConfigMenu.GetCategoryIDByName("OxyTheBunny") then
+	ModConfigMenu.SetCategoryInfo("OxyTheBunny", "OxyTheBunny config settings")
 
 	for i = 1, #SettingsHelper.Categories do
-		ModConfigMenu.AddSpace("Furtherance", SettingsHelper.Categories[i])
+		ModConfigMenu.AddSpace("OxyTheBunny", SettingsHelper.Categories[i])
 	end
 
 	for group, groupSettings in pairs(SettingsHelper.GetAllSettings()) do
@@ -103,7 +103,7 @@ if ModConfigMenu and not ModConfigMenu.GetCategoryIDByName("Furtherance") then
 			end
 
 			ModConfigMenu.AddSetting(
-				"Furtherance", -- category name
+				"OxyTheBunny", -- category name
 				group, -- group name
 				constructedArgs
 			)

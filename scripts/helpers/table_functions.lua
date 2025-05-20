@@ -352,24 +352,19 @@ function OxyTheBunny:GetValueFromWeightedPool(pool, rng)
 	while roll > 0 and index < #pool do
 		index = index + 1
 		roll = roll - GetWeight(pool[index])
-		--Furtherance:DebugLog("Index is:", index)
-		--Furtherance:DebugLog("Roll is:", roll)
 	end
 
 	-- V is the value of the selected pool item
-	--Furtherance:DebugLog("Available Pools: ")
 	for num, value in ipairs(pool) do
 		local weight = GetWeight(value)
 		if weight == math.floor(weight) then
 			weight = math.floor(weight)
 		end
-		--Furtherance:DebugLog(num .. " With weight " .. weight)
 	end
 	if index == 0 then
-		--Furtherance:DebugLog("Pool exhausted. Returned nil")
 		return nil, index
 	end
-	--Furtherance:DebugLog("Chosen Pool:" .. index)
+
 	local result = pool[index].V
 
 	return result, index

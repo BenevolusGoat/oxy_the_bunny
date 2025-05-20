@@ -2,7 +2,7 @@
 _G.OxyTheBunny = RegisterMod("Oxy the Bunny", 1)
 local Mod = OxyTheBunny
 
-OxyTheBunny.Version = "INDEV_REWRITE"
+OxyTheBunny.Version = "INDEV"
 
 OxyTheBunny.SaveManager = include("scripts.tools.save_manager")
 OxyTheBunny.SaveManager.Init(OxyTheBunny)
@@ -73,7 +73,7 @@ OxyTheBunny.InvalidPathError = false
 
 ---Mimics include() but with a pcall safety wrapper and appropriate error codes if any are found
 ---
----VSCode users: Go to Settings > Lua > Runtime:Special and link Furtherance.Include to require, just like you would regular include!
+---VSCode users: Go to Settings > Lua > Runtime:Special and link OxyTheBunny.Include to require, just like you would regular include!
 function OxyTheBunny.Include(path)
 	Isaac.DebugString("[OxyTheBunny] Loading " .. path)
 	local wasLoaded, result = pcall(include, path)
@@ -118,7 +118,6 @@ local helpers = {
 	"tears_util",
 	"proximity",
 	"npc_util",
-	"custom_callbacks",
 	"rooms_helper",
 	"pickups_helper",
 }
@@ -161,7 +160,8 @@ OxyTheBunny.PlayerType = {
 
 local characters = {
 	"oxy.oxy",
-	"oxy_b.oxy_b"
+	"oxy_b.oxy_b",
+	"tainted_unlock"
 }
 
 Mod.LoopInclude(characters, "scripts.oxy.characters")
@@ -185,7 +185,7 @@ end
 
 --!End of file
 
-Mod.Include("scripts.compatibility.patches.eid_support")
+--Mod.Include("scripts.compatibility.patches.eid_support")
 Mod.Include("scripts.compatibility.patches_loader")
 
 if Mod.FileLoadError then

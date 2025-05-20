@@ -1,4 +1,4 @@
 <costumes anm2root="gfx/characters/">
-	<costume id="0" anm2path="costume_oxy.anm2" priority="99" type="none"/>
-	<costume id="1" anm2path="costume_oxy_b.anm2" priority="99" type="none"/>
+	<costume id="1" anm2path="character_01_oxy.anm2" priority="99" type="none"/>
+	<costume id="2" anm2path="character_01b_oxy.anm2" priority="99" type="none"/>
 </costumes>

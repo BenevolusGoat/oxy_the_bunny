@@ -35,7 +35,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, TAINTED_UNLOCK.OnClosetEntry)
 ---@param slot EntitySlot
 function TAINTED_UNLOCK:CryingTaintedSpriteOnInit(slot)
 	local player = Isaac.GetPlayer()
-	if Mod.PlayerTypeToCompletionTable[player:GetPlayerType()] then
+	if Mod.Character.OXY:IsOxy(player) then
 		local sprite = slot:GetSprite()
 		sprite:ReplaceSpritesheet(0, player:GetEntityConfigPlayer():GetTaintedCounterpart():GetSkinPath(), true)
 	end
@@ -48,7 +48,7 @@ function TAINTED_UNLOCK:UnlockTainted(slot)
 	local player = Isaac.GetPlayer()
 	local sprite = slot:GetSprite()
 
-	if player:GetPlayerType() == Mod.PlayerType.OXY and sprite:IsFinished("PayPrize") then
+	if Mod.Character.OXY:IsOxy(player) and sprite:IsFinished("PayPrize") then
 		Mod.PersistGameData:TryUnlock(TAINTED_UNLOCK.ACHIEVEMENT)
 	end
 end

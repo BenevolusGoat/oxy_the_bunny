@@ -1,4 +1,5 @@
 <items gfxroot="gfx/items/" version="1" deathanm2="gfx/death items.anm2">
-	<active id="0" name="Chainsaw" description="Owie" gfx="chainsaw.png" quality="0" />
-	<active id="1" name="Specter" description="Spooky" gfx="specter.png" quality="0" />
+	<active id="1" name="Chainsaw" description="Owie" gfx="chainsaw.png" quality="0" />
+	<active id="2" name="Specter" description="Spooky" gfx="specter.png" quality="0" />
+	<active id="3" name="Manifest" description="Change reality" gfx="manifest.png" quality="0" />
 </items>

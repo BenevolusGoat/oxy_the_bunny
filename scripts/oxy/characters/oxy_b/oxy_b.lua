@@ -14,4 +14,3 @@ function OXY_B:OxyBHasBirthright(player)
 	return OXY_B:IsOxyB(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
 
-Mod.Include("scripts.oxy.characters.oxy_b.specter")

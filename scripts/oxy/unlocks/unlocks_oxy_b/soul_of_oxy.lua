@@ -2,7 +2,7 @@ local Mod = OxyTheBunny
 
 local SOUL_OF_OXY = {}
 
-OxyTheBunny.Pickup.SOUL_OF_OXY = SOUL_OF_OXY
+OxyTheBunny.Card.SOUL_OF_OXY = SOUL_OF_OXY
 
 SOUL_OF_OXY.ID = Isaac.GetCardIdByName("Soul of Oxy")
 
@@ -28,4 +28,4 @@ function SOUL_OF_OXY:ChainsawCooldownOnHit(ent, amount, flags, source, cooldown)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, SOUL_OF_OXY.OnTakeDamage, EntityType.ENTITY_PLAYER)
+Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, SOUL_OF_OXY.ChainsawCooldownOnHit, EntityType.ENTITY_PLAYER)

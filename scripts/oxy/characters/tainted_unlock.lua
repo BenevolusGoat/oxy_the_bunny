@@ -2,40 +2,32 @@ local Mod = OxyTheBunny
 
 local TAINTED_UNLOCK = {}
 
-TAINTED_UNLOCK.ACHIEVEMENT = Isaac.GetAchievementIdByName("The Inhabited")
+local function checkOxyTaintedLocked()
+	local player = Isaac.GetPlayer()
+	local playerType = player:GetPlayerType()
+	local persistGameData = Isaac.GetPersistentGameData()
+	return playerType == Mod.PlayerType.OXY
+		and not persistGameData:Unlocked(Mod.Character.OXY_B.ACHIEVEMENT)
+end
 
-function TAINTED_UNLOCK:OnClosetEntry()
-	if not REPENTOGON then return end
+function TAINTED_UNLOCK:OnSlotSpawn(entType, variant, subtype, grid, seed)
 	local level = Mod.Level()
-	local room = Mod.Room()
-
 	if level:GetStage() == LevelStage.STAGE8 --Home
 		and level:GetCurrentRoomIndex() == 94 --Closet
-		and room:IsFirstVisit()
+		and entType == EntityType.ENTITY_SLOT
+		and variant == SlotVariant.HOME_CLOSET_PLAYER
+		and checkOxyTaintedLocked()
 	then
-		local player = Isaac.GetPlayer()
-		local playerType = player:GetPlayerType()
-		if not Mod.PersistGameData:Unlocked(TAINTED_UNLOCK.ACHIEVEMENT) then
-			local innerChild = Isaac.FindByType(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, CollectibleType.COLLECTIBLE_INNER_CHILD)[1]
-			local shopKeeper = Isaac.FindByType(EntityType.ENTITY_SHOPKEEPER)[1]
-
-			if innerChild then
-				innerChild:Remove()
-			elseif shopKeeper then
-				shopKeeper:Remove()
-			end
-
-			Isaac.Spawn(EntityType.ENTITY_SLOT, SlotVariant.HOME_CLOSET_PLAYER, playerType, room:GetCenterPos(), Vector.Zero, player)
-		end
+		return { entType, variant, subtype }
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, TAINTED_UNLOCK.OnClosetEntry)
+Mod:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, TAINTED_UNLOCK.OnSlotSpawn)
 
 ---@param slot EntitySlot
 function TAINTED_UNLOCK:CryingTaintedSpriteOnInit(slot)
 	local player = Isaac.GetPlayer()
-	if Mod.Character.OXY:IsOxy(player) then
+	if player:GetPlayerType() == Mod.PlayerType.ARACHNA then
 		local sprite = slot:GetSprite()
 		sprite:ReplaceSpritesheet(0, player:GetEntityConfigPlayer():GetTaintedCounterpart():GetSkinPath(), true)
 	end
@@ -45,11 +37,14 @@ Mod:AddCallback(ModCallbacks.MC_POST_SLOT_INIT, TAINTED_UNLOCK.CryingTaintedSpri
 
 ---@param slot EntitySlot
 function TAINTED_UNLOCK:UnlockTainted(slot)
-	local player = Isaac.GetPlayer()
-	local sprite = slot:GetSprite()
-
-	if Mod.Character.OXY:IsOxy(player) and sprite:IsFinished("PayPrize") then
-		Mod.PersistGameData:TryUnlock(TAINTED_UNLOCK.ACHIEVEMENT)
+	if checkOxyTaintedLocked() then
+		local sprite = slot:GetSprite()
+		local unlock_table = Mod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA]
+		local tainted = unlock_table[CompletionType.TAINTED]
+		local persistGameData = Isaac.GetPersistentGameData()
+		if sprite:IsFinished("PayPrize") then
+			persistGameData:TryUnlock(tainted)
+		end
 	end
 end
 

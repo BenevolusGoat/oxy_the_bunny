@@ -111,6 +111,7 @@ function OxyTheBunny.LoopInclude(tab, path)
 end
 
 OxyTheBunny.Pickup = {}
+OxyTheBunny.Card = {}
 OxyTheBunny.Item = {}
 OxyTheBunny.Character = {}
 include("flags")
@@ -171,6 +172,8 @@ local characters = {
 
 Mod.LoopInclude(characters, "scripts.oxy.characters")
 
+Mod.Include("scripts.oxy.unlocks.unlock_loader")
+
 function OxyTheBunny:RunIDCheck()
 	local foundBadID = false
 	for _, subTable in pairs(OxyTheBunny) do
@@ -194,9 +197,9 @@ end
 Mod.Include("scripts.compatibility.patches_loader")
 
 if Mod.FileLoadError then
-	Mod:Log("Mod failed to load! Report this to a coder in the dev server!")
+	Mod:Log("Mod failed to load! Report this to Benny!")
 elseif Mod.InvalidPathError then
-	Mod:Log("One or more files were unable to be loaded. Report this to a coder in the dev server!")
+	Mod:Log("One or more files were unable to be loaded. Report this to Benny!")
 else
 	Mod:Log("v" .. Mod.Version .. " loaded successfully!")
 end

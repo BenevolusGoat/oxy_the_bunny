@@ -1,41 +1,32 @@
---Full credit to Epiphany
 local Mod = OxyTheBunny
 
----@param collectibleId CollectibleType
+OxyTheBunny.TECHNICAL_ITEMS = Mod:Set({
+	CollectibleType.COLLECTIBLE_DAMOCLES_PASSIVE,
+	CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL_PASSIVE,
+	CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES
+})
+
+---@param itemID CollectibleType
 ---@return boolean
----@function
-function OxyTheBunny:IsTechnicalPassive(collectibleId)
-	if collectibleId == CollectibleType.COLLECTIBLE_DAMOCLES_PASSIVE
-		or collectibleId == CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL_PASSIVE
-		or collectibleId == CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES
-	then
-		return true
-	else
-		return false
-	end
+function OxyTheBunny:IsTechnicalPassive(itemID)
+	return OxyTheBunny.TECHNICAL_ITEMS[itemID] ~= nil
 end
 
 ---Returns a dictionary of all passive items and how any of the item the player has.
 ---@param player EntityPlayer
----@param noFamiliar? boolean @If true, list will not include familiar items
 ---@return {[CollectibleType]: integer}
----@function
-function OxyTheBunny:GetPassiveItemDict(player, noFamiliar)
-	local ret = {}
-
-	for _, historyItem in ipairs(player:GetHistory():GetCollectiblesHistory()) do
-		if historyItem:IsTrinket() then goto skipTrinket end
-		local itemID = historyItem:GetItemID()
-		local item = Mod.ItemConfig:GetCollectible(historyItem:GetItemID())
-		if item
-			and item.Type ~= ItemType.ITEM_ACTIVE
-			and (not noFamiliar or item.Type ~= ItemType.ITEM_FAMILIAR)
-			and not Mod:IsTechnicalPassive(itemID)
+function OxyTheBunny:GetPassiveItemDict(player)
+	local ret = player:GetCollectiblesList()
+	for itemID = #ret, 1, -1 do
+		local numItem = ret[itemID]
+		local item = Mod.ItemConfig:GetCollectible(itemID)
+		if not item
+			or item.Type == ItemType.ITEM_ACTIVE
+			or numItem == 0
+			or Mod:IsTechnicalPassive(itemID)
 		then
-			local num_item = player:GetCollectibleNum(itemID, true)
-			ret[itemID] = num_item
+			ret[itemID] = nil
 		end
-		::skipTrinket::
 	end
 
 	return ret
@@ -43,22 +34,17 @@ end
 
 ---Returns a dictionary of all items and how any of the item the player has.
 ---@param player EntityPlayer
----@param noFamiliar? boolean @If true, list will not include familiar items
 ---@return {[CollectibleType]: integer}
 ---@function
-function OxyTheBunny:GetItemDict(player, noFamiliar)
-	local ret = {}
-	local itemId = 1
-	while itemId <= CollectibleType.NUM_COLLECTIBLES or Mod.ItemConfig:GetCollectible(itemId) do
-		local item = Mod.ItemConfig:GetCollectible(itemId)
-		if item and (not noFamiliar or item.Type ~= ItemType.ITEM_FAMILIAR) then
-			local num_item = player:GetCollectibleNum(itemId, true)
-			if num_item > 0 then
-				ret[itemId] = num_item
-			end
+function OxyTheBunny:GetItemDict(player)
+	local ret = player:GetCollectiblesList()
+	for itemID = #ret, 1, -1 do
+		local numItem = ret[itemID]
+		if numItem == 0 then
+			ret[itemID] = nil
 		end
-		itemId = itemId + 1
 	end
+
 	return ret
 end
 
@@ -70,8 +56,8 @@ function OxyTheBunny:IsQuestItem(itemId)
 	local itemCfg = config:GetCollectible(itemId)
 
 	return itemCfg and itemCfg:HasTags(ItemConfig.TAG_QUEST)
-		or itemId == CollectibleType.COLLECTIBLE_RECALL
-		or itemId == CollectibleType.COLLECTIBLE_HOLD
+	or itemId == CollectibleType.COLLECTIBLE_RECALL
+	or itemId == CollectibleType.COLLECTIBLE_HOLD
 end
 
 -- A set of items that give nothing but an HP up
@@ -119,19 +105,75 @@ end
 ---@return string
 ---@function
 function OxyTheBunny:GetCardName(id)
-	return Mod:TryGetTranslatedString("Cards", Isaac.GetItemConfig():GetCard(id).Name)
+	return Mod:TryGetTranslatedString(StringTableCategory.POCKET_ITEMS, Mod.ItemConfig:GetCard(id).Name)
 end
 
 ---@param id PillEffect
 ---@return string
 ---@function
 function OxyTheBunny:GetPillEffectName(id)
-	return Mod:TryGetTranslatedString("Pills", Isaac.GetItemConfig():GetPillEffect(id).Name)
+	return Mod:TryGetTranslatedString(StringTableCategory.POCKET_ITEMS, Mod.ItemConfig:GetPillEffect(id).Name)
 end
 
 ---@param id CollectibleType
 ---@return string
 ---@function
 function OxyTheBunny:GetCollectibleName(id)
-	return Mod:TryGetTranslatedString("Items", Isaac.GetItemConfig():GetCollectible(id).Name)
+	return Mod:TryGetTranslatedString(StringTableCategory.ITEMS, Mod.ItemConfig:GetCollectible(id).Name)
+end
+
+---@param id TrinketType
+---@return string
+function OxyTheBunny:GetTrinketName(id)
+	return Mod:TryGetTranslatedString(StringTableCategory.ITEMS, Mod.ItemConfig:GetTrinket(id).Name)
+end
+
+---@type fun(player: EntityPlayer)[]
+local voidOutcomes = {
+	function (player)
+		player:SetSpeedModifier(player:GetSpeedModifier() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_SPEED)
+		Mod:DebugLog("Void: Rolled +0.2 speed")
+	end,
+	function (player)
+		player:SetFireDelayModifier(player:GetFireDelayModifier() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_FIREDELAY)
+		Mod:DebugLog("Void: Rolled +0.5 fire delay")
+	end,
+	function (player)
+		player:SetDamageModifier(player:GetDamageModifier() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_DAMAGE)
+		Mod:DebugLog("Void: Rolled +1 damage")
+	end,
+	function (player)
+		player:SetTearRangeModifier(player:GetTearRangeModifier() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_RANGE)
+		Mod:DebugLog("Void: Rolled +2.5 range")
+	end,
+	function (player)
+		player:SetShotSpeedModifier(player:GetShotSpeedModifier() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_SHOTSPEED)
+		Mod:DebugLog("Void: Rolled +2 shot speed")
+	end,
+	function (player)
+		player:SetLuckModifier(player:GetLuckModifier() + 1)
+		player:AddCacheFlags(CacheFlag.CACHE_LUCK)
+		Mod:DebugLog("Void: Rolled +1 luck")
+	end,
+}
+
+---@param player EntityPlayer
+---@param rng? RNG
+---@param count integer? @default: `2`
+function OxyTheBunny:GrantVoidStats(player, rng, count)
+	--Void grants 2 random stats but not the same ones. For non-active goldens, grant another 2 random.
+	local indexRolls = { 1,2,3,4,5,6 }
+	rng = rng or player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_VOID)
+	count = count or 2
+	for _ = 1, count do
+		local roll = rng:RandomInt(#indexRolls) + 1
+		voidOutcomes[indexRolls[roll]](player)
+		table.remove(indexRolls, roll)
+	end
+	player:EvaluateItems()
 end

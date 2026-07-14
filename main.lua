@@ -15,15 +15,11 @@ OxyTheBunny.Room = function() return OxyTheBunny.Game:GetRoom() end
 OxyTheBunny.Level = function() return OxyTheBunny.Game:GetLevel() end
 OxyTheBunny.PersistGameData = Isaac.GetPersistentGameData()
 OxyTheBunny.Font = {
-	Terminus = Font(),
-	Tempest = Font(),
-	Meat10 = Font(),
-	Meat16 = Font()
+	Terminus = Font("font/terminus.fnt"),
+	Tempest = Font("font/pftempestasevencondensed.fnt"),
+	Meat10 = Font("font/teammeatfont10.fnt"),
+	Meat16 = Font("font/teammeatfont16bold.fnt")
 }
-OxyTheBunny.Font.Terminus:Load("font/terminus.fnt")
-OxyTheBunny.Font.Tempest:Load("font/pftempestasevencondensed.fnt")
-OxyTheBunny.Font.Meat10:Load("font/teammeatfont10.fnt")
-OxyTheBunny.Font.Meat16:Load("font/teammeatfont16bold.fnt")
 
 OxyTheBunny.GENERIC_RNG = RNG()
 
@@ -47,25 +43,39 @@ local getData = {}
 function OxyTheBunny:GetData(ent)
 	if not ent then return {} end
 	local ptrHash = GetPtrHash(ent)
-	local data = getData[ptrHash]
-	if not data then
-		local newData = {}
+	if not getData[ptrHash] then
+		local newData = {
+			Pointer = EntityPtr(ent)
+		}
 		getData[ptrHash] = newData
-		data = newData
 	end
-	return data
+	return getData[ptrHash]
 end
 
 ---@param ent Entity
 ---@return table?
 function OxyTheBunny:TryGetData(ent)
 	local ptrHash = GetPtrHash(ent)
-	local data = getData[ptrHash]
-	return data
+	return getData[ptrHash]
 end
 
 OxyTheBunny:AddPriorityCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, CallbackPriority.LATE, function(_, ent)
+	if not ent:ToNPC() then
+		getData[GetPtrHash(ent)] = nil
+	end
+end)
+
+OxyTheBunny:AddPriorityCallback(ModCallbacks.MC_POST_NPC_DEATH, CallbackPriority.LATE, function(_, ent)
 	getData[GetPtrHash(ent)] = nil
+end)
+
+OxyTheBunny:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.LATE, function(_, ent)
+	for ptrHash, entityData in pairs(getData) do
+		local entityPointer = (entityData and entityData.Pointer)
+		if not (entityPointer and entityPointer.Ref) then
+			getData[ptrHash] = nil
+		end
+	end
 end)
 
 OxyTheBunny.FileLoadError = false
@@ -100,7 +110,7 @@ function OxyTheBunny.LoopInclude(tab, path)
 	end
 end
 
-OxyTheBunny.Core = {}
+OxyTheBunny.Pickup = {}
 OxyTheBunny.Item = {}
 OxyTheBunny.Character = {}
 include("flags")
@@ -110,24 +120,18 @@ local helpers = {
 	"saving_system",
 	"bitmask_helper",
 	"maths_util",
-	"misc_util",
 	"players_util",
-	"familiars_util",
+	"attack_util",
 	"string_util",
 	"stats_util",
-	"tears_util",
 	"proximity",
 	"npc_util",
-	"rooms_helper",
 	"pickups_helper",
+	"hud_helper",
 }
 
 local tools = {
-	"debug_tools",
-	"hud_helper",
-	"status_effect_library",
-	"save_manager",
-	"pickups_tools"
+	"save_manager"
 }
 
 local core = {
@@ -144,6 +148,7 @@ local config = {
 OxyTheBunny.Spawn = include("scripts.helpers.spawn")
 OxyTheBunny.Foreach = include("scripts.helpers.for_each")
 
+include("scripts.tools.debug_tools")
 Mod.LoopInclude(helpers, "scripts.helpers")
 Dump = include("scripts.helpers.everything_function")
 InputHelper = include("scripts.helpers.vendor.inputhelper")
@@ -193,7 +198,7 @@ if Mod.FileLoadError then
 elseif Mod.InvalidPathError then
 	Mod:Log("One or more files were unable to be loaded. Report this to a coder in the dev server!")
 else
-	Mod:Log("v" .. Mod.Version .. " successfully loaded!")
+	Mod:Log("v" .. Mod.Version .. " loaded successfully!")
 end
 
 OxyTheBunny.Include = nil

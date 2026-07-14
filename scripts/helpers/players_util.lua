@@ -1,64 +1,58 @@
+local Mod = OxyTheBunny
+
+---@param player EntityPlayer
+---@param blindfoldOn boolean
+function OxyTheBunny:SetBlindfold(player, blindfoldOn)
+	if player:GetEntityConfigPlayer():CanShoot() then
+		player:SetCanShoot(not blindfoldOn)
+	end
+end
+
 ---Will attempt to find the player using the attached Entity, EntityRef, or EntityPtr.
 ---Will return if its a player, the player's familiar, or loop again if it has a SpawnerEntity
 ---@param ent Entity | EntityRef | EntityPtr
----@param weaponOwner? boolean #If specified, and it finds a familiar, will only pass the player if that familiar is a weapon-copying familiar
+---@param directOnly? boolean @Will not re-call the function if the player can be found through another entity
 ---@return EntityPlayer?
-function OxyTheBunny:TryGetPlayer(ent, weaponOwner)
+function OxyTheBunny:TryGetPlayer(ent, directOnly)
 	if not ent then return end
-	if string.match(getmetatable(ent).__type, "EntityPtr") then
+	if string.find(getmetatable(ent).__type, "EntityPtr") then
 		if ent.Ref then
 			return OxyTheBunny:TryGetPlayer(ent.Ref)
 		end
-	elseif string.match(getmetatable(ent).__type, "EntityRef") then
+	elseif string.find(getmetatable(ent).__type, "EntityRef") then
 		if ent.Entity then
 			return OxyTheBunny:TryGetPlayer(ent.Entity)
 		end
 	elseif ent:ToPlayer() then
 		return ent:ToPlayer()
-	elseif ent:ToFamiliar() and ent:ToFamiliar().Player then
-		if weaponOwner then
-			return ent:ToFamiliar():GetWeapon() and ent:ToFamiliar().Player
-		else
-			return ent:ToFamiliar().Player
-		end
-	elseif ent.SpawnerEntity then
+	elseif ent:ToFamiliar() and ent:ToFamiliar().Player and not directOnly then
+		return ent:ToFamiliar().Player
+	elseif ent.SpawnerEntity and not directOnly then
 		return OxyTheBunny:TryGetPlayer(ent.SpawnerEntity)
 	end
 end
 
+-- Returns the actual amount of red hearts the player has, subtracting rotten hearts.
 ---@param player EntityPlayer
----@return boolean canControl
-function OxyTheBunny:PlayerCanControl(player)
-	local canControl = false
-
-	if not OxyTheBunny.Game:IsPaused()
-		and not player:IsDead()
-		and player.ControlsEnabled
-	then
-		canControl = true
-	end
-
-	return canControl
-end
-
----@param player EntityPlayer
-function OxyTheBunny:IsNotUsingMoveControls(player)
-	if not OxyTheBunny.Game:IsPaused() and not player:IsDead() and player.ControlsEnabled and
-		not (Input.IsActionPressed(ButtonAction.ACTION_LEFT, player.ControllerIndex)
-			or Input.IsActionPressed(ButtonAction.ACTION_RIGHT, player.ControllerIndex)
-			or Input.IsActionPressed(ButtonAction.ACTION_UP, player.ControllerIndex)
-			or Input.IsActionPressed(ButtonAction.ACTION_DOWN, player.ControllerIndex)) then
-		return true
-	else
-		return false
-	end
-end
-
----Credit to Epiphany
----Returns the actual amount of soul hearts the player has, subtracting black hearts.
----@param player EntityPlayer
+---@param ignoreMods? boolean
 ---@function
-function OxyTheBunny:GetTrueSoulHearts(player)
+function OxyTheBunny:GetPlayerRealRedHeartsCount(player, ignoreMods)
+	if not ignoreMods and CustomHealthAPI then --Some modded hearts use red hearts behind the actual one.
+		return CustomHealthAPI.Library.GetHPOfKey(player, "RED_HEART", false, true)
+	end
+
+	return player:GetHearts() - player:GetRottenHearts() * 2
+end
+
+-- Returns the actual amount of soul hearts the player has, subtracting black hearts.
+---@param player EntityPlayer
+---@param ignoreMods? boolean
+---@function
+function OxyTheBunny:GetPlayerRealSoulHeartsCount(player, ignoreMods)
+	if not ignoreMods and CustomHealthAPI then --Some modded hearts use soul hearts behind the actual one.
+		return CustomHealthAPI.Library.GetHPOfKey(player, "SOUL_HEART", false, false)
+	end
+
 	local blackCount = 0
 	local soulHearts = player:GetSoulHearts()
 	local blackMask = player:GetBlackHearts()
@@ -73,11 +67,15 @@ function OxyTheBunny:GetTrueSoulHearts(player)
 	return soulHearts - blackCount
 end
 
----Credit to Epiphany
----Returns the actual amount of black hearts the player has.
+-- Returns the actual amount of black hearts the player has.
 ---@param player EntityPlayer
+---@param ignoreMods? boolean
 ---@function
-function OxyTheBunny:GetTrueBlackHearts(player)
+function OxyTheBunny:GetPlayerRealBlackHeartsCount(player, ignoreMods)
+	if not ignoreMods and CustomHealthAPI then --Some modded hearts use black hearts behind the actual one (?
+		return CustomHealthAPI.Library.GetHPOfKey(player, "BLACK_HEART", false, false)
+	end
+
 	local blackCount = 0
 	local soulHearts = player:GetSoulHearts()
 	local blackMask = player:GetBlackHearts()
@@ -92,114 +90,20 @@ function OxyTheBunny:GetTrueBlackHearts(player)
 	return blackCount
 end
 
----@param familiar EntityFamiliar
----@return boolean
-function OxyTheBunny:IsPlayerWeaponFamiliar(familiar)
-	local isPlayerFamiliar = false
-	if not familiar then return false end
-	local validFamiliars = OxyTheBunny:Set({
-		FamiliarVariant.INCUBUS,
-		FamiliarVariant.TWISTED_BABY,
-		FamiliarVariant.BLOOD_BABY,
-		FamiliarVariant.UMBILICAL_BABY,
-		FamiliarVariant.CAINS_OTHER_EYE
-	})
-	if validFamiliars[familiar.Variant] then
-		isPlayerFamiliar = true
-	end
-	return isPlayerFamiliar
-end
-
----@param player EntityPlayer
----@param pngName string
-function OxyTheBunny:IsHoldingCollectibleSprite(player, pngName)
-	local heldSprite = player:GetHeldSprite()
-	local isHolding = false
-	if not (heldSprite:IsLoaded()
-			and heldSprite:IsPlaying("PlayerPickupSparkle")
-			and string.match(player:GetSprite():GetAnimation(), "PickupWalk")
-			and heldSprite:GetFilename() == "005.100_collectible.anm2"
-		) then
-		return isHolding
-	end
-	local spritesheetPath = heldSprite:GetLayer("head"):GetSpritesheetPath()
-
-	if spritesheetPath == pngName then
-		isHolding = true
-	end
-	return isHolding
-end
-
----Credit to Epiphany
----checks if the player is dying, returns true if true, false if not
----@param player EntityPlayer
----@return boolean
----@function
-function OxyTheBunny:IsPlayerDying(player)
-	return player:GetSprite():GetAnimation():sub(- #"Death") == "Death" --does their current animation end with "Death"?
-end
-
----Credit to Epiphany
----@param itemId CollectibleType
-function OxyTheBunny:GetMaxCharges(itemId)
-	return OxyTheBunny.ItemConfig:GetCollectible(itemId).MaxCharges
-end
-
----Credit to Epiphany
----Removes player hp like normal damage would, without animation or invicibility frames
----@param player EntityPlayer
----@param heartsToRemove integer
----@param Inverse boolean
----@function
-function OxyTheBunny:RemoveHearts(player, heartsToRemove, Inverse)
-	if Inverse or player:HasTrinket(TrinketType.TRINKET_CROW_HEART) then
-		local souldamage = heartsToRemove - player:GetHearts()
-		player:AddHearts(-heartsToRemove)
-		if souldamage > 0 then
-			player:AddSoulHearts(-souldamage)
-		end
-	else
-		local redDamage = heartsToRemove - player:GetSoulHearts()
-		player:AddSoulHearts(-heartsToRemove)
-		if redDamage > 0 then
-			player:AddSoulHearts(-redDamage)
-		end
-	end
-end
-
----Credit to Epiphany
----Returns true if the player is found soul
----@param player EntityPlayer
-function OxyTheBunny:IsFoundSoul(player)
-	if player.Variant == PlayerVariant.FOUND_SOUL
-		and player:GetBabySkin() == BabySubType.BABY_FOUND_SOUL then
-		return true
-	end
-end
-
----Returns a list of all active slots that contain given item.
 ---@param player EntityPlayer
 ---@param item CollectibleType
+---@param includePocket2? boolean
 ---@return ActiveSlot[]
+---Returns a list of all active slots that contain given item.
 ---@function
-function OxyTheBunny:GetActiveItemSlots(player, item)
+function OxyTheBunny:GetActiveItemSlots(player, item, includePocket2)
 	local out = {}
-	for _, v in pairs(ActiveSlot) do
-		if player:GetActiveItem(v) == item then
-			OxyTheBunny.Insert(out, v)
+	for slot = ActiveSlot.SLOT_PRIMARY, ActiveSlot.SLOT_POCKET2 do
+		if player:GetActiveItem(slot) == item then
+			if slot ~= ActiveSlot.SLOT_POCKET2 or includePocket2 then
+				table.insert(out, slot)
+			end
 		end
-	end
-	return out
-end
-
----@param player EntityPlayer
----@param itemID CollectibleType
----@return {Slot: ActiveSlot, Charge: integer}[]
-function OxyTheBunny:GetActiveItemCharges(player, itemID)
-	local slots = OxyTheBunny:GetActiveItemSlots(player, itemID)
-	local out = {}
-	for i, slot in ipairs(slots) do
-		OxyTheBunny.Insert(out, { Slot = slot, Charge = player:GetActiveCharge(slot) })
 	end
 	return out
 end
@@ -212,131 +116,263 @@ function OxyTheBunny:IsJudasBirthrightActive(player)
 		player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
 
----Takes an EntityPlayer and returns how many hits they should be able to sustain
 ---@param player EntityPlayer
-function OxyTheBunny:GetEffectiveHitPoints(player)
-	return player:GetHearts()      --Red health you have
-		+ player:GetBoneHearts()   --Extra hit from bone hearts
-		+ player:GetSoulHearts()   --Soul hearts, including black hearts
-		+ player:GetEternalHearts() --Eternal Hearts can tank a hit by themselves
-		- (player:GetRottenHearts() * 2) --Rotten Hearts take a full heart while not replacing red health
+---@param item CollectibleType
+---@param slot ActiveSlot
+---@param charge? integer
+---@param replaceItem? CollectibleType
+---@function
+function OxyTheBunny:SetActiveItem(player, item, slot, charge, replaceItem)
+	charge = charge or Mod.itemconfig:GetCollectible(item).MaxCharges
+
+	if replaceItem then
+		player:RemoveCollectible(replaceItem, true, slot)
+	end
+
+	if slot == ActiveSlot.SLOT_POCKET or slot == ActiveSlot.SLOT_POCKET2 then
+		player:SetPocketActiveItem(item, slot)
+		player:SetActiveCharge(charge, slot)
+	elseif slot == ActiveSlot.SLOT_PRIMARY or slot == ActiveSlot.SLOT_SECONDARY then
+		player:AddCollectible(item, charge, false, slot)
+	else
+		error("Unknown active slot")
+	end
 end
 
-OxyTheBunny.LostPlayers = OxyTheBunny:Set({
-	PlayerType.PLAYER_THELOST,
-	PlayerType.PLAYER_THELOST_B
-})
-
+--[[
+--- Returns true if the player has space for an active item, false if he doesn't have space
 ---@param player EntityPlayer
-function OxyTheBunny:IsAnyLost(player)
-	return OxyTheBunny.LostPlayers[player:GetPlayerType()]
+---@return boolean
+function OxyTheBunny:HasSpaceForActive(player)
+	return not ((player:GetActiveItem(ActiveSlot.SLOT_SECONDARY) ~= 0 and player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG))
+		or not player:HasCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG) and player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= 0
+		and player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES)
 end
 
----returns true if the player can pickup the item, false if they cannot (not being able to pickup due animation is included)
 ---@param player EntityPlayer
 ---@param pickup EntityPickup
 ---@return boolean
-function OxyTheBunny:CanPlayerBuyShopItem(player, pickup)
-	if player:CanPickupItem() then
-		local isItem = (pickup.Variant == PickupVariant.PICKUP_COLLECTIBLE or pickup.Variant == PickupVariant.PICKUP_TRINKET)
-		local hasToHold = isItem or pickup.Price ~= 0
-
-		-- if you have to hold the item, you can't be on animation cooldown
-		if hasToHold then
-			if not player:IsExtraAnimationFinished() then
-				return false
-			end
-		end
-
-		if pickup.Price < 0 then
-			if not OxyTheBunny:IsAnyLost(player) then
-				if pickup.Price == PickupPrice.PRICE_ONE_HEART and player:GetMaxHearts() < 2 then
-					return false
-				end
-				if pickup.Price == PickupPrice.PRICE_TWO_HEARTS and player:GetMaxHearts() < 2 then
-					return false
-				end
-				if pickup.Price == PickupPrice.PRICE_THREE_SOULHEARTS and player:GetSoulHearts() < 1 then
-					return false
-				end
-				if pickup.Price == PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS and ((player:GetMaxHearts() < 2 or player:GetSoulHearts() < 1) and player:GetMaxHearts() < 4) then
-					return false
-				end
-			end
-			return true
-		end
-
-		if pickup.Price == 0
-			or pickup.Price == PickupPrice.PRICE_FREE
-			or pickup.Price > 0 and player:GetNumCoins() >= pickup.Price then
-			return true
-		end
-	end
-	return false
-end
-
----Aquired from EID who reverse engineerd the decomp code for Consolation Prize
----@param player EntityPlayer
----@param cacheFlag CacheFlag
-function OxyTheBunny:GetStatScore(player, cacheFlag)
-	local score = 0
-	if cacheFlag == CacheFlag.CACHE_SPEED then
-		score = (player.MoveSpeed * 4.5) - 2
-	elseif cacheFlag == CacheFlag.CACHE_FIREDELAY then
-		score = (((30 / (player.MaxFireDelay + 1)) ^ 0.75) * 2.120391) - 2
-	elseif cacheFlag == CacheFlag.CACHE_DAMAGE then
-		score = ((player.Damage ^ 0.56) * 2.231179) - 2
-	elseif cacheFlag == CacheFlag.CACHE_RANGE then
-		score = ((player.TearRange - 230) / 60) + 2
-		--Shotspeed and Luck are custom. Default should be 2.5
-	elseif cacheFlag == CacheFlag.CACHE_SHOTSPEED then
-		score = (player.ShotSpeed * 6.5) - 4
-	elseif cacheFlag == CacheFlag.CACHE_LUCK then
-		score = player.Luck + 2.5
-	end
-	return OxyTheBunny:Round(score)
-end
-
----Attempts to return the Marked target used by the player. Returns nil if none are found
----@param player EntityPlayer
----@return Vector?
-function OxyTheBunny:TryGetMarkedTargetAimVector(player)
-	local aimVector
-	if REPENTOGON then
-		local target = player:GetMarkedTarget()
-		if target then
-			aimVector = (target.Position - player.Position):Normalized()
-		end
+function OxyTheBunny:CanAffordPrice(player, pickup)
+	if pickup.Price == 0
+	or pickup.Price == PickupPrice.PRICE_FREE then
+		return true
+	elseif pickup.Price > 0 then
+		return player:GetNumCoins() >= pickup.Price
 	else
-		local markedVariants = {
-			EffectVariant.TARGET,
-			EffectVariant.OCCULT_TARGET
-		}
-		for _, variant in ipairs(markedVariants) do
-			for _, mark in ipairs(Isaac.FindByType(EntityType.ENTITY_EFFECT, variant)) do
-				local spawnEnt = mark.SpawnerEntity and mark.SpawnerEntity:ToPlayer()
-				if spawnEnt and GetPtrHash(spawnEnt) == GetPtrHash(player) then
-					aimVector = (mark.Position - player.Position):Normalized()
-					break
-				end
-			end
+		if Mod:IsAnyLost(player) then
+			return true
+		end
+
+		if pickup.Price == PickupPrice.PRICE_ONE_HEART then
+			return player:GetMaxHearts() >= 2
+		elseif pickup.Price == PickupPrice.PRICE_TWO_HEARTS then
+			return player:GetMaxHearts() >= 4
+		elseif pickup.Price == PickupPrice.PRICE_THREE_SOULHEARTS then
+			return player:GetSoulHearts() >= 6
+		elseif pickup.Price == PickupPrice.PRICE_ONE_HEART_AND_TWO_SOULHEARTS then
+			return (player:GetMaxHearts() >= 2 and player:GetSoulHearts() >= 4) or player:GetMaxHearts() >= 6
+		elseif pickup.Price == PickupPrice.PRICE_SOUL then
+			return player:HasTrinket(TrinketType.TRINKET_YOUR_SOUL)
 		end
 	end
-	return aimVector
+
+	-- Try to check using custom price functions
+	local canAfford = Mod.SHOP_ITEMS:CanAffordPickup(player, pickup)
+	if canAfford ~= nil then
+		return canAfford
+	end
+
+	return true -- unknown price, assume true
+end
+
+---checks if the player is dying, returns true if true, false if not
+---@param player EntityPlayer
+---@return boolean
+---@function
+function OxyTheBunny:IsPlayerDying(player)
+	return player:GetSprite():GetAnimation():sub(- #"Death") == "Death" --does their current animation end with "Death"?
 end
 
 ---@param player EntityPlayer
-function OxyTheBunny:GetLaserRange(player)
-	return 60 + math.max(0, player.TearRange - 112) * 0.25
+---@function
+function OxyTheBunny:IsUrnOfSoulsActive(player)
+	local weapon = player:GetActiveWeaponEntity()
+	return weapon
+		and weapon.Type == EntityType.ENTITY_EFFECT
+		and weapon.Variant == EffectVariant.URN_OF_SOULS
 end
 
 ---@param player EntityPlayer
----@param layer PlayerSpriteLayer
-function OxyTheBunny:GetCostumeSpriteFromLayer(player, layer)
-	local layerMap = player:GetCostumeLayerMap()[layer + 1]
-	if not layerMap then return end
-	local costumeIndex = layerMap.costumeIndex
-	local costumeDescs = player:GetCostumeSpriteDescs()
-	local costumeDesc = costumeDescs[costumeIndex + 1]
-	return costumeDesc and costumeDesc:GetSprite()
+function OxyTheBunny:IsNotchedAxeActive(player)
+	local weapon = player:GetActiveWeaponEntity()
+	return weapon
+		and weapon.Type == EntityType.ENTITY_KNIFE
+		and weapon.Variant == 9 -- No enum for knife variants (without RGON)
+end ]]
+
+---@param itemId CollectibleType
+function OxyTheBunny:GetMaxCharges(itemId)
+	return Mod.itemconfig:GetCollectible(itemId).MaxCharges
+end
+
+--#endregion
+
+--[[ ---@param player EntityPlayer
+function OxyTheBunny:GetPrimaryWeaponType(player)
+	if not REPENTOGON then return end
+	local weapon = player:GetWeapon(1)
+	if weapon then return weapon:GetWeaponType() end
+end ]]
+
+
+--- Gives the player's luck accounting for teardrop charm
+---@param player EntityPlayer
+---@return integer
+function OxyTheBunny:GetTearModifierLuck(player)
+	local luck = player.Luck
+	if player:HasTrinket(TrinketType.TRINKET_TEARDROP_CHARM) then
+		luck = luck + (player:GetTrinketMultiplier(TrinketType.TRINKET_TEARDROP_CHARM) * 4)
+	end
+	return luck
+end
+
+--[[ ---@param player EntityPlayer
+---@param filterFunc fun(val: any, key?: integer): boolean @Filters what collectibles are removed
+function OxyTheBunny:EmptyInventory(player, filterFunc)
+	local itemlist = Mod:FilterList(OxyTheBunny:GetChronologicalInventory(player), filterFunc)
+	inverseiforeach(itemlist, function(itemID)
+		player:RemoveCollectible(itemID)
+	end)
+
+	player:AddKeys(-player:GetNumKeys())
+	player:AddBombs(-player:GetNumBombs())
+	player:AddCoins(-player:GetNumCoins())
+	player:RemoveGoldenBomb()
+	player:RemoveGoldenKey()
+	for i = 1, player:GetMaxTrinkets() do
+		if player:GetTrinket(i - 1) ~= 0 then
+			player:TryRemoveTrinket(player:GetTrinket(i - 1))
+		end
+	end
+	for i = 0, 3 do
+		player:DropPocketItem(i, Vector.Zero)
+	end
+end ]]
+
+---Returns true if the player has enough charge to use the active item in the specified slot
+---@param player EntityPlayer
+---@param slot ActiveSlot
+function OxyTheBunny:CanUseActive(player, slot)
+	return player:GetActiveCharge(slot) + player:GetBloodCharge() + player:GetSoulCharge() >= player:GetActiveMinUsableCharge(slot)
+end
+
+--[[ ---Returns true if given active is in player's "main" slot (SLOT_PRIMARY or SLOT_POCKET for pocket actives)
+---Accounts for player having pills/cards in pocket slots
+---@param player EntityPlayer
+---@param item CollectibleType
+---@param isPocketSlot boolean
+function OxyTheBunny:IsActiveInMainSlot(player, item, isPocketSlot)
+	if isPocketSlot then
+		local pocketItem = player:GetPocketItem(PillCardSlot.PRIMARY)
+		return player:GetActiveItem(ActiveSlot.SLOT_POCKET) == item
+			and pocketItem:GetType() == PocketItemType.ACTIVE_ITEM
+			and (pocketItem:GetSlot() - 1) == ActiveSlot.SLOT_POCKET
+	else
+		return player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == item
+	end
+end
+
+---@param player EntityPlayer
+---@param flags UseFlag
+---@param slot ActiveSlot
+function OxyTheBunny:DropCollectibleFromButter(player, flags, slot)
+	if player:HasTrinket(TrinketType.TRINKET_BUTTER)
+		and Mod:HasBitFlags(flags, UseFlag.USE_OWNED)
+		and not Mod:HasBitFlags(flags, UseFlag.USE_MIMIC)
+		and (slot == ActiveSlot.SLOT_PRIMARY or slot == ActiveSlot.SLOT_SECONDARY)
+	then
+		Scheduler.Schedule(1, function()
+			local activeItem = player:GetActiveItem(slot)
+			local isGolden = Mod:HasGoldenItem(activeItem, player, slot)
+			player:DropCollectible(activeItem)
+			Mod.Foreach.Pickup(function (pickup, index)
+				if pickup.FrameCount == 0
+					and pickup.SubType == activeItem
+					and isGolden
+				then
+					Mod.Pickup.GOLDEN_ITEM:TurnPedestalGold(pickup)
+					return true
+				end
+			end, PickupVariant.PICKUP_COLLECTIBLE, nil, {Inverse = true})
+		end)
+	end
+end ]]
+
+local colorToSuffix = {
+	[SkinColor.SKIN_PINK] = "",
+	[SkinColor.SKIN_WHITE] = "_white",
+	[SkinColor.SKIN_BLACK] = "_black",
+	[SkinColor.SKIN_BLUE] = "_blue",
+	[SkinColor.SKIN_RED] = "_red",
+	[SkinColor.SKIN_GREEN] = "_green",
+	[SkinColor.SKIN_GREY] = "_grey",
+	[SkinColor.SKIN_SHADOW] = "_shadow",
+}
+
+---@param player EntityPlayer
+---@param isBody? boolean @default: `false`.
+function OxyTheBunny:GetPlayerSkinColorSuffix(player, isBody)
+	local color
+	if isBody then
+		color = player:GetBodyColor()
+	else
+		color = player:GetHeadColor()
+	end
+	if color == player:GetEntityConfigPlayer():GetSkinColor() then
+		return ""
+	else
+		return Mod:GetSkinColorSuffix(color)
+	end
+end
+
+---@param color SkinColor
+function OxyTheBunny:GetSkinColorSuffix(color)
+	return colorToSuffix[color]
+end
+
+---@param player EntityPlayer
+---@param spriteLayer PlayerSpriteLayer
+function OxyTheBunny:TryGetCostumeDesc(player, spriteLayer)
+	local costumeSpriteDescs = player:GetCostumeSpriteDescs()
+	local costumeLayerMap = player:GetCostumeLayerMap()
+	local costumeSpriteDescIndex = costumeLayerMap[spriteLayer + 1].costumeIndex
+	return costumeSpriteDescs[costumeSpriteDescIndex + 1]
+end
+
+---@param player EntityPlayer
+---@param flags UseFlag
+function OxyTheBunny:CanSpawnWisp(player, flags)
+	return player:HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES)
+		and (not Mod:HasBitFlags(flags, UseFlag.USE_NOANIM) or Mod:HasBitFlags(flags, UseFlag.USE_ALLOWWISPSPAWN))
+end
+
+---@param player EntityPlayer
+---@param item CollectibleType
+function OxyTheBunny:HasBlockedCollectible(player, item)
+	return player:HasCollectible(item, true) and not player:HasCurseMistEffect()
+end
+
+---@param player EntityPlayer
+---@param item CollectibleType
+function OxyTheBunny:GetBlockedCollectibleNum(player, item)
+	if player:HasCurseMistEffect() then
+		return 0
+	end
+	return player:GetCollectibleNum(item, true)
+end
+
+---@param player EntityPlayer
+---@param trinket TrinketType
+function OxyTheBunny:HasBlockedTrinket(player, trinket)
+	return player:HasTrinket(trinket, true) and not player:HasCurseMistEffect()
 end

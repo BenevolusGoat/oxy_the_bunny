@@ -1,4 +1,9 @@
 
 <achievements gfxroot="gfx/ui/achievement/">
+	<achievement name="Oxy" gfx="achievement_oxy.png" />
+	<achievement name="Chainsaw" gfx="achievement_chainsaw.png" />
 	<achievement name="The Inhabited" gfx="achievement_taintedoxy.png" />
+	<achievement name="Soul of Oxy" gfx="achievement_oxy.png" />
+	<achievement name="Manfiest" gfx="achievement_manifest.png" />
+	<achievement name="Specter" gfx="achievement_specter.png" />
 </achievements>

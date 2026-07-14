@@ -52,7 +52,7 @@ local function isValidEnemyTarget(ent, searchParams)
 	return ent
 	and ent:ToNPC()
 	and ent:IsActiveEnemy(searchParams and searchParams.Dead or false)
-	and (ent:IsVulnerableEnemy() or searchParams and searchParams.Invincible)
+	and (not ent:IsInvincible() or searchParams and searchParams.Invincible)
 	and (not ent:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) or searchParams and searchParams.Friendly)
 	and (ent.EntityCollisionClass ~= EntityCollisionClass.ENTCOLL_NONE or searchParams and searchParams.NoCollision)
 	and (ent:ToNPC().CanShutDoors or ent.Type == EntityType.ENTITY_DUMMY or searchParams and searchParams.CantShutDoors)
@@ -70,7 +70,7 @@ local function forEach(ent, i, func, searchParams, variant, subtype)
 			castEnt = nil
 		end
 		if castEnt and (not searchParams or not searchParams.UseEnemySearchParams or isValidEnemyTarget(castEnt, searchParams)) then
-			local index = REPENTOGON and castEnt:ToPlayer() and castEnt:GetPlayerIndex() or i
+			local index = REPENTOGON and castEnt:ToPlayer() and castEnt:ToPlayer():GetPlayerIndex() or i
 			local result = func(castEnt, index)
 			if result ~= nil then
 				return result
@@ -106,7 +106,12 @@ end
 local function startForEachType(func, entType, variant, subtype, searchParams)
 	local loopTable
 	if REPENTOGON and entType == EntityType.ENTITY_PLAYER then
-		loopTable = PlayerManager.GetPlayers()
+		loopTable = {}
+		for _, player in ipairs(PlayerManager.GetPlayers()) do
+			if (not variant or variant == -1 or player.Variant == variant) and (not subtype or subtype == -1 or player:GetPlayerType() == subtype) then
+				loopTable[#loopTable+1] = player
+			end
+		end
 	elseif entType then
 		loopTable = Isaac.FindByType(entType, variant, subtype, searchParams and searchParams.ShouldCache or false, searchParams and searchParams.Friendly or false)
 	else
@@ -146,9 +151,9 @@ local function startForEachPartition(func, partition, pos, radius, variant, subt
 		loopTable = {}
 		local posCompare
 		if isVector then
-			posCompare = 0
+			posCompare = radius
 		else
-			posCompare = pos.Size
+			posCompare = pos.Size + radius
 		end
 		local byType = Isaac.FindByType(partition, variant, subtype, true, searchParams and searchParams.Friendly or false)
 		for _, ent in ipairs(byType) do
@@ -419,14 +424,44 @@ end
 function Foreach.Grid(func, gridType, gridVariant)
 	local room = game:GetRoom()
 	for i = 0, room:GetGridSize() - 1 do
-		local grid = room:GetGridEntity(i)
-		if grid
-			and (not gridType or grid:GetType() == gridType)
-			and (not gridVariant or grid:GetVariant() == gridVariant)
+		local gridEnt = room:GetGridEntity(i)
+		if gridEnt
+			and (not gridType or gridEnt:GetType() == gridType)
+			and (not gridVariant or gridEnt:GetVariant() == gridVariant)
 		then
-			local result = func(grid, i)
+			local result = func(gridEnt, i)
 			if result ~= nil then
 				return result
+			end
+		end
+	end
+end
+
+---Searches in a square radius rather than a circle
+---@generic V
+---@param func fun(gridEnt: GridEntity, gridIndex: integer): V?
+---@param gridType? GridEntityType
+---@param gridVariant? integer
+---@return V?
+function Foreach.GridInRadius(pos, radius, func, gridType, gridVariant)
+	local topLeft = pos + Vector(-radius, -radius)
+	local bottomRight = pos + Vector(radius, radius)
+	topLeft = Vector(topLeft.X, topLeft.Y)
+	bottomRight = Vector(bottomRight.X, bottomRight.Y)
+	local room = game:GetRoom()
+
+	for x = topLeft.X, bottomRight.X do
+		for y = topLeft.Y, bottomRight.Y do
+			local gridIndex = room:GetGridIndex(Vector(x, y))
+			local grid = room:GetGridEntity(gridIndex)
+			if grid
+				and (not gridType or grid:GetType() == gridType)
+				and (not gridVariant or grid:GetVariant() == gridVariant)
+			then
+				local result = func(grid, gridIndex)
+				if result ~= nil then
+					return result
+				end
 			end
 		end
 	end
@@ -470,24 +505,48 @@ function Foreach.EntityInRadius(pos, radius, func, searchParams)
 	return startForEachPartition(func, nil, pos, radius, nil, nil, searchParams)
 end
 
---Will move DOWN the chain from the provided entity. Provide the parent if you want to loop through the whole line of enemies
----@param npc Entity
----@param func fun(npc: Entity)
-function Foreach.Segment(npc, func)
+--Will move DOWN the chain from the provided entity and prevent loops. Provide the parent if you want to loop through the whole line of enemies
+---@generic V
+---@param ent Entity
+---@param func fun(segment: Entity): V?
+---@return V?
+function Foreach.Segment(ent, func)
 	local entitiesSearch = {}
-	local curHash = GetPtrHash(npc)
-	entitiesSearch[curHash] = true
-	local currentEnt = npc.Child
-	if currentEnt.Parent
+	local currentEnt = ent.Child
+
+	while currentEnt
+		and currentEnt.Parent
 		and currentEnt.Parent:ToNPC()
 		and currentEnt.Parent.Child
 		and GetPtrHash(currentEnt) == GetPtrHash(currentEnt.Parent.Child)
-		and not entitiesSearch[curHash]
-	then
-		entitiesSearch[curHash] = true
-		func(npc)
+		and not entitiesSearch[GetPtrHash(currentEnt)]
+	do
+		local result = func(currentEnt)
+		if result ~= nil then
+			return result
+		end
+		--needs end segment?
+		entitiesSearch[GetPtrHash(currentEnt)] = true
 		currentEnt = currentEnt.Child
-		curHash = GetPtrHash(currentEnt)
+	end
+end
+
+--Will move UP the chain from the provided entity and prevent loops
+---@param npc Entity
+---@param func fun(npc: Entity): boolean?
+function Foreach.Parent(npc, func)
+	local entitiesSearch = {}
+	local currentEnt = npc.Parent
+
+	while currentEnt
+		and not entitiesSearch[GetPtrHash(currentEnt)]
+	do
+		local result = func(currentEnt)
+		if result ~= nil then
+			return result
+		end
+		entitiesSearch[GetPtrHash(currentEnt)] = true
+		currentEnt = currentEnt.Parent
 	end
 end
 

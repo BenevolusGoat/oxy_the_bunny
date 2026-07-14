@@ -437,7 +437,7 @@ end
 ---@generic K, V
 ---@param tab table<K,V>
 ---@param func fun(val: V, key?: K): boolean?
-function OxyTheBunny:foreach(tab, func)
+function OxyTheBunny.foreach(tab, func)
 	for k, v in pairs(tab) do
 		if func(v, k) then
 			return
@@ -448,7 +448,7 @@ end
 ---@generic V
 ---@param tab table<integer,V>
 ---@param func fun(val: V, key?: integer): boolean?
-function OxyTheBunny:iforeach(tab, func)
+function OxyTheBunny.iforeach(tab, func)
 	for k, v in ipairs(tab) do
 		if func(v, k) then
 			return
@@ -459,7 +459,7 @@ end
 ---@generic V
 ---@param tab table<integer,V>
 ---@param func fun(val: V, key?: integer): boolean?
-function OxyTheBunny:inverseiforeach(tab, func)
+function OxyTheBunny.inverseiforeach(tab, func)
 	for k = #tab, 1, -1 do
 		if func(tab[k], k) then
 			return

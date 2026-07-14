@@ -1,67 +1,4 @@
-OxyTheBunny.RandomRNG = RNG()
-OxyTheBunny.RandomRNG:SetSeed(Random() + 1)
-
----@param lower? integer
----@param upper? integer
-function OxyTheBunny:RandomNum(lower, upper)
-	if upper then
-		return OxyTheBunny.RandomRNG:RandomInt((upper - lower) + 1) + lower
-	elseif lower then
-		return OxyTheBunny.RandomRNG:RandomInt(lower) + 1
-	else
-		return OxyTheBunny.RandomRNG:RandomFloat()
-	end
-end
-
----Takes the `allNums` table and removes identical values found in `selectedNum`, then randomly returning one of the values
----@generic V
----@param selectedNums table
----@param allNums V[]
----@param rng RNG
----@return V
-function OxyTheBunny:GetDifferentRandomValue(selectedNums, allNums, rng)
-	local filteredNums = {}
-
-	for _, int in pairs(allNums) do
-		for _, checkInt in pairs(selectedNums) do
-			if int == checkInt then goto continue end
-		end
-		OxyTheBunny.Insert(filteredNums, int)
-		::continue::
-	end
-	return filteredNums[rng:RandomInt(#filteredNums) + 1]
-end
-
----@generic V
----@param selectedNums table
----@param allNums {[V]: any}
----@param rng RNG
----@return V
-function OxyTheBunny:GetDifferentRandomKey(selectedNums, allNums, rng)
-	local filteredNums = {}
-
-	for int, _ in pairs(allNums) do
-		if not selectedNums[int] then
-			OxyTheBunny.Insert(filteredNums, int)
-		end
-	end
-	return filteredNums[rng:RandomInt(#filteredNums) + 1]
-end
-
---Credit to DeadInfinity for Lerping directly with angles!
----@param a1 number
----@param a2 number
-function OxyTheBunny:GetAngleDifference(a1, a2)
-	local sub = a1 - a2
-	return (sub + 180) % 360 - 180
-end
-
----@param aStart number
----@param aEnd number
----@param percent number
-function OxyTheBunny:LerpAngleDegrees(aStart, aEnd, percent)
-	return aStart + OxyTheBunny:GetAngleDifference(aEnd, aStart) * percent
-end
+local Mod = OxyTheBunny
 
 ---@param first number
 ---@param second number
@@ -94,9 +31,89 @@ function OxyTheBunny:Clamp(value, min, max)
 	end
 end
 
+---@param rng RNG
+---@function
+function OxyTheBunny:RandomNormal(rng)
+	local radius = math.sqrt(math.max(0, -2.0 * math.log(1e-6 + rng:RandomFloat())))
+	local angle = rng:RandomFloat() * 2.0 * math.pi
+	return Vector(math.cos(angle), math.sin(angle)) * radius
+end
+
 ---Exists so that random will never have 0 for a seed, which would otherwise crash the game
 function OxyTheBunny:Random()
 	return math.max(Random(), 1)
+end
+
+---@param percent number
+---@param maxvalue number
+---@function
+function OxyTheBunny:GetPercent(percent, maxvalue)
+	if tonumber(percent) and tonumber(maxvalue) then
+		return (maxvalue * percent) / 100
+	end
+	return false
+end
+
+---@param num number
+---@function
+function OxyTheBunny.Round(num)
+	return num % 1 >= 0.5 and math.ceil(num) or math.floor(num)
+end
+
+---@function
+function OxyTheBunny:RandomFloatRange(range)
+	return Mod.GENERIC_RNG:RandomFloat() * (range or 1.0)
+end
+
+---@param direction Direction
+---@return Vector
+---@function
+function OxyTheBunny:DirectionToVector(direction)
+	direction = direction == -1 and Direction.DOWN or direction
+	return Vector(-1, 0):Rotated(90 * direction)
+end
+
+---Takes two 2d vectors and checks them to see if they are equal
+---@param vec1 Vector
+---@param vec2 Vector
+function OxyTheBunny:VectorsAreEqual(vec1, vec2)
+	return vec1.X == vec2.X
+		and vec1.Y == vec2.Y
+end
+
+---@param color Color
+---@param alpha number
+function OxyTheBunny:ColorChangeAlpha(color, alpha)
+	color.A = alpha
+	return color
+end
+
+---@param Range integer range visualised
+---@return integer
+function OxyTheBunny:CalculateRange(Range)
+	return (Range * 2.5) / 100
+end
+
+---@param startPoint Vector
+---@param controlPoint Vector
+---@param endPoint Vector
+---@param t number @Must be in range [0, 1]
+---@return Vector
+function OxyTheBunny:QuadraticBezier(startPoint, controlPoint, endPoint, t)
+	return (1 - t) ^ 2 * startPoint + 2 * (1 - t) * t * controlPoint + t ^ 2 * endPoint
+end
+
+---@param rng RNG
+---@param lower? integer
+---@param upper? integer
+function OxyTheBunny:RandomNum(rng, lower, upper)
+	if upper then
+		return rng:RandomInt((upper - lower) + 1) + lower
+	elseif lower then
+		return rng:RandomInt(lower) + 1
+	else
+		return rng:RandomFloat()
+	end
 end
 
 ---@param vec Vector
@@ -135,30 +152,4 @@ function OxyTheBunny:GetRoundedDirection(vec)
 	}
 
 	return dirAngles[closestAngle]
-end
-
----@param dir integer
-function OxyTheBunny:DirectionToVector(dir)
-	return Vector(-1, 0):Rotated(90 * dir)
-end
-
----@param num number
----@param dp? integer
-function OxyTheBunny:Round(num, dp)
-	dp = dp or 2
-	local mult = 10 ^ dp
-	return math.floor(num * mult + 0.5) / mult
-end
-
----Takes two 2d vectors and checks them to see if they are equal
----@param vec1 Vector
----@param vec2 Vector
-function OxyTheBunny:VectorsAreEqual(vec1, vec2)
-	return vec1.X == vec2.X
-		and vec1.Y == vec2.Y
-end
-
----@param num number
-function OxyTheBunny:FlattenFloatValue(num)
-	return math.floor(num) == num and math.floor(num) or num
 end

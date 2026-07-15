@@ -5,14 +5,14 @@
 		hp="2" armor="2" keys="1"
 		speedmodifier="0.2" luckmodifier="1"
 		pocketActive="Holster" items="282"
-		nameimage="playername_oxy.png" portrait="playerportrait_oxy.png"
+		nameimage="playername_oxy.png" extraportrait="extraportrait_oxy.anm2"
 		birthright="Chainsaw Mastery"
 		achievement="Oxy" />
 	<player name="Oxy" bSkinParent="Oxy" skin="character_01b_oxy.png" costumeSuffix="oxy_b" skinColor="1" modcostume="1"
 		blackhearts="2" healthtype="1"
 		damagemodifier="-1.75"
 		pocketActive="Manifest"
-		nameimage="playername_oxy.png" portrait="playerportrait_oxy_b.png"
+		nameimage="playername_oxy.png" extraportrait="extraportrait_oxy_b.anm2"
 		birthright="I understand now"
 		achievement="The Inhabited" />
 </players>

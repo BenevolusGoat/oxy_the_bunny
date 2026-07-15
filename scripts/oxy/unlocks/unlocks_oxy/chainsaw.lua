@@ -80,10 +80,16 @@ end
 ---@param tearFlags TearFlags
 ---@param hitEnemies table
 ---@param hitGrids table
-local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hitEnemies, hitGrids)
+---@param isTip boolean
+local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hitEnemies, hitGrids, isTip)
+	if Mod:HasBitFlags(Mod.Game:GetDebugFlags(), DebugFlag.HITSPHERES) then
+		local shape = DebugRenderer.Get(-1, true)
+		shape:Capsule(capsule)
+		shape:SetTimeout(1)
+	end
 	for _, ent in ipairs(Isaac.FindInCapsule(capsule)) do
 		local npc = ent:ToNPC()
-		if npc and canHitEnemy(npc) and (not hitEnemies or not hitEnemies[ent.Index]) then
+		if npc and canHitEnemy(npc) and (isTip or not hitEnemies[ent.Index]) then
 			npc:TakeDamage(damage, 0, source, 0)
 			npc:ApplyTearflagEffects(npc.Position, tearFlags, chainsaw, damage)
 			if not npc:HasEntityFlags(EntityFlag.FLAG_NO_FLASH_ON_DAMAGE) then
@@ -97,7 +103,7 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 		end
 	end
 	Mod.Foreach.GridInRadius(capsule:GetPosition(), capsule:GetF1(), function (gridEnt, gridIndex)
-		if gridEnt:ToPoop() and not hitGrids[gridIndex] then
+		if (gridEnt:ToPoop() or gridEnt:ToTNT()) and not hitGrids[gridIndex] then
 			gridEnt:HurtWithSource(1, source)
 			hitGrids[gridIndex] = CHAINSAW.DEFAULT_HIT_COUNTDOWN
 		end
@@ -125,8 +131,9 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	local tearFlags = TearFlags.TEAR_NORMAL
 	if player then
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
-		damage = tearParams.TearDamage
+		damage = tearParams.TearDamage * 0.85
 		tearFlags = tearParams.TearFlags
+		chainsaw.Color = tearParams.TearColor
 	end
 
 	for index, countdown in pairs(hitEnemies) do
@@ -226,3 +233,12 @@ function CHAINSAW:OnPlayerUpdate(player)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, CHAINSAW.OnPlayerUpdate, PlayerVariant.PLAYER)
+
+---@param player EntityPlayer
+function CHAINSAW:UpdateDamage(player)
+	if CHAINSAW:CanUseChainsaw(player) then
+		player.Damage = player:GetTearPoisonDamage()
+	end
+end
+
+Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_CACHE, CallbackPriority.IMPORTANT, CHAINSAW.UpdateDamage, CacheFlag.CACHE_DAMAGE)

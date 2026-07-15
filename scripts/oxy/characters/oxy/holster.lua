@@ -82,3 +82,13 @@ function HOLSTER:EnableChainsawOnMaxCharge(player)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, HOLSTER.EnableChainsawOnMaxCharge)
+
+---@param player EntityPlayer
+function HOLSTER:CropOffset(player, slot, offset, alpha, scale, chargebar)
+	local hasOxySaw = player:GetInnateCollectibleCount(Mod.Item.CHAINSAW.ID, "Oxy") > 0
+	if hasOxySaw then
+		return {CropOffset = Vector(32, 0)}
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_PLAYERHUD_RENDER_ACTIVE_ITEM, HOLSTER.CropOffset, HOLSTER.ID)

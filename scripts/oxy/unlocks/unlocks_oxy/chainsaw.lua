@@ -52,9 +52,11 @@ function CHAINSAW:SpawnChainsaw(player)
 	data.ActiveChainsaw = EntityPtr(chainsaw)
 	chainsaw.Rotation = angle
 	sprite.Rotation = angle
-	chainsaw.PositionOffset = fireDir:Resized(5) + Vector(0, -5)
+	chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
 	sprite:Play("Swing", true)
 	chainsaw.Parent = player
+	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
+	chainsaw.Color = tearParams.TearColor
 	local weapon = player:GetWeapon(1)
 	if weapon then
 		weapon:SetFireDelay(weapon:GetMaxFireDelay())
@@ -80,7 +82,7 @@ end
 ---@param tearFlags TearFlags
 ---@param hitEnemies table
 ---@param hitGrids table
----@param isTip boolean
+---@param isTip? boolean
 local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hitEnemies, hitGrids, isTip)
 	if Mod:HasBitFlags(Mod.Game:GetDebugFlags(), DebugFlag.HITSPHERES) then
 		local shape = DebugRenderer.Get(-1, true)
@@ -133,7 +135,6 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
 		damage = tearParams.TearDamage * 0.85
 		tearFlags = tearParams.TearFlags
-		chainsaw.Color = tearParams.TearColor
 	end
 
 	for index, countdown in pairs(hitEnemies) do
@@ -153,7 +154,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	end
 
 	if nullTip and nullTip:IsVisible() then
-		damageInCapsule(chainsaw, capsuleTip, damage * 2, source, tearFlags, hitEnemies, hitGrids)
+		damageInCapsule(chainsaw, capsuleTip, damage * 2, source, tearFlags, hitEnemies, hitGrids, true)
 	end
 	if null1 and null1:IsVisible() then
 		damageInCapsule(chainsaw, capsule1, damage, source, tearFlags, hitEnemies, hitGrids)
@@ -219,7 +220,7 @@ function CHAINSAW:OnPlayerUpdate(player)
 		local angle = fireDir:GetAngleDegrees() - 90
 		chainsaw.Rotation = angle
 		sprite.Rotation = angle
-		chainsaw.PositionOffset = fireDir:Resized(20) + Vector(0, -10)
+		chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
 		player:SetHeadDirection(Mod:GetFireDirection(player), 16, true)
 	end
 	if canUseChainsaw and isShooting and not chainsaw and player:IsExtraAnimationFinished() and not onCooldown then

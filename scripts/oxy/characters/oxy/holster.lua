@@ -31,7 +31,12 @@ function HOLSTER:ChainsawCooldownOnHit(ent, amount, flags, source, cooldown)
 		and player:GetActiveItem(ActiveSlot.SLOT_POCKET) == HOLSTER.ID
 		and not Mod:HasAnyBitFlags(flags, DamageFlag.DAMAGE_FAKE | DamageFlag.DAMAGE_RED_HEARTS | DamageFlag.DAMAGE_NO_PENALTIES)
 	then
-		Mod:RunSave(player).ChainsawDisabled = true
+		local item = Mod.Item.CHAINSAW.ID
+		local hasOxySaw = player:GetInnateCollectibleCount(item, "Oxy") > 0
+		if hasOxySaw then
+			player:RemoveInnateCollectible(item, 1, "Oxy")
+			Mod:RunSave(player).ChainsawDisabled = true
+		end
 	end
 end
 

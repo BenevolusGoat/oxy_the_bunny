@@ -1,5 +1,5 @@
 <entities anm2root="gfx/" version="5">
-    <entity id="8" variant="60" name="Oxy's Chainsaw" anm2path="weapon_oxy_chainsaw.anm2"
+    <entity id="1000" variant="3784" name="Oxy's Chainsaw" anm2path="weapon_oxy_chainsaw.anm2"
 			friction="1" collisionMass="3" collisionRadius="16" >
     </entity>
 	<!-- <entity anm2path="weapon.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="16" collisionRadiusXMulti="5" collisionRadiusYMulti="8" friction="1" id="8" name="Cursor" numGridCollisionPoints="70" shadowSize="0" stageHP="0" variant="69">

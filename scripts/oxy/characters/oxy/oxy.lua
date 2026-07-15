@@ -21,7 +21,7 @@ end
 ---@param player EntityPlayer
 ---@param tearParams TearParams
 function OXY:CharmChance(player, tearParams)
-	if not Mod.Item.CHAINSAW:IsActive(player) then
+	if not Mod.Item.CHAINSAW:CanUseChainsaw(player) then
 		local chance = 1 / math.max(1, 10 - (player.Luck / 3 ) )
 		local roll = player:GetCollectibleRNG(Mod.Item.HOLSTER.ID):RandomFloat()
 		if roll < chance then

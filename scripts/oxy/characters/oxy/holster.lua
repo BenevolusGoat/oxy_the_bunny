@@ -7,12 +7,17 @@ OxyTheBunny.Item.HOLSTER = HOLSTER
 HOLSTER.ID = Isaac.GetItemIdByName("Holster")
 HOLSTER.CLEARS_NEEDED = 3
 
----@param item CollectibleType
 ---@param rng RNG
 ---@param player EntityPlayer
-function HOLSTER:ToggleChainsawOnUse(item, rng, player)
-	local data = Mod:GetData(player)
-	data.OxyChainsawActive = not data.OxyChainsawActive
+function HOLSTER:ToggleChainsawOnUse(_, rng, player)
+	local item = Mod.Item.CHAINSAW.ID
+	local hasOxySaw = player:GetInnateCollectibleCount(item, "Oxy") > 0
+	if hasOxySaw then
+		player:RemoveInnateCollectible(item, 1, "Oxy")
+	else
+		player:AddInnateCollectible(item, 1, "Oxy")
+	end
+	player:AnimateCollectible(HOLSTER.ID, "HideItem")
 end
 
 Mod:AddCallback(ModCallbacks.MC_USE_ITEM, HOLSTER.ToggleChainsawOnUse, HOLSTER.ID)

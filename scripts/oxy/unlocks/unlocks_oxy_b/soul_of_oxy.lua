@@ -13,7 +13,7 @@ function SOUL_OF_OXY:OnUse(item, rng, player)
 	player:AddInnateCollectible(Mod.Item.CHAINSAW.ID, 1, "Soul of Oxy", SOUL_OF_OXY.DURATION)
 end
 
-Mod:AddCallback(ModCallbacks.MC_USE_ITEM, SOUL_OF_OXY.OnUse)
+Mod:AddCallback(ModCallbacks.MC_USE_CARD, SOUL_OF_OXY.OnUse, SOUL_OF_OXY.ID)
 
 ---@param ent Entity
 ---@param flags DamageFlag

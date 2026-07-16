@@ -14,3 +14,12 @@ function OXY_B:OxyBHasBirthright(player)
 	return OXY_B:IsOxyB(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
 
+
+---@param player EntityPlayer
+---@param tearParams TearParams
+function OXY_B:FearEffect(player, tearParams)
+	tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_FEAR)
+	return tearParams
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, OXY_B.FearEffect, Mod.PlayerType.OXY_B)

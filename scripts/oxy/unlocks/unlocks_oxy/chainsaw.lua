@@ -27,7 +27,7 @@ function CHAINSAW:CanUseChainsaw(player)
 	then
 		return false
 	end
-	return player:HasCollectible(CHAINSAW.ID)
+	return player:HasCollectible(CHAINSAW.ID) or player:GetPlayerType() == Mod.PlayerType.OXY_B
 end
 
 ---@param player EntityPlayer
@@ -49,14 +49,19 @@ function CHAINSAW:SpawnChainsaw(player)
 	local chainsaw = Mod.Spawn.Effect(CHAINSAW.KNIFE, 0, player.Position, nil, player)
 	local sprite = chainsaw:GetSprite()
 	local data = player:GetData()
-	data.ActiveChainsaw = EntityPtr(chainsaw)
+	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
+	data.ChainsawDamage = tearParams.TearDamage * 0.85
+	data.ChainsawTearFlags = tearParams.TearFlags
+	chainsaw.Color = tearParams.TearColor
 	chainsaw.Rotation = angle
 	sprite.Rotation = angle
 	chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
 	sprite:Play("Swing", true)
 	chainsaw.Parent = player
-	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
-	chainsaw.Color = tearParams.TearColor
+	data.ActiveChainsaw = EntityPtr(chainsaw)
+	if player:GetPlayerType() == Mod.PlayerType.OXY_B then
+		sprite:ReplaceSpritesheet(0, "gfx/weapon_specter.png", true)
+	end
 	local weapon = player:GetWeapon(1)
 	if weapon then
 		weapon:SetFireDelay(weapon:GetMaxFireDelay())
@@ -123,18 +128,21 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	data.GridList = data.GridList or {}
 	local hitGrids = data.GridList
 	local source = EntityRef(chainsaw)
-	local damage = 3.5
+	local damage = data.ChainsawDamage or 3.5
 	local sprite = chainsaw:GetSprite()
 	local null1 = sprite:GetNullFrame("Hit")
 	local null2 = sprite:GetNullFrame("Hit2")
 	local nullTip = sprite:GetNullFrame("tip")
 	local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 	---@type TearFlags
-	local tearFlags = TearFlags.TEAR_NORMAL
-	if player then
+	local tearFlags = data.ChainsawTearFlags or TearFlags.TEAR_NORMAL
+	if player and sprite:IsEventTriggered("Early Retract") then
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
-		damage = tearParams.TearDamage * 0.85
-		tearFlags = tearParams.TearFlags
+		data.ChainsawDamage = tearParams.TearDamage * 0.85
+		data.ChainsawTearFlags = tearParams.TearFlags
+		damage = data.ChainsawDamage
+		tearFlags = data.ChainsawTearFlags
+		chainsaw.Color = tearParams.TearColor
 	end
 
 	for index, countdown in pairs(hitEnemies) do
@@ -221,13 +229,12 @@ function CHAINSAW:OnPlayerUpdate(player)
 		chainsaw.Rotation = angle
 		sprite.Rotation = angle
 		chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
-		player:SetHeadDirection(Mod:GetFireDirection(player), 16, true)
 	end
 	if canUseChainsaw and isShooting and not chainsaw and player:IsExtraAnimationFinished() and not onCooldown then
 		CHAINSAW:SpawnChainsaw(player)
-	elseif chainsaw and (not isShooting or not player:IsExtraAnimationFinished() or not canUseChainsaw) then
+	elseif chainsaw and (not isShooting or not player:IsExtraAnimationFinished() or not canUseChainsaw or onCooldown) then
 		local sprite = chainsaw:GetSprite()
-		if sprite:IsEventTriggered("Retract") and chainsaw:Exists() then
+		if (not isShooting and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) and chainsaw:Exists() then
 			chainsaw:Remove()
 		end
 	end

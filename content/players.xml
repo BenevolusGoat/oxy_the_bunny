@@ -8,7 +8,7 @@
 		nameimage="playername_oxy.png" extraportrait="extraportrait_oxy.anm2"
 		birthright="Chainsaw Mastery"
 		achievement="Oxy" />
-	<player name="Oxy" bSkinParent="Oxy" skin="character_01b_oxy.png" costumeSuffix="oxy_b" skinColor="1" modcostume="1"
+	<player name="Oxy" bSkinParent="Oxy" skin="character_01b_oxy.png" costumeSuffix="oxy_b" skinColor="1" modcostume="1" canShoot="false"
 		blackhearts="2" healthtype="1"
 		damagemodifier="-1.75"
 		pocketActive="Manifest"

@@ -34,7 +34,8 @@ local function applyFetus(_, chainsaw)
 	local rng = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_C_SECTION)
 	if rng:RandomFloat() < FETUS_CHANCE then
 		local velDir = Mod:GetAttackDirection(player, true, true)
-		local vel = velDir:Resized(player.ShotSpeed * Mod:RandomNum(Mod.GENERIC_RNG, 10, 12)):Rotated(Mod:RandomNum(Mod.GENERIC_RNG, -30, 30))
+		local vel = Mod:AddTearVelocity(velDir, player.ShotSpeed * Mod:RandomNum(Mod.GENERIC_RNG, 10, 12), player)
+		vel = vel:Rotated(Mod:RandomNum(Mod.GENERIC_RNG, -30, 30))
 		local tear = player:FireTear(player.Position, vel, false, false, true, player, 0.75)
 		tear.Scale = 1.25
 		tear:ChangeVariant(TearVariant.FETUS)

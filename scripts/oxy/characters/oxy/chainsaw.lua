@@ -155,7 +155,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 	---@type TearFlags
 	local tearFlags = data.ChainsawTearFlags or TearFlags.TEAR_NORMAL
-	if player and sprite:IsEventTriggered("Early Retract") then
+	if player and (sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) then
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
 		data.ChainsawDamage = tearParams.TearDamage * 0.85
 		data.ChainsawTearFlags = tearParams.TearFlags
@@ -163,6 +163,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 		tearFlags = data.ChainsawTearFlags
 		chainsaw.Color = tearParams.TearColor
 	end
+	chainsaw.CollisionDamage = damage
 
 	for index, countdown in pairs(hitEnemies) do
 		if countdown > 0 then
@@ -208,6 +209,20 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 
 	if chainsaw:GetSprite():IsEventTriggered("Woosh") then
 		Mod.SFXMan:Play(SoundEffect.SOUND_SWORD_SPIN)
+		local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
+		if player then
+			local data = Mod:GetData(player)
+			if (data.LastChainsawFired or -1) ~= Mod.Game:GetFrameCount() then
+				data.LastChainsawFired = data.LastChainsawFired
+				data.ChainsawNumFired = (data.ChainsawNumFired or 0) + 1
+			end
+			local fireDir = Vector.FromAngle(chainsaw.Rotation + 90)
+			local fireAmount = 1
+			if player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) then
+				fireAmount = 12
+			end
+			Isaac.RunCallback(Mod.ModCallbacks.POST_CHAINSAW_FIRE, fireDir, fireAmount, player, data.ChainsawNumFired, chainsaw)
+		end
 	end
 
 	CHAINSAW:HitboxUpdate(chainsaw)
@@ -255,8 +270,10 @@ Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, CHAINSAW.PeffectUpdate)
 function CHAINSAW:OnPlayerUpdate(player)
 	local isShooting = Mod:IsShooting(player)
 	local chainsaw = CHAINSAW:TryGetChainsaw(player)
+	local chainsawExists = chainsaw ~= nil
 	local canUseChainsaw = CHAINSAW:CanUseChainsaw(player)
 	local onCooldown = player:GetWeapon(1) and player:GetWeapon(1):GetFireDelay() > -1
+	local playingAnim = not player:IsExtraAnimationFinished()
 	if isShooting and chainsaw then
 		local sprite = chainsaw:GetSprite()
 		local fireDir = Mod:GetAttackDirection(player, false, true)
@@ -265,9 +282,10 @@ function CHAINSAW:OnPlayerUpdate(player)
 		sprite.Rotation = angle
 		chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
 	end
-	if canUseChainsaw and isShooting and not chainsaw and player:IsExtraAnimationFinished() and not onCooldown then
+	if canUseChainsaw and isShooting and not chainsawExists and not playingAnim and not onCooldown then
 		CHAINSAW:SpawnChainsaw(player)
-	elseif chainsaw and (not isShooting or not player:IsExtraAnimationFinished() or not canUseChainsaw or onCooldown) then
+	elseif chainsawExists and (not isShooting or playingAnim or not canUseChainsaw or onCooldown) then
+		---@cast chainsaw EntityEffect
 		local sprite = chainsaw:GetSprite()
 		if (not isShooting and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) and chainsaw:Exists() then
 			chainsaw:Remove()

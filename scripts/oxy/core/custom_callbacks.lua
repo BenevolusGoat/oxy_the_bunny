@@ -8,8 +8,12 @@ OxyTheBunny.ModCallbacks = {
 	CHAINSAW_PRE_HIT_GRID = "OXY_CHAINSAW_PRE_HIT_GRID",
 	--(GridEntity Grid, integer GridIndex), Optional Arg: GridEntityType
 	CHAINSAW_POST_HIT_GRID = "OXY_CHAINSAW_POST_HIT_GRID",
+	--(EntityEffect Chainsaw)
 	POST_CHAINSAW_UPDATE = "OXY_POST_CHAINSAW_UPDATE",
-	CHAINSAW_ON_ARC_PEAK = "OXY_CHAINSAW_ON_ARC_PEAK"
+	--(EntityEffect Chainsaw, TearFlags, Vector Pos)
+	CHAINSAW_ON_ARC_PEAK = "OXY_CHAINSAW_ON_ARC_PEAK",
+	--(Vector FireDirection, integer FireAmount, EntityPlayer Player, integer NumFired, EntityEffect Chainsaw)
+	POST_CHAINSAW_FIRE = "OXY_POST_CHAINSAW_FIRE"
 }
 
 ---@param npc EntityNPC

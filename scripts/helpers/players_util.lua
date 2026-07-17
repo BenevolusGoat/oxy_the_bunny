@@ -376,3 +376,15 @@ end
 function OxyTheBunny:HasBlockedTrinket(player, trinket)
 	return player:HasTrinket(trinket, true) and not player:HasCurseMistEffect()
 end
+
+---@param direction Vector
+---@param shotSpeed number
+---@param player? EntityPlayer
+function OxyTheBunny:AddTearVelocity(direction, shotSpeed, player)
+	local newDirection = direction:Resized(shotSpeed)
+
+	if player then
+		newDirection = newDirection + player:GetTearMovementInheritance(newDirection)
+	end
+	return newDirection
+end

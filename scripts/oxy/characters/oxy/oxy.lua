@@ -7,6 +7,8 @@ OxyTheBunny.Character.OXY = OXY
 OXY.CHARM_COLOR = Color(1, 0, 1, 1, 0.196078)
 
 Mod.Include("scripts.oxy.characters.oxy.holster")
+Mod.Include("scripts.oxy.characters.oxy.chainsaw")
+Mod.Include("scripts.oxy.characters.oxy.synergy_loader")
 
 ---@param player EntityPlayer
 function OXY:IsOxy(player)

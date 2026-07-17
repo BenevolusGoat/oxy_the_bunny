@@ -33,7 +33,7 @@ end
 ---@param player EntityPlayer
 ---@return EntityEffect?
 function CHAINSAW:TryGetChainsaw(player)
-	local data = player:GetData()
+	local data = Mod:GetData(player)
 	return data and data.ActiveChainsaw and data.ActiveChainsaw.Ref and data.ActiveChainsaw.Ref:ToEffect()
 end
 
@@ -48,10 +48,11 @@ function CHAINSAW:SpawnChainsaw(player)
 	local angle = fireDir:GetAngleDegrees() - 90
 	local chainsaw = Mod.Spawn.Effect(CHAINSAW.KNIFE, 0, player.Position, nil, player)
 	local sprite = chainsaw:GetSprite()
-	local data = player:GetData()
+	local data = Mod:GetData(player)
+	local cData = Mod:GetData(chainsaw)
 	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
-	data.ChainsawDamage = tearParams.TearDamage * 0.85
-	data.ChainsawTearFlags = tearParams.TearFlags
+	cData.ChainsawDamage = tearParams.TearDamage * 0.85
+	cData.ChainsawTearFlags = tearParams.TearFlags
 	chainsaw.Color = tearParams.TearColor
 	chainsaw.Rotation = angle
 	sprite.Rotation = angle
@@ -80,6 +81,17 @@ local function canHitEnemy(npc)
 		and not npc:IsDead()
 end
 
+local function runArcPeakCallback(chainsaw, tearFlags, pos)
+	local callbacks = Isaac.GetCallbacks(Mod.ModCallbacks.CHAINSAW_ON_ARC_PEAK)
+	for _, callback in ipairs(callbacks) do
+		local func = callback.Function
+		local param = callback.Param
+		if not param or Mod:HasBitFlags(tearFlags, param) then
+			func(callback.Mod, chainsaw, tearFlags, pos)
+		end
+	end
+end
+
 ---@param chainsaw EntityEffect
 ---@param capsule Capsule
 ---@param damage number
@@ -94,11 +106,15 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 		shape:Capsule(capsule)
 		shape:SetTimeout(1)
 	end
+	if isTip then
+		runArcPeakCallback(chainsaw, tearFlags, capsule:GetPosition())
+	end
 	for _, ent in ipairs(Isaac.FindInCapsule(capsule)) do
 		local npc = ent:ToNPC()
 		if npc and canHitEnemy(npc) and (isTip or not hitEnemies[ent.Index]) then
 			npc:TakeDamage(damage, 0, source, 0)
-			npc:ApplyTearflagEffects(npc.Position, tearFlags, chainsaw, damage)
+			local pos = npc.Position + (chainsaw.Position - npc.Position):Resized(npc.Size)
+			npc:ApplyTearflagEffects(pos, tearFlags, chainsaw, damage)
 			if not npc:HasEntityFlags(EntityFlag.FLAG_NO_FLASH_ON_DAMAGE) then
 				Mod.SFXMan:Play(SoundEffect.SOUND_MEATY_DEATHS)
 			end
@@ -109,10 +125,13 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 			ent:Die()
 		end
 	end
-	Mod.Foreach.GridInRadius(capsule:GetPosition(), capsule:GetF1(), function (gridEnt, gridIndex)
-		if (gridEnt:ToPoop() or gridEnt:ToTNT()) and not hitGrids[gridIndex] then
+	Mod.Foreach.GridInRadius(capsule:GetPosition(), capsule:GetF1(), function(gridEnt, gridIndex)
+		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_PRE_HIT_GRID, gridEnt:GetType(), gridEnt,
+			gridIndex)
+		if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) and not hitGrids[gridIndex] then
 			gridEnt:HurtWithSource(1, source)
 			hitGrids[gridIndex] = CHAINSAW.DEFAULT_HIT_COUNTDOWN
+			Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex)
 		end
 	end)
 end
@@ -122,7 +141,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	local capsule1 = chainsaw:GetNullCapsule("Hit")
 	local capsule2 = chainsaw:GetNullCapsule("Hit2")
 	local capsuleTip = chainsaw:GetNullCapsule("tip")
-	local data = chainsaw:GetData()
+	local data = Mod:GetData(chainsaw)
 	data.HitList = data.HitList or {}
 	local hitEnemies = data.HitList
 	data.GridList = data.GridList or {}
@@ -192,9 +211,17 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 	end
 
 	CHAINSAW:HitboxUpdate(chainsaw)
+	Isaac.RunCallback(Mod.ModCallbacks.POST_CHAINSAW_UPDATE, chainsaw)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, CHAINSAW.ChainsawUpdate, CHAINSAW.KNIFE)
+
+local STUCK_KNIVES = Mod:Set({
+	KnifeVariant.MOMS_KNIFE,
+	KnifeVariant.SUMPTORIUM,
+	KnifeVariant.BONE_CLUB,
+	KnifeVariant.BONE_SCYTHE,
+})
 
 ---@param player EntityPlayer
 function CHAINSAW:PeffectUpdate(player)
@@ -205,6 +232,14 @@ function CHAINSAW:PeffectUpdate(player)
 		if canShoot then
 			Mod:SetBlindfold(player, true)
 		end
+		Mod.Foreach.Knife(function (knife, index)
+			if knife.Parent
+				and GetPtrHash(player) == GetPtrHash(knife.Parent)
+				and STUCK_KNIVES[knife.Variant]
+			then
+				knife:Remove()
+			end
+		end, nil, 0, {Inverse = true})
 		data.ChainsawBlindfold = true
 	elseif not canUseChainsaw and data.ChainsawBlindfold then
 		if not canShoot then

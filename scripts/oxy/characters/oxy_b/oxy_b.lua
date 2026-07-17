@@ -4,6 +4,9 @@ local OXY_B = {}
 
 OxyTheBunny.Character.OXY_B = OXY_B
 
+Mod.Include("scripts.oxy.characters.oxy_b.specter")
+Mod.Include("scripts.oxy.characters.oxy_b.manifest")
+
 ---@param player EntityPlayer
 function OXY_B:IsOxyB(player)
 	return player:GetPlayerType() == Mod.PlayerType.OXY_B

@@ -5,7 +5,6 @@ local prefix = "scripts.oxy.unlocks.unlocks_"
 --#region Oxy
 
 local oxy = {
-	"chainsaw"
 }
 
 Mod.LoopInclude(oxy, prefix .. "oxy")
@@ -15,8 +14,6 @@ Mod.LoopInclude(oxy, prefix .. "oxy")
 --#region Tainted Oxy
 
 local oxy_b = {
-	"specter",
-	"manifest",
 	"soul_of_oxy",
 }
 

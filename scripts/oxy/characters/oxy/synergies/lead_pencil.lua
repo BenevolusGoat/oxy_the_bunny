@@ -16,7 +16,7 @@ local function leadPencil(_, fireDir, fireAmount, player, numFired)
 				local tear = Mod.Spawn.Tear(TearVariant.BLOOD, player.Position, velocity, nil, player)
 				tear.FallingSpeed = Mod:RandomNum(Mod.GENERIC_RNG, -12, 2) - Mod:RandomNum(Mod.GENERIC_RNG)
 				tear.FallingAcceleration = 0.5
-				local tearParams = player:GetTearHitParams(WeaponType.WEAPON_TEARS, 1, 1, player)
+				local tearParams = player:GetTearHitParams(WeaponType.WEAPON_TEARS, 1, -1, player)
 				local scale = tearParams.TearScale
 				local scaleOffset = Mod:RandomNum(Mod.GENERIC_RNG, -1, 3) + Mod:RandomNum(Mod.GENERIC_RNG)
 				tear.Scale = scale + (scaleOffset * 0.1)

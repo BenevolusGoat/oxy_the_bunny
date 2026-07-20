@@ -2,7 +2,7 @@
 local Mod = OxyTheBunny
 
 OxyTheBunny.ModCallbacks = {
-	--(EntityNPC NPC, Vector Position, TearFlags, Entity Source, float Damage), Optional Arg: TearFlags
+	--(EntityNPC NPC, Vector Position, TearFlags, EntityEffect Chainsaw, float Damage), Optional Arg: TearFlags
 	CHAINSAW_APPLY_TEARFLAG_EFFECTS = "OXY_CHAINSAW_APPLY_TEARFLAG_EFFECTS",
 	--(GridEntity Grid, integer GridIndex): boolean, Optional Arg: GridEntityType - Return `true` to allow this grid to take damage
 	CHAINSAW_PRE_HIT_GRID = "OXY_CHAINSAW_PRE_HIT_GRID",
@@ -26,14 +26,15 @@ function Mod:OnChainsawApplyTearflagEffects(npc, pos, tearFlags, source, damage)
 		and source.Type == EntityType.ENTITY_EFFECT
 		and source.Variant == Mod.Item.CHAINSAW.KNIFE
 	then
-		local player = source.SpawnerEntity and source.SpawnerEntity:ToPlayer()
+		local chainsaw = source:ToEffect() ---@cast chainsaw EntityEffect
+		local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 		if not player then return end
 		local callbacks = Isaac.GetCallbacks(Mod.ModCallbacks.CHAINSAW_APPLY_TEARFLAG_EFFECTS)
 		for _, callback in ipairs(callbacks) do
 			local func = callback.Function
 			local param = callback.Param
 			if not param or Mod:HasBitFlags(tearFlags, param) then
-				func(callback.Mod, npc, pos, tearFlags, source, damage, player)
+				func(callback.Mod, npc, pos, tearFlags, chainsaw, damage, player)
 			end
 		end
 	end

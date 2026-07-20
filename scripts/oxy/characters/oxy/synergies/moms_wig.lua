@@ -8,7 +8,7 @@ local function momsWig(_, fireDir, fireAmount, player)
 	if player:HasCollectible(CollectibleType.COLLECTIBLE_MOMS_WIG) and fireAmount > 0 then
 		--Thanks Nine for this because I'm dumb at math
 		local luckChance = min(1, 0.5 + 0.95 * (1 / 2) ^ (10 - player.Luck))
-		local rng = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_MOMS_WIG)
+		local rng = Mod.GENERIC_RNG
 		local numSpiders = player:GetNumBlueSpiders()
 
 		if numSpiders < 5 and rng:RandomFloat() <= luckChance then

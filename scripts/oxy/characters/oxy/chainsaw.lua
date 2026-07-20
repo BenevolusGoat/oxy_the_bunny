@@ -42,6 +42,29 @@ function CHAINSAW:IsActive(player)
 	return CHAINSAW:TryGetChainsaw(player) ~= nil
 end
 
+---@param chainsaw EntityEffect
+---@param tearFlags TearFlags
+function CHAINSAW:HasTearFlags(chainsaw, tearFlags)
+	local data = Mod:GetData(chainsaw)
+	if not data.ChainsawTearFlags then return false end
+	return Mod:HasBitFlags(data.ChainsawTearFlags, tearFlags)
+end
+
+---@param player EntityPlayer
+local function getNextTearDisplacement(player)
+	local data = Mod:GetData(player)
+	if not data.ChainsawTearDisplacement then
+		data.ChainsawTearDisplacement = -1
+	end
+	local displacement = data.ChainsawTearDisplacement
+	if displacement == -1 then
+		data.ChainsawTearDisplacement = 1
+	else
+		data.ChainsawTearDisplacement = -1
+	end
+	return data.ChainsawTearDisplacement
+end
+
 ---@param player EntityPlayer
 function CHAINSAW:SpawnChainsaw(player)
 	local fireDir = Mod:GetAttackDirection(player, false, true)
@@ -50,7 +73,8 @@ function CHAINSAW:SpawnChainsaw(player)
 	local sprite = chainsaw:GetSprite()
 	local data = Mod:GetData(player)
 	local cData = Mod:GetData(chainsaw)
-	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
+	local displacement = getNextTearDisplacement(player)
+	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
 	cData.ChainsawDamage = tearParams.TearDamage * 0.85
 	cData.ChainsawTearFlags = tearParams.TearFlags
 	chainsaw.Color = tearParams.TearColor
@@ -126,12 +150,12 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 		end
 	end
 	Mod.Foreach.GridInRadius(capsule:GetPosition(), capsule:GetF1(), function(gridEnt, gridIndex)
-		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_PRE_HIT_GRID, gridEnt:GetType(), gridEnt,
-			gridIndex)
+		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_PRE_HIT_GRID, gridEnt:GetType(),
+			gridEnt, gridIndex, chainsaw)
 		if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) and not hitGrids[gridIndex] then
 			gridEnt:HurtWithSource(1, source)
 			hitGrids[gridIndex] = CHAINSAW.DEFAULT_HIT_COUNTDOWN
-			Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex)
+			Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex, chainsaw)
 		end
 	end)
 end
@@ -155,8 +179,9 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 	---@type TearFlags
 	local tearFlags = data.ChainsawTearFlags or TearFlags.TEAR_NORMAL
-	if player and (sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) then
-		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, 1, chainsaw)
+	if player and (sprite:IsEventTriggered("Swing") or sprite:GetFrame() == 0) then
+		local displacement = getNextTearDisplacement(player)
+		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
 		data.ChainsawDamage = tearParams.TearDamage * 0.85
 		data.ChainsawTearFlags = tearParams.TearFlags
 		damage = data.ChainsawDamage
@@ -195,9 +220,9 @@ end
 ---@param chainsaw EntityEffect
 function CHAINSAW:ChainsawUpdate(chainsaw)
 	if not chainsaw.Parent then
-		chainsaw:Remove()
 		return
 	end
+	local sprite = chainsaw:GetSprite()
 
 	chainsaw.Position = chainsaw.Parent.Position
 	--Above
@@ -207,7 +232,7 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 		chainsaw.DepthOffset = 40 * 7
 	end
 
-	if chainsaw:GetSprite():IsEventTriggered("Woosh") then
+	if sprite:IsEventTriggered("SwingSound") or sprite:IsEventTriggered("Swing") then
 		Mod.SFXMan:Play(SoundEffect.SOUND_SWORD_SPIN)
 		local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 		if player then

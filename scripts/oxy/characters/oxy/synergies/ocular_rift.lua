@@ -3,7 +3,7 @@ local Mod = OxyTheBunny
 ---@param chainsaw EntityEffect
 ---@param pos Vector
 ---@param tearFlags TearFlags
-local function applyOcularRift(_, chainsaw, tearFlags, pos)
+local function applyOcularRift(_, npc, pos, tearFlags, chainsaw, damage)
 	local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 	if not player then return end
 	local rift = Mod.Spawn.Effect(EffectVariant.RIFT, 0, pos, nil, player)
@@ -11,4 +11,4 @@ local function applyOcularRift(_, chainsaw, tearFlags, pos)
 	rift.CollisionDamage = chainsaw.CollisionDamage / 2
 end
 
-Mod:AddCallback(Mod.ModCallbacks.CHAINSAW_ON_ARC_PEAK, applyOcularRift, TearFlags.TEAR_RIFT)
+Mod:AddCallback(Mod.ModCallbacks.CHAINSAW_APPLY_TEARFLAG_EFFECTS, applyOcularRift, TearFlags.TEAR_RIFT)

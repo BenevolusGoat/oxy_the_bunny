@@ -150,13 +150,14 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 		end
 	end
 	Mod.Foreach.GridInRadius(capsule:GetPosition(), capsule:GetF1(), function(gridEnt, gridIndex)
+		if hitGrids[gridIndex] then return end
 		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_PRE_HIT_GRID, gridEnt:GetType(),
 			gridEnt, gridIndex, chainsaw)
-		if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) and not hitGrids[gridIndex] then
+		if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) then
 			gridEnt:HurtWithSource(1, source)
-			hitGrids[gridIndex] = true
 			Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex, chainsaw)
 		end
+		hitGrids[gridIndex] = true
 	end)
 end
 

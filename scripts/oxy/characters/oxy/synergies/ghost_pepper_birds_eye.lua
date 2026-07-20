@@ -18,13 +18,14 @@ function Mod:TryTriggerFireGhostPepperOrBirdsEye(player)
 				fireToShoot = EffectVariant.BLUE_FLAME
 			end
 		end
+		local luck = Mod:GetTearModifierLuck(player)
 		local baseChance = hasBoth and 8 or 12
-		local procRate = baseChance - player.Luck
+		local procRate = baseChance - luck
 		if procRate < 0 then procRate = 1 end
 		local luckChance = 1 / procRate
 		local luckCap = baseChance == 8 and 7 or 10
 
-		luckChance = math.abs(player.Luck) <= luckCap and luckChance or 1 / (baseChance - luckCap)
+		luckChance = math.abs(luck) <= luckCap and luckChance or 1 / (baseChance - luckCap)
 
 		if rng:RandomFloat() <= luckChance then
 			return fireToShoot

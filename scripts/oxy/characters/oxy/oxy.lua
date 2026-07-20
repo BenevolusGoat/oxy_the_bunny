@@ -24,7 +24,8 @@ end
 ---@param tearParams TearParams
 function OXY:CharmChance(player, tearParams)
 	if not Mod.Item.CHAINSAW:CanUseChainsaw(player) then
-		local chance = 1 / math.max(1, 10 - (player.Luck / 3 ) )
+		local luck = Mod:GetTearModifierLuck(player)
+		local chance = 1 / math.max(1, 10 - (luck / 3 ) )
 		local roll = player:GetCollectibleRNG(Mod.Item.HOLSTER.ID):RandomFloat()
 		if roll < chance then
 			tearParams.TearFlags = Mod:AddBitFlags(tearParams.TearFlags, TearFlags.TEAR_CHARM)

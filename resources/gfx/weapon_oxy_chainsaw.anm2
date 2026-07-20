@@ -15,8 +15,9 @@
         </Nulls>
         <Events>
             <Event Id="0" Name="Retract"/>
-            <Event Id="1" Name="Woosh"/>
+            <Event Id="1" Name="SwingSound"/>
             <Event Id="2" Name="Early Retract"/>
+            <Event Id="3" Name="Swing"/>
         </Events>
     </Content>
     <Animations DefaultAnimation="Idle">
@@ -108,9 +109,9 @@
             <Triggers>
                 <Trigger EventId="1" AtFrame="2"/>
                 <Trigger EventId="2" AtFrame="8"/>
-                <Trigger EventId="1" AtFrame="9"/>
+                <Trigger EventId="3" AtFrame="9"/>
                 <Trigger EventId="2" AtFrame="12"/>
-                <Trigger EventId="1" AtFrame="13"/>
+                <Trigger EventId="3" AtFrame="13"/>
                 <Trigger EventId="0" AtFrame="16"/>
             </Triggers>
         </Animation>

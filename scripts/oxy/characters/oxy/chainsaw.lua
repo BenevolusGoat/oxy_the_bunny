@@ -135,7 +135,7 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 	end
 	for _, ent in ipairs(Isaac.FindInCapsule(capsule)) do
 		local npc = ent:ToNPC()
-		if npc and canHitEnemy(npc) and (isTip or not hitEnemies[ent.Index]) then
+		if npc and canHitEnemy(npc) and not hitEnemies[ent.Index] then
 			npc:TakeDamage(damage, 0, source, 0)
 			local pos = npc.Position + (chainsaw.Position - npc.Position):Resized(npc.Size)
 			npc:ApplyTearflagEffects(pos, tearFlags, chainsaw, damage)
@@ -143,7 +143,7 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 				Mod.SFXMan:Play(SoundEffect.SOUND_MEATY_DEATHS)
 			end
 			if hitEnemies then
-				hitEnemies[ent.Index] = CHAINSAW.DEFAULT_HIT_COUNTDOWN
+				hitEnemies[ent.Index] = true
 			end
 		elseif ent:ToEffect() and BACKGROUND_BUGS[ent.Variant] and not ent:IsDead() then
 			ent:Die()
@@ -154,7 +154,7 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 			gridEnt, gridIndex, chainsaw)
 		if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) and not hitGrids[gridIndex] then
 			gridEnt:HurtWithSource(1, source)
-			hitGrids[gridIndex] = CHAINSAW.DEFAULT_HIT_COUNTDOWN
+			hitGrids[gridIndex] = true
 			Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex, chainsaw)
 		end
 	end)
@@ -184,27 +184,16 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
 		data.ChainsawDamage = tearParams.TearDamage * 0.85
 		data.ChainsawTearFlags = tearParams.TearFlags
+		data.HitList = {}
+		data.GridList = {}
+		hitEnemies = data.HitList
+		hitGrids = data.GridList
 		damage = data.ChainsawDamage
 		tearFlags = data.ChainsawTearFlags
 		chainsaw.Color = tearParams.TearColor
 	end
+
 	chainsaw.CollisionDamage = damage
-
-	for index, countdown in pairs(hitEnemies) do
-		if countdown > 0 then
-			hitEnemies[index] = hitEnemies[index] - 1
-		else
-			hitEnemies[index] = nil
-		end
-	end
-
-	for index, countdown in pairs(hitGrids) do
-		if countdown > 0 then
-			hitGrids[index] = hitGrids[index] - 1
-		else
-			hitGrids[index] = nil
-		end
-	end
 
 	if nullTip and nullTip:IsVisible() then
 		damageInCapsule(chainsaw, capsuleTip, damage * 2, source, tearFlags, hitEnemies, hitGrids, true)

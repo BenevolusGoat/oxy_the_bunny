@@ -15,20 +15,24 @@ local function postPeffectUpdate(_, player)
 	end
 	local data = Mod:GetData(player)
 	local laser = tryGetLaser(data)
+	local dir = Mod:GetAttackDirection(player, true, true)
 	if laser then
 		laser.Position = player.Position
+		laser.PositionOffset = player:GetLaserOffset(LaserOffset.LASER_TECH2_OFFSET, dir)
 	end
 	if Mod:IsShooting(player) then
-		local dir = Mod:GetAttackDirection(player)
 		if not laser then
 			laser = EntityLaser.ShootAngle(LaserVariant.THIN_RED, player.Position, dir:GetAngleDegrees(), 2, player:GetLaserOffset(LaserOffset.LASER_TECH2_OFFSET, dir), player)
+			laser.GridCollisionClass = EntityGridCollisionClass.GRIDCOLL_NOPITS
+			laser:SetInitSound(SoundEffect.SOUND_REDLIGHTNING_ZAP_WEAK)
 			laser.CollisionDamage = player.Damage * 0.2
 			data.Tech2Laser = EntityPtr(laser)
 		end
 		laser.AngleDegrees = dir:GetAngleDegrees()
 		laser.Timeout = 2
+		local headDir = player:GetHeadDirection()
 		--Above
-		if laser.Position.Y + laser.PositionOffset.Y < player.Position.Y then
+		if headDir == Direction.UP or headDir == Direction.LEFT then
 			laser.DepthOffset = -10
 		else --Below
 			laser.DepthOffset = 3000
@@ -39,4 +43,4 @@ local function postPeffectUpdate(_, player)
 	end
 end
 
---Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, postPeffectUpdate)
+Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, postPeffectUpdate)

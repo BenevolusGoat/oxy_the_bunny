@@ -1,3 +1,5 @@
+--#region Variables
+
 local Mod = OxyTheBunny
 
 local CHAINSAW = {}
@@ -9,6 +11,8 @@ CHAINSAW.KNIFE = Isaac.GetEntityVariantByName("Oxy's Chainsaw")
 
 CHAINSAW.DEFAULT_HIT_COUNTDOWN = 3
 
+CHAINSAW.CHAINSAW_TEST_MODE = false
+
 local BACKGROUND_BUGS = Mod:Set({
 	EffectVariant.BEETLE,
 	EffectVariant.WORM,
@@ -17,6 +21,10 @@ local BACKGROUND_BUGS = Mod:Set({
 	EffectVariant.BUTTERFLY,
 	EffectVariant.TADPOLE
 })
+
+--#endregion
+
+--#region Helpers
 
 ---@param player EntityPlayer
 function CHAINSAW:CanUseChainsaw(player)
@@ -84,7 +92,7 @@ function CHAINSAW:SpawnChainsaw(player, angle, pos, displacement, isSpecter)
 	local sprite = chainsaw:GetSprite()
 	local data = Mod:GetData(chainsaw)
 	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
-	data.ChainsawDamage = tearParams.TearDamage * 0.85
+	data.ChainsawDamage = tearParams.TearDamage
 	data.ChainsawTearFlags = tearParams.TearFlags
 	chainsaw.Color = tearParams.TearColor
 	chainsaw.Rotation = angle
@@ -96,6 +104,10 @@ function CHAINSAW:SpawnChainsaw(player, angle, pos, displacement, isSpecter)
 	end
 	return chainsaw
 end
+
+--#endregion
+
+--#region Chainsaw Update
 
 ---@param npc? EntityNPC
 local function canHitEnemy(npc)
@@ -144,11 +156,15 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 			local pos = npc.Position + (chainsaw.Position - npc.Position):Resized(npc.Size)
 			npc:ApplyTearflagEffects(pos, tearFlags, chainsaw, damage)
 			if not npc:HasEntityFlags(EntityFlag.FLAG_NO_FLASH_ON_DAMAGE) then
-				Mod.SFXMan:Play(SoundEffect.SOUND_MEATY_DEATHS)
+				local sfx = isTip and SoundEffect.SOUND_TOOTH_AND_NAIL or SoundEffect.SOUND_MEATY_DEATHS
+				Mod.SFXMan:Play(sfx)
+				if isTip then
+					local impact = Mod.Spawn.Effect(EffectVariant.IMPACT, 0, pos, nil, chainsaw)
+					impact.SpriteScale = Vector(1.5, 1.5)
+					impact.Color = chainsaw.Color
+				end
 			end
-			if hitEnemies then
-				hitEnemies[ent.Index] = true
-			end
+			hitEnemies[ent.Index] = true
 		elseif ent:ToEffect() and BACKGROUND_BUGS[ent.Variant] and not ent:IsDead() then
 			ent:Die()
 		end
@@ -187,7 +203,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	if player and (sprite:IsEventTriggered("Swing") or sprite:GetFrame() == 0) then
 		local displacement = CHAINSAW:GetTearDisplacement(player, true)
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
-		data.ChainsawDamage = tearParams.TearDamage * 0.85
+		data.ChainsawDamage = tearParams.TearDamage
 		data.ChainsawTearFlags = tearParams.TearFlags
 		data.HitList = {}
 		data.GridList = {}
@@ -201,7 +217,8 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	chainsaw.CollisionDamage = damage
 
 	if nullTip and nullTip:IsVisible() then
-		damageInCapsule(chainsaw, capsuleTip, damage * 2, source, tearFlags, hitEnemies, hitGrids, true)
+		local dmgMult = CHAINSAW.CHAINSAW_TEST_MODE == true and 3 or 2
+		damageInCapsule(chainsaw, capsuleTip, damage * dmgMult, source, tearFlags, hitEnemies, hitGrids, true)
 	end
 	if null1 and null1:IsVisible() then
 		damageInCapsule(chainsaw, capsule1, damage, source, tearFlags, hitEnemies, hitGrids)
@@ -252,6 +269,10 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, CHAINSAW.ChainsawUpdate, CHAINSAW.KNIFE)
+
+--#endregion
+
+--#region Fire Chainsaw
 
 local STUCK_KNIVES = Mod:Set({
 	KnifeVariant.MOMS_KNIFE,
@@ -382,11 +403,27 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, CHAINSAW.OnPlayerUpdate, PlayerVariant.PLAYER)
 
+--#endregion
+
+--#region Stats
+
 ---@param player EntityPlayer
 function CHAINSAW:UpdateDamage(player)
 	if CHAINSAW:CanUseChainsaw(player) then
-		player.Damage = player:GetTearPoisonDamage()
+		local dmgDown = CHAINSAW.CHAINSAW_TEST_MODE == true and 0.65 or 0.85
+		player.Damage = player:GetTearPoisonDamage() * dmgDown
 	end
 end
 
 Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_CACHE, CallbackPriority.IMPORTANT, CHAINSAW.UpdateDamage, CacheFlag.CACHE_DAMAGE)
+
+---@param player EntityPlayer
+function CHAINSAW:UpdateFirerate(player)
+	if CHAINSAW:CanUseChainsaw(player) and CHAINSAW.CHAINSAW_TEST_MODE == false then
+		player.MaxFireDelay = player.MaxFireDelay / 0.33
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, CHAINSAW.UpdateFirerate, CacheFlag.CACHE_FIREDELAY)
+
+--#endregion

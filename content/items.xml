@@ -1,5 +1,5 @@
 <items gfxroot="gfx/items/" version="1" deathanm2="gfx/death items.anm2">
-	<passive id="0" name="Chainsaw" description="We all cut close" gfx="chainsaw.png" quality="3" cache="damage" />
+	<passive id="0" name="Chainsaw" description="We all cut close" gfx="chainsaw.png" quality="3" cache="damage firedelay" />
 	<active id="1" name="Holster" description="Put away" gfx="holster.png" quality="0" hidden="true" chargetype="special" />
 	<passive id="2" name="Specter" description="Inhabited" gfx="specter.png" quality="4" />
 	<active id="3" name="Manifest" description="I can become anything" gfx="manifest.png" quality="3" maxcharges="6" />

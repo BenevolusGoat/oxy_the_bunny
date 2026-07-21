@@ -19,6 +19,7 @@ OxyTheBunny.CompletionType = {
 
 --#region Oxy
 
+OxyTheBunny.Character.OXY.ACHIEVEMENT = achievement("Oxy")
 OxyTheBunny.Item.CHAINSAW.ACHIEVEMENT = achievement("Chainsaw")
 OxyTheBunny.Character.OXY_B.ACHIEVEMENT = achievement("The Inhabited")
 

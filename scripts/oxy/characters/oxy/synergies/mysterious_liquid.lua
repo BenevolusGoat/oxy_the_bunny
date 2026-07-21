@@ -9,12 +9,13 @@ local function mysteriousLiquid(_, npc, pos, tearFlags, chainsaw, damage)
 	if not player then return end
 	--As otherwise it lands on the enemy 100% of the time which is kinda nutty
 	local dir = (pos - npc.Position):Normalized()
-	pos = pos + dir:Resized(Mod:RandomNum(Mod.GENERIC_RNG, 15, 25))
+	pos = pos + dir:Resized(Mod:RandomNum(15, 25))
 	local creep = Mod.Spawn.Effect(EffectVariant.PLAYER_CREEP_GREEN, 0, pos, nil, player)
 	creep:Update() --To update its size immediately
 end
 
-Mod:AddCallback(Mod.ModCallbacks.CHAINSAW_APPLY_TEARFLAG_EFFECTS, mysteriousLiquid, TearFlags.TEAR_MYSTERIOUS_LIQUID_CREEP)
+Mod:AddCallback(Mod.ModCallbacks.CHAINSAW_APPLY_TEARFLAG_EFFECTS, mysteriousLiquid,
+	TearFlags.TEAR_MYSTERIOUS_LIQUID_CREEP)
 
 ---@param chainsaw EntityEffect
 local function leaveCreepDuringArc(_, chainsaw)
@@ -24,7 +25,8 @@ local function leaveCreepDuringArc(_, chainsaw)
 	local tip = chainsaw:GetSprite():GetNullFrame("tip")
 	if hit1 and tip and hit1:IsVisible() then
 		local offset = tip:GetPos():Rotated(chainsaw.Rotation)
-		local creep = Mod.Spawn.Effect(EffectVariant.PLAYER_CREEP_GREEN, 0, chainsaw.Position + offset, nil, chainsaw.SpawnerEntity)
+		local creep = Mod.Spawn.Effect(EffectVariant.PLAYER_CREEP_GREEN, 0, chainsaw.Position + offset, nil,
+			chainsaw.SpawnerEntity)
 		creep:Update() --To update its size immediately
 	end
 end

@@ -263,7 +263,8 @@ end ]]
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
 function OxyTheBunny:CanUseActive(player, slot)
-	return player:GetActiveCharge(slot) + player:GetBloodCharge() + player:GetSoulCharge() >= player:GetActiveMinUsableCharge(slot)
+	return player:GetActiveCharge(slot) + player:GetBloodCharge() + player:GetSoulCharge() >=
+	player:GetActiveMinUsableCharge(slot)
 end
 
 --[[ ---Returns true if given active is in player's "main" slot (SLOT_PRIMARY or SLOT_POCKET for pocket actives)
@@ -387,4 +388,33 @@ function OxyTheBunny:AddTearVelocity(direction, shotSpeed, player)
 		newDirection = newDirection + player:GetTearMovementInheritance(newDirection)
 	end
 	return newDirection
+end
+
+---@param player EntityPlayer
+---@param direction Vector
+---@return Vector[]
+function OxyTheBunny:GetExtraFireDirections(player, weaponType, direction)
+	local weapon = player:GetWeapon(1)
+	local multiShotParams = player:GetMultiShotParams(weaponType)
+	local directions = {}
+	if not weapon then return directions end
+
+	--[[ if Mod:HasBitFlags(weapon:GetModifiers(), WeaponModifier.MONSTROS_LUNG) then
+		local weaponTypeShotDegrees = {
+			[WeaponType.WEAPON_BRIMSTONE] = 360,
+			[WeaponType.WEAPON_KNIFE] = 360,
+			[WeaponType.WEAPON_TECH_X] = 180,
+			[WeaponType.WEAPON_LASER] = 60,
+			[WeaponType.WEAPON_BOMBS] = 30,
+		}
+		local degrees = weaponTypeShotDegrees[weaponType]
+		if degrees then
+			for _ = 1, Mod:RandomNum(3, 5) do
+				local rotationOffset = Mod:RandomNum(math.floor(degrees / -2), math.floor(degrees / 2))
+				local newDirection = direction:Rotated(rotationOffset)
+				Mod.Insert(directions, newDirection)
+			end
+		end
+	end ]]
+	return directions
 end

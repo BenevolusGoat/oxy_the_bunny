@@ -13,7 +13,9 @@ OxyTheBunny.ModCallbacks = {
 	--(EntityEffect Chainsaw, TearFlags, Vector Pos)
 	CHAINSAW_ON_ARC_PEAK = "OXY_CHAINSAW_ON_ARC_PEAK",
 	--(Vector FireDirection, integer FireAmount, EntityPlayer Player, integer NumFired, EntityEffect Chainsaw)
-	POST_CHAINSAW_FIRE = "OXY_POST_CHAINSAW_FIRE"
+	POST_CHAINSAW_FIRE = "OXY_POST_CHAINSAW_FIRE",
+	--(EntityPlayer Player) - Return a table of rotation offsets for extra chainsaws that only swing once
+	CHAINSAW_GET_EXTRA_SAWS = "OXY_CHAINSAW_GET_EXTRA_SAWS"
 }
 
 ---@param npc EntityNPC

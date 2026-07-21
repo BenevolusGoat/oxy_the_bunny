@@ -30,16 +30,22 @@ function CHAINSAW:CanUseChainsaw(player)
 	return player:HasCollectible(CHAINSAW.ID) or player:GetPlayerType() == Mod.PlayerType.OXY_B
 end
 
+---@class PlayerChainsawData
+---@field Pointer EntityPtr
+---@field RotationOffset number
+
 ---@param player EntityPlayer
----@return EntityEffect?
-function CHAINSAW:TryGetChainsaw(player)
+---@return PlayerChainsawData[]
+function CHAINSAW:GetChainsaws(player)
 	local data = Mod:GetData(player)
-	return data and data.ActiveChainsaw and data.ActiveChainsaw.Ref and data.ActiveChainsaw.Ref:ToEffect()
+	data.ChainsawWeapons = data.ChainsawWeapons or {}
+	return data.ChainsawWeapons
 end
 
 ---@param player EntityPlayer
 function CHAINSAW:IsActive(player)
-	return CHAINSAW:TryGetChainsaw(player) ~= nil
+	local chainsaws = CHAINSAW:GetChainsaws(player)
+	return chainsaws and chainsaws > 0
 end
 
 ---@param chainsaw EntityEffect
@@ -51,46 +57,44 @@ function CHAINSAW:HasTearFlags(chainsaw, tearFlags)
 end
 
 ---@param player EntityPlayer
-local function getNextTearDisplacement(player)
+---@param advance? boolean
+function CHAINSAW:GetTearDisplacement(player, advance)
 	local data = Mod:GetData(player)
 	if not data.ChainsawTearDisplacement then
 		data.ChainsawTearDisplacement = -1
 	end
-	local displacement = data.ChainsawTearDisplacement
-	if displacement == -1 then
-		data.ChainsawTearDisplacement = 1
-	else
-		data.ChainsawTearDisplacement = -1
+	if advance then
+		local displacement = data.ChainsawTearDisplacement
+		if displacement == -1 then
+			data.ChainsawTearDisplacement = 1
+		else
+			data.ChainsawTearDisplacement = -1
+		end
 	end
 	return data.ChainsawTearDisplacement
 end
 
 ---@param player EntityPlayer
-function CHAINSAW:SpawnChainsaw(player)
-	local fireDir = Mod:GetAttackDirection(player, false, true)
-	local angle = fireDir:GetAngleDegrees() - 90
-	local chainsaw = Mod.Spawn.Effect(CHAINSAW.KNIFE, 0, player.Position, nil, player)
+---@param angle number
+---@param pos Vector
+---@param displacement integer
+---@param isSpecter? boolean
+function CHAINSAW:SpawnChainsaw(player, angle, pos, displacement, isSpecter)
+	local chainsaw = Mod.Spawn.Effect(CHAINSAW.KNIFE, 0, pos, nil, player)
 	local sprite = chainsaw:GetSprite()
-	local data = Mod:GetData(player)
-	local cData = Mod:GetData(chainsaw)
-	local displacement = getNextTearDisplacement(player)
+	local data = Mod:GetData(chainsaw)
 	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
-	cData.ChainsawDamage = tearParams.TearDamage * 0.85
-	cData.ChainsawTearFlags = tearParams.TearFlags
+	data.ChainsawDamage = tearParams.TearDamage * 0.85
+	data.ChainsawTearFlags = tearParams.TearFlags
 	chainsaw.Color = tearParams.TearColor
 	chainsaw.Rotation = angle
 	sprite.Rotation = angle
-	chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
 	sprite:Play("Swing", true)
 	chainsaw.Parent = player
-	data.ActiveChainsaw = EntityPtr(chainsaw)
-	if player:GetPlayerType() == Mod.PlayerType.OXY_B then
+	if isSpecter then
 		sprite:ReplaceSpritesheet(0, "gfx/weapon_specter.png", true)
 	end
-	local weapon = player:GetWeapon(1)
-	if weapon then
-		weapon:SetFireDelay(weapon:GetMaxFireDelay())
-	end
+	return chainsaw
 end
 
 ---@param npc? EntityNPC
@@ -181,7 +185,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	---@type TearFlags
 	local tearFlags = data.ChainsawTearFlags or TearFlags.TEAR_NORMAL
 	if player and (sprite:IsEventTriggered("Swing") or sprite:GetFrame() == 0) then
-		local displacement = getNextTearDisplacement(player)
+		local displacement = CHAINSAW:GetTearDisplacement(player, true)
 		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
 		data.ChainsawDamage = tearParams.TearDamage * 0.85
 		data.ChainsawTearFlags = tearParams.TearFlags
@@ -213,14 +217,14 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 		return
 	end
 	local sprite = chainsaw:GetSprite()
-
-	chainsaw.Position = chainsaw.Parent.Position
 	--Above
 	if chainsaw.Position.Y + chainsaw.PositionOffset.Y + 10 < chainsaw.Parent.Position.Y then
 		chainsaw.DepthOffset = 0
 	else --Below
 		chainsaw.DepthOffset = 40 * 7
 	end
+
+	chainsaw.Position = chainsaw.Parent.Position
 
 	if sprite:IsEventTriggered("SwingSound") or sprite:IsEventTriggered("Swing") then
 		Mod.SFXMan:Play(SoundEffect.SOUND_SWORD_SPIN)
@@ -242,6 +246,9 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 
 	CHAINSAW:HitboxUpdate(chainsaw)
 	Isaac.RunCallback(Mod.ModCallbacks.POST_CHAINSAW_UPDATE, chainsaw)
+	if sprite:IsFinished() then
+		chainsaw:Remove()
+	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, CHAINSAW.ChainsawUpdate, CHAINSAW.KNIFE)
@@ -282,28 +289,93 @@ end
 Mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, CHAINSAW.PeffectUpdate)
 
 ---@param player EntityPlayer
+---@param multiShotParams MultiShotParams
+local function runExtraSawsCallback(player, multiShotParams)
+	local extraSaws = {}
+	local callbacks = Isaac.GetCallbacks(Mod.ModCallbacks.CHAINSAW_GET_EXTRA_SAWS)
+	for _, callback in ipairs(callbacks) do
+		local func = callback.Function
+		local result = func(callback.Mod, player, multiShotParams)
+		if type(result) == "table" then
+			Mod:AppendTable(extraSaws, result)
+		end
+	end
+	return extraSaws
+end
+
+---@param player EntityPlayer
+---@param fireDir Vector
+---@param angle number
+---@param displacement integer
+function CHAINSAW:FireChainsaw(player, fireDir, angle, displacement)
+	local chainsaw = CHAINSAW:SpawnChainsaw(player, angle, player.Position, displacement, player:GetPlayerType() == Mod.PlayerType.OXY_B)
+	local a1m = fireDir:GetAngleDegrees()
+	local a2m = chainsaw.Rotation
+	local angleDiff = math.min(a1m-a2m, 360-a1m-a2m)
+	---@type PlayerChainsawData
+	return {
+		Pointer = EntityPtr(chainsaw),
+		RotationOffset = angleDiff
+	}
+end
+
+---@param player EntityPlayer
+function CHAINSAW:WeaponFire(player)
+	local fireDir = Mod:GetAttackDirection(player, false, true)
+	local displacement = CHAINSAW:GetTearDisplacement(player, true)
+	local multiShotParams = player:GetMultiShotParams(WeaponType.WEAPON_KNIFE)
+	local data = Mod:GetData(player)
+	data.ChainsawWeapons = data.ChainsawWeapons or {}
+	local tears = multiShotParams:GetNumTears()
+	for i = 0, tears - 1 do
+		local multiShot = player:GetMultiShotPositionVelocity(i, WeaponType.WEAPON_KNIFE, fireDir, player.ShotSpeed * 10, multiShotParams)
+		local angle = multiShot.Velocity:GetAngleDegrees()
+		local playerChainsawData = CHAINSAW:FireChainsaw(player, fireDir, angle, displacement)
+		Mod.Insert(data.ChainsawWeapons, playerChainsawData)
+	end
+	local extraSaws = runExtraSawsCallback(player, multiShotParams)
+	for _, rotation in ipairs(extraSaws) do
+		local angle = fireDir:Rotated(rotation):GetAngleDegrees()
+		local playerChainsawData = CHAINSAW:FireChainsaw(player, fireDir, angle, displacement)
+		Mod.Insert(data.ChainsawWeapons, playerChainsawData)
+	end
+	local weapon = player:GetWeapon(1)
+	if weapon then
+		weapon:SetFireDelay(weapon:GetMaxFireDelay())
+	end
+end
+
+---@param player EntityPlayer
 function CHAINSAW:OnPlayerUpdate(player)
 	local isShooting = Mod:IsShooting(player)
-	local chainsaw = CHAINSAW:TryGetChainsaw(player)
-	local chainsawExists = chainsaw ~= nil
+	local data = Mod:GetData(player)
+	local chainsaws = CHAINSAW:GetChainsaws(player)
 	local canUseChainsaw = CHAINSAW:CanUseChainsaw(player)
-	local onCooldown = player:GetWeapon(1) and player:GetWeapon(1):GetFireDelay() > -1
+	local weapon = player:GetWeapon(1)
+	local onCooldown = weapon and weapon:GetFireDelay() > -1 or player.FireDelay > -1
 	local playingAnim = not player:IsExtraAnimationFinished()
-	if isShooting and chainsaw then
-		local sprite = chainsaw:GetSprite()
-		local fireDir = Mod:GetAttackDirection(player, false, true)
-		local angle = fireDir:GetAngleDegrees() - 90
-		chainsaw.Rotation = angle
-		sprite.Rotation = angle
-		chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
+	if canUseChainsaw and isShooting and not playingAnim and not onCooldown and #chainsaws == 0 then
+		CHAINSAW:WeaponFire(player)
 	end
-	if canUseChainsaw and isShooting and not chainsawExists and not playingAnim and not onCooldown then
-		CHAINSAW:SpawnChainsaw(player)
-	elseif chainsawExists and (not isShooting or playingAnim or not canUseChainsaw or onCooldown) then
-		---@cast chainsaw EntityEffect
-		local sprite = chainsaw:GetSprite()
-		if (not isShooting and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) and chainsaw:Exists() then
-			chainsaw:Remove()
+	for i = #chainsaws, 1, -1 do
+		local playerChainsawData = chainsaws[i]
+		local chainsaw = playerChainsawData.Pointer and playerChainsawData.Pointer.Ref and playerChainsawData.Pointer.Ref:ToEffect()
+		if isShooting and chainsaw then
+			local sprite = chainsaw:GetSprite()
+			local fireDir = Mod:GetAttackDirection(player, false, true)
+			local angle = fireDir:Rotated(playerChainsawData.RotationOffset):GetAngleDegrees() - 90
+			chainsaw.Rotation = angle
+			sprite.Rotation = angle
+			chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
+		end
+		if chainsaw then
+			local sprite = chainsaw:GetSprite()
+			if (not isShooting and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) then
+				chainsaw:Remove()
+			end
+		end
+		if not chainsaw or not chainsaw:Exists() then
+			table.remove(data.ChainsawWeapons, i)
 		end
 	end
 end

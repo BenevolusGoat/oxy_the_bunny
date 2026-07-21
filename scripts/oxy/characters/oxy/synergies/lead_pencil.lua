@@ -11,14 +11,15 @@ local function leadPencil(_, fireDir, fireAmount, player, numFired)
 	then
 		if (numFired % PENCIL_SHOT_THRESHOLD) + fireAmount >= PENCIL_SHOT_THRESHOLD then
 			for _ = 1, 12 do
-				local angledDir = fireDir:Rotated(Mod:RandomNum(Mod.GENERIC_RNG, -5, 5))
-				local velocity = Mod:AddTearVelocity(angledDir, player.ShotSpeed * (Mod:RandomNum(Mod.GENERIC_RNG, 7, 13) + Mod:RandomNum(Mod.GENERIC_RNG)), player)
+				local angledDir = fireDir:Rotated(Mod:RandomNum(-5, 5))
+				local velocity = Mod:AddTearVelocity(angledDir,
+					player.ShotSpeed * (Mod:RandomNum(7, 13) + Mod:RandomNum(Mod.GENERIC_RNG)), player)
 				local tear = Mod.Spawn.Tear(TearVariant.BLOOD, player.Position, velocity, nil, player)
-				tear.FallingSpeed = Mod:RandomNum(Mod.GENERIC_RNG, -12, 2) - Mod:RandomNum(Mod.GENERIC_RNG)
+				tear.FallingSpeed = Mod:RandomNum(-12, 2) - Mod:RandomNum(Mod.GENERIC_RNG)
 				tear.FallingAcceleration = 0.5
 				local tearParams = player:GetTearHitParams(WeaponType.WEAPON_TEARS, 1, -1, player)
 				local scale = tearParams.TearScale
-				local scaleOffset = Mod:RandomNum(Mod.GENERIC_RNG, -1, 3) + Mod:RandomNum(Mod.GENERIC_RNG)
+				local scaleOffset = Mod:RandomNum(-1, 3) + Mod:RandomNum(Mod.GENERIC_RNG)
 				tear.Scale = scale + (scaleOffset * 0.1)
 				tear:ResetSpriteScale(true)
 			end

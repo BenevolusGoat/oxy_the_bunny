@@ -7,6 +7,7 @@ local synergyList = {
 	"dead_tooth",
 	"evil_eye",
 	"explosivo",
+	"extra_directionals",
 	"eye_of_greed",
 	"fire_mind",
 	"ghost_pepper_birds_eye",

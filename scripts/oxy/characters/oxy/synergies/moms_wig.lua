@@ -12,7 +12,7 @@ local function momsWig(_, fireDir, fireAmount, player)
 		local numSpiders = player:GetNumBlueSpiders()
 
 		if numSpiders < 5 and rng:RandomFloat() <= luckChance then
-			local target = player.Position + Vector(-50, 50):Rotated(Mod:RandomNum(Mod.GENERIC_RNG, 360))
+			local target = player.Position + Vector(-50, 50):Rotated(Mod:RandomNum(360))
 			player:ThrowBlueSpider(player.Position, target)
 		end
 	end

@@ -103,16 +103,15 @@ function OxyTheBunny:QuadraticBezier(startPoint, controlPoint, endPoint, t)
 	return (1 - t) ^ 2 * startPoint + 2 * (1 - t) * t * controlPoint + t ^ 2 * endPoint
 end
 
----@param rng RNG
 ---@param lower? integer
 ---@param upper? integer
-function OxyTheBunny:RandomNum(rng, lower, upper)
+function OxyTheBunny:RandomNum(lower, upper)
 	if upper then
-		return rng:RandomInt((upper - lower) + 1) + lower
+		return Mod.GENERIC_RNG:RandomInt((upper - lower) + 1) + lower
 	elseif lower then
-		return rng:RandomInt(lower) + 1
+		return Mod.GENERIC_RNG:RandomInt(lower) + 1
 	else
-		return rng:RandomFloat()
+		return Mod.GENERIC_RNG:RandomFloat()
 	end
 end
 

@@ -136,7 +136,8 @@ local tools = {
 }
 
 local core = {
-	"custom_callbacks"
+	"custom_callbacks",
+	"console_commands"
 }
 
 local config = {

@@ -85,7 +85,7 @@ local commands = {
 	{ "clearmarks",        "Clears all completion marks on Oxy" },
 	{ "clearmarkstainted", "Clears all completion marks on Tainted Oxy" },
 	{ "wipesave",          "Clears all completion marks on both Oxys and locks all achievements" },
-	{ "chainsawtest",      "Toggle chainsaw stats between 1. Firerate down, and 2. Damage down, tip damage up. Default: 1" },
+	{ "disableitems",      "Will remove all custom items from the run's item pool at run start" },
 }
 
 local helpText = {
@@ -134,21 +134,12 @@ local commandFuncs = {
 		manageAchievements(false)
 		return "Save successfully wiped!"
 	end,
-	["chainsawtest"] = function ()
-		---@class table
-		local CHAINSAW = Mod.Item.CHAINSAW
-		CHAINSAW.CHAINSAW_TEST_MODE = not CHAINSAW.CHAINSAW_TEST_MODE
-		if Isaac.IsInGame() then
-			Mod.Foreach.Player(function (player, index)
-				if player:HasCollectible(CHAINSAW.ID) then
-					player:AddCacheFlags(CacheFlag.CACHE_DAMAGE | CacheFlag.CACHE_FIREDELAY, true)
-				end
-			end)
-		end
-		if CHAINSAW.CHAINSAW_TEST_MODE == true then
-			return "Firerate: x1. Damage: x0.65. Tip Damage: x3"
+	["disableitems"] = function ()
+		Mod.DISABLE_ITEMS = not Mod.DISABLE_ITEMS
+		if Mod.DISABLE_ITEMS then
+			return "Custom items from Oxy MOD disabled"
 		else
-			return "Firerate: x0.33. Damage: x0.85. Tip Damage: x2"
+			return "Custom items from Oxy MOD enabled"
 		end
 	end
 }

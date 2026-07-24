@@ -192,6 +192,22 @@ function OxyTheBunny:RunIDCheck()
 	end
 end
 
+OxyTheBunny.DISABLE_ITEMS = false
+
+function OxyTheBunny:DisableItems()
+	if OxyTheBunny.DISABLE_ITEMS then
+		local itemPool = Mod.Game:GetItemPool()
+		for _, itemTable in pairs(Mod.Item) do
+			itemPool:RemoveCollectible(itemTable.ID)
+		end
+		--[[ for _, trinketTable in pairs(Mod.Trinket) do
+
+		end ]]
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Mod.DisableItems)
+
 --!End of file
 
 --Mod.Include("scripts.compatibility.patches.eid_support")

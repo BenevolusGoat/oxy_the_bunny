@@ -10,8 +10,8 @@ CHAINSAW.ID = Isaac.GetItemIdByName("Chainsaw")
 CHAINSAW.KNIFE = Isaac.GetEntityVariantByName("Oxy's Chainsaw")
 
 CHAINSAW.DEFAULT_HIT_COUNTDOWN = 3
-
-CHAINSAW.CHAINSAW_TEST_MODE = false
+CHAINSAW.FIREDELAY_DIV = 0.33
+CHAINSAW.DAMAGE_MULT = 0.85
 
 local BACKGROUND_BUGS = Mod:Set({
 	EffectVariant.BEETLE,
@@ -217,8 +217,7 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	chainsaw.CollisionDamage = damage
 
 	if nullTip and nullTip:IsVisible() then
-		local dmgMult = CHAINSAW.CHAINSAW_TEST_MODE == true and 3 or 2
-		damageInCapsule(chainsaw, capsuleTip, damage * dmgMult, source, tearFlags, hitEnemies, hitGrids, true)
+		damageInCapsule(chainsaw, capsuleTip, damage * 2, source, tearFlags, hitEnemies, hitGrids, true)
 	end
 	if null1 and null1:IsVisible() then
 		damageInCapsule(chainsaw, capsule1, damage, source, tearFlags, hitEnemies, hitGrids)
@@ -410,8 +409,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, CHAINSAW.OnPlayerUpdate, Pla
 ---@param player EntityPlayer
 function CHAINSAW:UpdateDamage(player)
 	if CHAINSAW:CanUseChainsaw(player) then
-		local dmgDown = CHAINSAW.CHAINSAW_TEST_MODE == true and 0.65 or 0.85
-		player.Damage = player:GetTearPoisonDamage() * dmgDown
+		player.Damage = player:GetTearPoisonDamage() * CHAINSAW.DAMAGE_MULT
 	end
 end
 
@@ -419,11 +417,32 @@ Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_CACHE, CallbackPriority.IMPORTA
 
 ---@param player EntityPlayer
 function CHAINSAW:UpdateFirerate(player)
-	if CHAINSAW:CanUseChainsaw(player) and CHAINSAW.CHAINSAW_TEST_MODE == false then
-		player.MaxFireDelay = player.MaxFireDelay / 0.33
+	if CHAINSAW:CanUseChainsaw(player) then
+		player.MaxFireDelay = player.MaxFireDelay / CHAINSAW.FIREDELAY_DIV
 	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, CHAINSAW.UpdateFirerate, CacheFlag.CACHE_FIREDELAY)
+
+--#endregion
+
+--#region Stackable Chainsaws
+
+---@param player EntityPlayer
+function CHAINSAW:MultiShot(player, params, weaponType)
+	local numChainsaw = player:GetCollectibleNum(CHAINSAW.ID)
+	if numChainsaw <= 1 then return end
+	local weapon = player:GetWeapon(1)
+	if weapon then
+		local mult = numChainsaw - 1
+		params:SetSpreadAngle(weaponType, params:GetSpreadAngle(weaponType) + 2.167 * mult)
+		params:SetNumTears(params:GetNumTears() + mult)
+		local expectedAmount = params:GetNumTears() / params:GetNumEyesActive()
+		params:SetNumLanesPerEye(expectedAmount)
+		return params
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_MULTI_SHOT_PARAMS, CHAINSAW.MultiShot)
 
 --#endregion

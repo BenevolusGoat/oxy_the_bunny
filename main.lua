@@ -113,6 +113,7 @@ end
 OxyTheBunny.Pickup = {}
 OxyTheBunny.Card = {}
 OxyTheBunny.Item = {}
+OxyTheBunny.Trinket = {}
 OxyTheBunny.Character = {}
 include("flags")
 

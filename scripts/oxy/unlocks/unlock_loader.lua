@@ -5,6 +5,10 @@ local prefix = "scripts.oxy.unlocks.unlocks_"
 --#region Oxy
 
 local oxy = {
+	"bodysuit",
+	"tuft_of_fur",
+	"bunny_ears",
+	"boring_horror"
 }
 
 Mod.LoopInclude(oxy, prefix .. "oxy")

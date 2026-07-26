@@ -42,16 +42,10 @@ local function ghostPepperBirdsEye(_, chainsaw, tearFlags, pos)
 	local fireToShoot = Mod:TryTriggerFireGhostPepperOrBirdsEye(player)
 	if fireToShoot then
 		local velDir = (pos - chainsaw.Position):Normalized()
-		local vel = Mod:AddTearVelocity(velDir, player.ShotSpeed * 13.3, player)
-		local fire = Mod.Spawn.Effect(fireToShoot, 0, player.Position, vel, player)
 		if fireToShoot == EffectVariant.BLUE_FLAME then
-			fire.CollisionDamage = player.Damage * 6
-			fire:SetTimeout(60)
-			fire.LifeSpan = 60
+			player:ShootBlueCandle(velDir)
 		elseif fireToShoot == EffectVariant.RED_CANDLE_FLAME then
-			fire.CollisionDamage = player.Damage * 4
-			fire:SetTimeout(300)
-			fire.LifeSpan = 300
+			player:ShootRedCandle(velDir)
 		end
 	end
 end

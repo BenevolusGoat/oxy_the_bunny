@@ -1,3 +1,4 @@
 <pocketitems>
-	<card type="rune" pickup="104" description="Saw it off" hud="Soul of Oxy" name="Soul of Oxy" achievement="Soul of Oxy" mimiccharge="6" />
+	<card type="card" pickup="847" description="Multiplier" hud="Steel Card" name="Steel Card" achievement="Steel Card" mimiccharge="6" />
+	<card type="rune" pickup="848" description="Saw it off" hud="Soul of Oxy" name="Soul of Oxy" achievement="Soul of Oxy" mimiccharge="6" />
 </pocketitems>

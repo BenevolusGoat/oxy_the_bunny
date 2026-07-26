@@ -6,9 +6,12 @@ local prefix = "scripts.oxy.unlocks.unlocks_"
 
 local oxy = {
 	"bodysuit",
-	"tuft_of_fur",
+	"boring_horror",
 	"bunny_ears",
-	"boring_horror"
+	"four_leaf_clover",
+	"little_oxy",
+	"sanctuary",
+	"tuft_of_fur"
 }
 
 Mod.LoopInclude(oxy, prefix .. "oxy")
@@ -18,7 +21,11 @@ Mod.LoopInclude(oxy, prefix .. "oxy")
 --#region Tainted Oxy
 
 local oxy_b = {
+	"passage",
+	"red_keychain",
 	"soul_of_oxy",
+	"steel_card",
+	"white_petal"
 }
 
 Mod.LoopInclude(oxy_b, prefix .. "oxy_b")

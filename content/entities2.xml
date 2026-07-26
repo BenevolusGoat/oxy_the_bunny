@@ -2,10 +2,15 @@
     <entity id="1000" variant="3784" name="Oxy's Chainsaw" anm2path="weapon_oxy_chainsaw.anm2"
 			friction="1" collisionMass="3" collisionRadius="16" >
     </entity>
-	<!-- <entity anm2path="weapon.anm2" baseHP="0" boss="0" champion="0" collisionDamage="0" collisionMass="3" collisionRadius="16" collisionRadiusXMulti="5" collisionRadiusYMulti="8" friction="1" id="8" name="Cursor" numGridCollisionPoints="70" shadowSize="0" stageHP="0" variant="69">
-        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
+	<entity id="3" variant="3784" name="Little Oxy" anm2path="familiar_little_oxy.anm2"
+		friction="1" collisionMass="3" collisionRadius="13" numGridCollisionPoints="12" shadowSize="11"
+		tags="cansacrifice" customtags="">
+		<gibs amount="0" blood="3" bone="0" eye="0" gut="0" large="0" />
+	</entity>
+    <entity id="5" variant="300" name="Steel Card" anm2path="pickup_steel_card.anm2" subtype="847"
+		friction="1" collisionMass="3" collisionRadius="12"   numGridCollisionPoints="24" shadowSize="16">
     </entity>
-	<entity anm2path="cursor.anm2" baseHP="0" boss="0" champion="0" variant="420" collisionDamage="4" collisionMass="3" collisionRadius="13" friction="1" id="3" name="Cursor Familiar" numGridCollisionPoints="12" shadowSize="11" stageHP="0" >
-        <gibs amount="0" blood="0" bone="0" eye="0" gut="0" large="0" />
-	</entity> -->
+    <entity id="5" variant="300" name="Soul of Oxy" anm2path="pickup_soul_of_oxy.anm2" subtype="848"
+		friction="1" collisionMass="3" collisionRadius="12" numGridCollisionPoints="24" shadowSize="16">
+    </entity>
 </entities>

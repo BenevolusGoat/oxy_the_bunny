@@ -20,25 +20,38 @@ OxyTheBunny.CompletionType = {
 --#region Oxy
 
 OxyTheBunny.Character.OXY.ACHIEVEMENT = achievement("Oxy")
+OxyTheBunny.Item.LITTLE_OXY.ACHIEVEMENT = achievement("Little Oxy")
+--[[ Isaac Unlock Here ]]
+OxyTheBunny.Item.BODYSUIT.ACHIEVEMENT = achievement("Bodysuit")
+OxyTheBunny.Item.BUNNY_EARS.ACHIEVEMENT = achievement("Bunny Ears")
+--[[ BB Unlock Here ]]
+OxyTheBunny.Trinket.TUFT_OF_FUR.ACHIEVEMENT = achievement("Tuft of Fur")
+--[[ Mega Satan Unlock Here ]]
+--[[ Greed Mode Unlock Here ]]
+OxyTheBunny.Item.BORING_HORROR.ACHIEVEMENT = achievement("Boring Horror")
+OxyTheBunny.Trinket.FOUR_LEAF_CLOVER.ACHIEVEMENT = achievement("Four Leaf Clover")
 OxyTheBunny.Item.CHAINSAW.ACHIEVEMENT = achievement("Chainsaw")
+--[[ Mother Unlock Here ]]
+OxyTheBunny.Item.SANCTUARY.ACHIEVEMENT = achievement("Sanctuary")
 OxyTheBunny.Character.OXY_B.ACHIEVEMENT = achievement("The Inhabited")
 
+OxyTheBunny.Item.SPECTER.ACHIEVEMENT = achievement("Specter")
+
 OxyTheBunny.CompletionMarkToAchievement.OXY = {
-	--[CompletionType.MOMS_HEART] = Mod.Pickup.WEB_HEART.ACHIEVEMENT,
+	[CompletionType.MOMS_HEART] = Mod.Item.LITTLE_OXY.ACHIEVEMENT,
 	--[CompletionType.ISAAC] = Mod.Item.ARACHNAS_SPOOL.ACHIEVEMENT,
-	--[CompletionType.SATAN] = Mod.Item.YARN.ACHIEVEMENT,
-	--[CompletionType.BOSS_RUSH] = Mod.Item.GEPTAMERON.ACHIEVEMENT,
+	[CompletionType.SATAN] = Mod.Item.BODYSUIT.ACHIEVEMENT,
+	[CompletionType.BOSS_RUSH] = Mod.Item.BUNNY_EARS.ACHIEVEMENT,
 	--[CompletionType.BLUE_BABY] = Mod.Trinket.WHITE_STRING.ACHIEVEMENT,
-	--[CompletionType.LAMB] = Mod.Item.GLASSES_3D.ACHIEVEMENT,
+	[CompletionType.LAMB] = Mod.Trinket.TUFT_OF_FUR.ACHIEVEMENT,
 	--[CompletionType.MEGA_SATAN] = Mod.Item.MECHANICAL_EYE.ACHIEVEMENT,
 	--[CompletionType.ULTRA_GREED] = Mod.Trinket.INFESTED_PENNY.ACHIEVEMENT,
-	--[CompletionType.HUSH] = Mod.Item.ARACHNIDS_GRIP.ACHIEVEMENT,
-	--[CompletionType.ULTRA_GREEDIER] = Mod.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT,
+	[CompletionType.HUSH] = Mod.Item.BORING_HORROR.ACHIEVEMENT,
+	[CompletionType.ULTRA_GREEDIER] = Mod.Trinket.FOUR_LEAF_CLOVER.ACHIEVEMENT,
 	[CompletionType.DELIRIUM] = Mod.Item.CHAINSAW.ACHIEVEMENT,
 	--[CompletionType.MOTHER] = Mod.Item.YARN_HEART.ACHIEVEMENT,
-	--[CompletionType.BEAST] = Mod.Item.TESTAMENT.ACHIEVEMENT,
-	[CompletionType.TAINTED] = Mod.Character.OXY_B.ACHIEVEMENT,
-	--[Mod.CompletionType.ALL] = Mod.Item.LIL_ARACHNA.ACHIEVEMENT
+	[CompletionType.BEAST] = Mod.Item.SANCTUARY.ACHIEVEMENT,
+	[CompletionType.TAINTED] = Mod.Character.OXY_B.ACHIEVEMENT
 }
 OxyTheBunny.PlayerTypeToCompletionTable[Mod.PlayerType.OXY] = Mod.CompletionMarkToAchievement.OXY
 
@@ -46,67 +59,25 @@ OxyTheBunny.PlayerTypeToCompletionTable[Mod.PlayerType.OXY] = Mod.CompletionMark
 
 --#region Tainted Oxy
 
-OxyTheBunny.Item.SPECTER.ACHIEVEMENT = achievement("Specter")
-OxyTheBunny.Item.MANIFEST.ACHIEVEMENT = achievement("Manifest")
 OxyTheBunny.Card.SOUL_OF_OXY.ACHIEVEMENT = achievement("Soul of Oxy")
---[[
-OxyTheBunny.Trinket.SPINDLE.ACHIEVEMENT = achievement("Spindle")
-OxyTheBunny.Slot.SPIDER_BEGGAR.ACHIEVEMENT = achievement("Spider Beggar")
-OxyTheBunny.Card.MERGED_CARD.ACHIEVEMENT = achievement("Merged Card")
-OxyTheBunny.Item.DIVINE_CLOTH.ACHIEVEMENT = achievement("Divine Cloth")
-OxyTheBunny.Item.DADS_NEWSPAPER.ACHIEVEMENT = achievement("Dad's Newspaper")
-OxyTheBunny.Item.BEST_BUD_BALL.ACHIEVEMENT = achievement("Best Bud Ball") ]]
+OxyTheBunny.Trinket.PASSAGE.ACHIEVEMENT = achievement("Passage")
+OxyTheBunny.Card.STEEL_CARD.ACHIEVEMENT = achievement("Steel Card")
+--[[ Greed Mode Unlock Here ]]
+OxyTheBunny.Item.MANIFEST.ACHIEVEMENT = achievement("Manifest")
+OxyTheBunny.Trinket.WHITE_PETAL.ACHIEVEMENT = achievement("White Petal")
+OxyTheBunny.Item.RED_KEYCHAIN.ACHIEVEMENT = achievement("Red Keychain")
 
 OxyTheBunny.CompletionMarkToAchievement.OXY_B = {
-	--[CompletionType.MEGA_SATAN] = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT,
+	[CompletionType.MEGA_SATAN] = Mod.Card.STEEL_CARD.ACHIEVEMENT,
 	--[CompletionType.ULTRA_GREEDIER] = Mod.Card.MERGED_CARD.ACHIEVEMENT,
-	[CompletionType.DELIRIUM] = Mod.Item.SPECTER.ACHIEVEMENT,
-	--[CompletionType.MOTHER] = Mod.Item.DADS_NEWSPAPER.ACHIEVEMENT,
-	[CompletionType.BEAST] = Mod.Item.MANIFEST.ACHIEVEMENT,
+	[CompletionType.DELIRIUM] = Mod.Item.MANIFEST.ACHIEVEMENT,
+	[CompletionType.MOTHER] = Mod.Trinket.WHITE_PETAL.ACHIEVEMENT,
+	[CompletionType.BEAST] = Mod.Item.RED_KEYCHAIN.ACHIEVEMENT,
 	[CompletionType.TAINTED_GROUP1] = Mod.Card.SOUL_OF_OXY.ACHIEVEMENT,
-	--[CompletionType.TAINTED_GROUP2] = Mod.Trinket.SPINDLE.ACHIEVEMENT,
+	[CompletionType.TAINTED_GROUP2] = Mod.Trinket.PASSAGE.ACHIEVEMENT,
 }
 OxyTheBunny.PlayerTypeToCompletionTable[Mod.PlayerType.OXY_B] = Mod.CompletionMarkToAchievement.OXY_B
 
---#endregion
-
---#region Entity replacements
-
---[[ Mod:RegisterReplacementEntity({
-	OldType = { EntityType.ENTITY_SLOT },
-	OldVariant = { SlotVariant.BEGGAR, SlotVariant.KEY_MASTER },
-	NewType = EntityType.ENTITY_SLOT,
-	NewVariant = Mod.Slot.SPIDER_BEGGAR.ID,
-	ReplacementChance = Mod.Slot.SPIDER_BEGGAR.REPLACEMENT_CHANCE,
-	Achievement = Mod.Slot.SPIDER_BEGGAR.ACHIEVEMENT
-})
-
-Mod:RegisterReplacementEntity({
-	OldType = { EntityType.ENTITY_SHOPKEEPER },
-	OldVariant = { 0, 1, 3, 4 }, --Normal/Hanging Keepers and their Special variants
-	NewType = EntityType.ENTITY_SHOPKEEPER,
-	NewVariant = Mod.Entities.GOLDEN_SHOPKEEPER.ID,
-	ReplacementChance = Mod.Entities.GOLDEN_SHOPKEEPER.REPLACEMENT_CHANCE,
-	Achievement = Mod.Entities.GOLDEN_SHOPKEEPER.ACHIEVEMENT
-})
-
-Mod:RegisterReplacementPickup({
-	OldVariant = { PickupVariant.PICKUP_HEART },
-	OldSubtype = { HeartSubType.HEART_BLACK, HeartSubType.HEART_BLENDED, HeartSubType.HEART_BONE, HeartSubType.HEART_ROTTEN },
-	NewVariant = PickupVariant.PICKUP_HEART,
-	NewSubtype = function(rng, subtype)
-		if rng:RandomFloat() < Mod.Pickup.WEB_HEART.DOUBLE_REPLACEMENT_CHANCE then
-			return Mod.Pickup.WEB_HEART.ID_DOUBLE
-		else
-			return Mod.Pickup.WEB_HEART.ID
-		end
-	end,
-	ReplacementChance = function()
-		local chance = Mod.Pickup.WEB_HEART.REPLACEMENT_CHANCE
-		chance = chance + Mod.Trinket.SPINDLE.WEB_HEART_REPLACEMENT_BONUS * PlayerManager.GetTotalTrinketMultiplier(Mod.Trinket.SPINDLE.ID)
-		return chance
-	end,
-	Achievement = Mod.Pickup.WEB_HEART.ACHIEVEMENT
-}) ]]
+OxyTheBunny.ACHIEVEMENT_COMPLETION = achievement("Oxy Full Completion")
 
 --#endregion

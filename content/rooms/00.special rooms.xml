@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <rooms>
-	<room variant="0" name="2 Psy Maws" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="0" name="2 Psy Maws" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -36,7 +36,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="1" name="3 Candlers" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="1" name="3 Candlers" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -84,7 +84,7 @@
 			<entity type="5" variant="10" subtype="3" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="2" name="2 Angel Babies" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="2" name="2 Angel Babies" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -159,7 +159,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="3" name="3 Wizoobs" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="3" name="3 Wizoobs" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -198,7 +198,7 @@
 			<entity type="5" variant="100" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="4" name="1 Holy Mulligan" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="4" name="1 Holy Mulligan" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="False" x="6" y="7"/>
@@ -252,7 +252,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="5" name="2 Holy Leeches" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="5" name="2 Holy Leeches" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="False" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -363,7 +363,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="6" name="2 Psy Tumors" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="6" name="2 Psy Tumors" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -405,7 +405,7 @@
 			<entity type="5" variant="100" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="7" name="1 Holy Eye" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="7" name="1 Holy Eye" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -444,7 +444,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="8" name="4 Keeper Heads" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="8" name="4 Keeper Heads" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="False" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -540,7 +540,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="9" name="2 Lil Haunts" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="9" name="2 Lil Haunts" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -582,7 +582,7 @@
 			<entity type="5" variant="100" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="10" name="1 Holy Bony" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="10" name="1 Holy Bony" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -657,7 +657,7 @@
 			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="11" name="1 Headless Horseman Head" type="15" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="11" name="1 Headless Horseman Head" type="15" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -702,7 +702,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="0" name="Pedestal and Lucky Coins" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="0" name="Pedestal and Lucky Coins" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -810,7 +810,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="1" name="2 Pedestals and Chest" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="1" name="2 Pedestals and Chest" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -911,7 +911,7 @@
 			<entity type="33" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="2" name="Reroll for keys" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="2" name="Reroll for keys" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1082,7 +1082,7 @@
 			<entity type="5" variant="100" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="3" name="Restock Pedestal and Greed Gapers" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="3" name="Restock Pedestal and Greed Gapers" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1147,7 +1147,7 @@
 			<entity type="299" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="4" name="Rib of Greed" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:37+00:00">
+	<room variant="4" name="Rib of Greed" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:37+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1285,7 +1285,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="5" name="Pedestal and flies" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="5" name="Pedestal and flies" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1402,7 +1402,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="6" name="2 Pedestals and flies" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="6" name="2 Pedestals and flies" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1525,7 +1525,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="7" name="3 Chests" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="7" name="3 Chests" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1686,7 +1686,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="8" name="2 Pedestals on island" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="8" name="2 Pedestals on island" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1797,7 +1797,7 @@
 			<entity type="0" variant="10" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="9" name="Pedestal behind TNT trail" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="9" name="Pedestal behind TNT trail" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -1970,7 +1970,7 @@
 			<entity type="17" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="10" name="Minecart Loop" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="10" name="Minecart Loop" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2177,7 +2177,7 @@
 			<entity type="5" variant="100" subtype="0" weight="0.5"/>
 		</spawn>
 	</room>
-	<room variant="11" name="Special Card" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="11" name="Special Card" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2264,7 +2264,7 @@
 			<entity type="0" variant="20" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="12" name="Crane Game and nickel" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="12" name="Crane Game and nickel" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2382,7 +2382,7 @@
 			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="13" name="3 Runes" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="13" name="3 Runes" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2532,7 +2532,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="14" name="Usually poop" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="14" name="Usually poop" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2633,7 +2633,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="15" name="Devil vortex coins" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="15" name="Devil vortex coins" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2736,7 +2736,7 @@
 			<entity type="5" variant="20" subtype="1" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="16" name="Cobweb crawlspace" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="16" name="Cobweb crawlspace" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -2912,7 +2912,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="17" name="Golden Room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:37+00:00">
+	<room variant="17" name="Golden Room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:37+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3083,7 +3083,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="18" name="4 Chests" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="18" name="4 Chests" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3161,7 +3161,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="19" name="1 Mega Chest" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="19" name="1 Mega Chest" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3230,7 +3230,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="20" name="ERROR" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:37+00:00">
+	<room variant="20" name="ERROR" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:37+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3315,7 +3315,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="21" name="Lots of machines" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="21" name="Lots of machines" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3359,7 +3359,7 @@
 			<entity type="0" variant="20" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="22" name="3 Trinkets" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="22" name="3 Trinkets" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3426,7 +3426,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="23" name="Polty room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="23" name="Polty room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3550,7 +3550,7 @@
 			<entity type="5" variant="100" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="24" name="Hanging keeper" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="24" name="Hanging keeper" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3697,7 +3697,7 @@
 			<entity type="1002" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="25" name="3 Boners" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="25" name="3 Boners" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3853,7 +3853,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="26" name="Battery ritual" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="26" name="Battery ritual" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -3979,7 +3979,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="27" name="Pedestal across spike platform" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="27" name="Pedestal across spike platform" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4171,7 +4171,7 @@
 			<entity type="0" variant="10" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="28" name="Sausage room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="28" name="Sausage room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4264,7 +4264,7 @@
 			<entity type="1002" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="29" name="Death Certificate?" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="0.2" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="29" name="Death Certificate?" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4395,7 +4395,7 @@
 			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="30" name="Not Death Certificate" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="30" name="Not Death Certificate" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4522,7 +4522,7 @@
 			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="31" name="Secret Shop" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="31" name="Secret Shop" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4678,7 +4678,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="32" name="2 Special coins and pedestal" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="32" name="2 Special coins and pedestal" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4809,7 +4809,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="33" name="2 Pedestals and random pickups" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="33" name="2 Pedestals and random pickups" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -4954,7 +4954,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="34" name="Pedestal across spikes" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="34" name="Pedestal across spikes" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5059,7 +5059,7 @@
 			<entity type="1900" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="35" name="Pedestal across rock/key block" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="35" name="Pedestal across rock/key block" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5174,7 +5174,7 @@
 			<entity type="1002" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="36" name="TNT Push room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="36" name="TNT Push room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5318,7 +5318,7 @@
 			<entity type="1500" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="37" name="TNT Push room 2" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="37" name="TNT Push room 2" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5407,7 +5407,7 @@
 			<entity type="5" variant="100" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="38" name="Isaac's grave" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="38" name="Isaac's grave" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5486,7 +5486,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="39" name="Restock Box and Pedestal" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="39" name="Restock Box and Pedestal" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5619,7 +5619,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="40" name="Angel Room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="40" name="Angel Room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5679,7 +5679,7 @@
 			<entity type="33" variant="2" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="41" name="Devil Room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="41" name="Devil Room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5741,7 +5741,7 @@
 			<entity type="33" variant="3" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="42" name="Pedestal behind random rocks" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="42" name="Pedestal behind random rocks" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5889,7 +5889,7 @@
 			<entity type="1901" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="43" name="Souls of Eden" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="43" name="Souls of Eden" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -5977,7 +5977,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="44" name="2 Restock Boxes" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="44" name="2 Restock Boxes" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -6073,7 +6073,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="45" name="3 Pedestals" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="45" name="3 Pedestals" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.1" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -6188,7 +6188,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="46" name="Poop" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="46" name="Poop" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -6288,7 +6288,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="47" name="Red Key room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="47" name="Red Key room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -6443,7 +6443,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="48" name="2 Pedestals" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="48" name="2 Pedestals" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -6558,7 +6558,7 @@
 			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="49" name="Teleporter room" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
+	<room variant="49" name="Teleporter room" type="7" subtype="55" shape="1" width="13" height="7" difficulty="1" weight="0.0" lastTestTime="2026-07-26T11:21+00:00">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -6754,224 +6754,6 @@
 		</spawn>
 		<spawn x="8" y="6">
 			<entity type="6100" variant="3" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="6">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="6">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="6">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="6">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-	</room>
-	<room variant="50" name="Pedestal over huge pit" type="7" subtype="0" shape="1" width="13" height="7" difficulty="1" weight="1.0" lastTestTime="2026-07-26T11:21+00:00">
-		<door exists="True" x="-1" y="3"/>
-		<door exists="True" x="6" y="-1"/>
-		<door exists="True" x="6" y="7"/>
-		<door exists="False" x="13" y="3"/>
-		<spawn x="0" y="0">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="1" y="0">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="5" y="0">
-			<entity type="0" variant="10" subtype="0" weight="1.0"/>
-			<entity type="0" variant="30" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="0">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="0">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="0">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="0">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="0">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="0">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="0" y="1">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="1" y="1">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-			<entity type="0" variant="10" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="4" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="5" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="6" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="1">
-			<entity type="33" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="1">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="0" y="2">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-			<entity type="0" variant="30" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="5" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="6" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="2">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="2" y="3">
-			<entity type="0" variant="10" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="4" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="5" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="6" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="3">
-			<entity type="5" variant="100" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="3">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="0" y="4">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-			<entity type="0" variant="10" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="3" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="4" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="5" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="6" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="4">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="0" y="5">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="1" y="5">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-			<entity type="0" variant="20" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="4" y="5">
-			<entity type="0" variant="20" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="5" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="6" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="9" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="10" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="11" y="5">
-			<entity type="33" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="5">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="0" y="6">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="1" y="6">
-			<entity type="1000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="7" y="6">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="8" y="6">
-			<entity type="3000" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 		<spawn x="9" y="6">
 			<entity type="3000" variant="0" subtype="0" weight="1.0"/>

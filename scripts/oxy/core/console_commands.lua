@@ -19,7 +19,7 @@ local nameToMark = {
 
 local function manageAchievements(shouldUnlock)
 	local startAch = Mod.Character.OXY.ACHIEVEMENT
-	local endAch = Mod.Item.SPECTER.ACHIEVEMENT
+	local endAch = Mod.ACHIEVEMENT_COMPLETION
 	local persistGameData = Isaac.GetPersistentGameData()
 
 	for i = startAch, endAch do

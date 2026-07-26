@@ -33,6 +33,8 @@ function BORING_HORROR:FireOOBTear(player, ent)
 	local color = tear:GetSprite().Color
 	color.A = 0
 	tear:SetColor(color, 15, 1, true, false)
+	tear.CollisionDamage = tear.CollisionDamage / 2
+	tear:ResetSpriteScale(true)
 	tear:AddTearFlags(TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_HOMING)
 	tear:AddVelocity((ent.Position - pos):Resized(20))
 	Mod:GetData(tear).BoringHorror = true

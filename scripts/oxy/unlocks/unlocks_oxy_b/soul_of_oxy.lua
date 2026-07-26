@@ -9,7 +9,7 @@ SOUL_OF_OXY.ID = Isaac.GetCardIdByName("Soul of Oxy")
 SOUL_OF_OXY.DURATION = 30 * 30 --30 ticks per second * duration
 
 ---@param player EntityPlayer
-function SOUL_OF_OXY:OnUse(item, rng, player)
+function SOUL_OF_OXY:OnUse(item, player, flags)
 	player:AddInnateCollectible(Mod.Item.CHAINSAW.ID, 1, "Soul of Oxy", SOUL_OF_OXY.DURATION)
 end
 

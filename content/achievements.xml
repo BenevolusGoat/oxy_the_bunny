@@ -1,9 +1,58 @@
 
 <achievements gfxroot="gfx/ui/achievement/">
+	<!-- UNLOCK ORDER  -->
+	<!--
+		MomsHeart
+		Isaac
+		Satan
+		BossRush
+		BlueBaby
+		Lamb
+		MegaSatan
+		GreedMode
+		Hush
+		Greedier
+		Delirium
+		Mother
+		Beast
+		Tainted
+		FullCompletion
+
+		SoulPath
+		PolNegPath
+		MegaSatan
+		Greedier
+		Delirium
+		Mother
+		Beast
+	-->
+	<!-- Oxy -->
 	<achievement name="Oxy" gfx="achievement_oxy.png" />
+	<achievement name="Little Oxy" gfx="achievement_little_oxy.png" />
+	<!-- Isaac Unlock -->
+	<achievement name="Bodysuit" gfx="achievement_bodysuit.png" />
+	<achievement name="Bunny Ears" gfx="achievement_bunny_ears.png" />
+	<!-- Polaroid/BB Unlock -->
+	<achievement name="Tuft of Fur" gfx="achievement_tuft_of_fur.png" />
+	<!-- Mega Satan Unlock -->
+	<!-- Greed Mode Unlock -->
+	<achievement name="Boring Horror" gfx="achievement_boring_horror.png" />
+	<achievement name="Four Leaf Clover" gfx="achievement_four_leaf_clover.png" />
 	<achievement name="Chainsaw" gfx="achievement_chainsaw.png" />
-	<achievement name="The Inhabited" gfx="achievement_taintedoxy.png" />
-	<achievement name="Soul of Oxy" gfx="achievement_oxy.png" />
-	<achievement name="Manfiest" gfx="achievement_manifest.png" />
+	<!-- Mother Unlock -->
+	<achievement name="Sanctuary" gfx="achievement_tuft_of_fur.png" />
+	<achievement name="The Inhabited" gfx="achievement_tainted_oxy.png" />
+	<!-- (Unlocks w/The Inhabited I guess?) -->
 	<achievement name="Specter" gfx="achievement_specter.png" />
+
+	<!-- Tainted Oxy -->
+	<achievement name="Soul of Oxy" gfx="achievement_soul_of_oxy.png" />
+	<achievement name="Passage" gfx="achievement_passage.png" />
+	<achievement name="Steel Card" gfx="achievement_steel_card.png" />
+	<!-- Greedier Unlock -->
+	<achievement name="Manfiest" gfx="achievement_manifest.png" />
+	<achievement name="White Petal" gfx="achievement_white_petal.png" />
+	<achievement name="Red Keychain" gfx="achievement_red_keychain.png" />
+
+	<achievement name="Oxy Full Completion" gfx="achievement_oxy_thanks.png" />
 </achievements>

@@ -35,8 +35,6 @@ OxyTheBunny.Item.CHAINSAW.ACHIEVEMENT = achievement("Chainsaw")
 OxyTheBunny.Item.SANCTUARY.ACHIEVEMENT = achievement("Sanctuary")
 OxyTheBunny.Character.OXY_B.ACHIEVEMENT = achievement("The Inhabited")
 
-OxyTheBunny.Item.SPECTER.ACHIEVEMENT = achievement("Specter")
-
 OxyTheBunny.CompletionMarkToAchievement.OXY = {
 	[CompletionType.MOMS_HEART] = Mod.Item.LITTLE_OXY.ACHIEVEMENT,
 	--[CompletionType.ISAAC] = Mod.Item.ARACHNAS_SPOOL.ACHIEVEMENT,

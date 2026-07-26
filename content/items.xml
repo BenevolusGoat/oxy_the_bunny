@@ -2,21 +2,20 @@
 	<!-- Collectibles -->
 	<passive id="0" name="Chainsaw" achievement="Chainsaw" description="We all cut close" gfx="chainsaw.png" quality="3" cache="damage firedelay" />
 	<active id="1" name="Holster" description="Put away" gfx="holster.png" quality="0" hidden="true" chargetype="special" />
-	<passive id="2" name="Specter" achievement="Specter" description="I am Inhabited" gfx="specter.png" quality="4" hidden="true" />
-	<active id="3" name="Manifest" achievement="Manifest" description="I can become anything" gfx="manifest.png" quality="3" maxcharges="6" />
-	<passive id="4" name="Bodysuit" achievement="Bodysuit" description="You feel nimble" gfx="bodysuit.png" quality="2" cache="speed" />
-	<passive id="5" name="Bunny Ears" achievement="Bunny Ears" description="Don't hurt me!" gfx="bunny_ears.png" quality="2" addcostumeonpickup="false" cache="tears" effectflattears="1" />
-	<passive id="6" name="Boring Horror" achievement="Boring Horror" description="I'll be your glorious mirror" gfx="boring_horror.png" quality="3" />
-	<passive id="7" name="Sanctuary" achievement="Sanctuary" description="Hidden between the walls" gfx="sanctuary.png" quality="3" />
-	<familiar id="8" name="Little Oxy" achievement="Little Oxy" description="Bunny friend" gfx="little_oxy.png" quality="1" />
-	<familiar id="9" name="Red Keychain" achievement="Red Keychain" description="Visit the other side" gfx="red_keychain.png" quality="3" />
+	<active id="2" name="Manifest" achievement="Manifest" description="I can become anything" gfx="manifest.png" quality="3" maxcharges="6" />
+	<passive id="3" name="Bodysuit" achievement="Bodysuit" description="You feel nimble" gfx="bodysuit.png" quality="2" cache="speed" />
+	<passive id="4" name="Bunny Ears" achievement="Bunny Ears" description="Don't hurt me!" gfx="bunny_ears.png" quality="2" addcostumeonpickup="false" cache="tears" effectflattears="1" />
+	<passive id="5" name="Boring Horror" achievement="Boring Horror" description="I'll be your glorious mirror" gfx="boring_horror.png" quality="3" />
+	<passive id="6" name="Sanctuary" achievement="Sanctuary" description="Hidden between the walls" gfx="sanctuary.png" quality="3" tags="nogreed" />
+	<familiar id="7" name="Little Oxy" achievement="Little Oxy" description="Bunny friend" gfx="little_oxy.png" quality="1" />
+	<familiar id="8" name="Red Keychain" achievement="Red Keychain" description="Visit the other side" gfx="red_keychain.png" quality="3" />
 
 	<!-- Trinkets -->
 	<trinket id="0" name="Tuft of Fur" achievement="Tuft of Fur" description="Fluffy...Hairy..." gfx="tuft_of_fur.png" />
-	<trinket id="1" name="Passage" achievement="Passage" description="Another way through" gfx="passage.png" bombs="1" tags="lazarussharedglobal" />
+	<trinket id="1" name="Passage" achievement="Passage" description="Another way through" gfx="passage.png" bombs="1" tags="lazarussharedglobal nogreed" />
 	<trinket id="2" name="White Petal" achievement="White Petal" description="Another way through" gfx="white_petal.png" />
 	<trinket id="3" name="Four Leaf Clover" achievement="Four Leaf Clover" description="You feel protected!" gfx="four_leaf_clover.png" />
 
 	<!-- Null -->
-	<null id="0" name="steel card" tearsmult="1.5" damagemult="1.5" />
+	<null name="steel card" tearsmult="1.5" damagemult="1.5" />
 </items>

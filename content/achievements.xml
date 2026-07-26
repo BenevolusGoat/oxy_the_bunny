@@ -42,8 +42,6 @@
 	<!-- Mother Unlock -->
 	<achievement name="Sanctuary" gfx="achievement_tuft_of_fur.png" />
 	<achievement name="The Inhabited" gfx="achievement_tainted_oxy.png" />
-	<!-- (Unlocks w/The Inhabited I guess?) -->
-	<achievement name="Specter" gfx="achievement_specter.png" />
 
 	<!-- Tainted Oxy -->
 	<achievement name="Soul of Oxy" gfx="achievement_soul_of_oxy.png" />

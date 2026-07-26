@@ -1,0 +1,42 @@
+<ItemPools>
+	<Pool Name="treasure">
+		<Item Name="Bunny Ears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Boring Horror" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Bodysuit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Chainsaw" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
+		<Item Name="Red Keychain" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="devil">
+		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Chainsaw" Weight="0.5" DecreaseBy="0.5" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="angel">
+		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Chainsaw" Weight="0.5" DecreaseBy="0.5" RemoveOn="0.1"/>
+		<Item Name="Manifest" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="secret">
+		<Item Name="Manifest" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
+		<Item Name="Sanctuary" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="craneGame">
+		<Item Name="Chainsaw" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="curse">
+		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="keyMaster">
+		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="redChest">
+		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="ultraSecret">
+		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="babyShop">
+		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+</ItemPools>

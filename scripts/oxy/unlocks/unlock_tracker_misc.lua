@@ -13,11 +13,6 @@ local function onAchievementUnlock(_, achievement)
 
 		Mod.PersistGameData:TryUnlock(Mod.ACHIEVEMENT_COMPLETION)
 	end
-	if achievement == Mod.Character.OXY_B.ACHIEVEMENT
-		and not Mod.PersistGameData:Unlocked(Mod.Item.SPECTER.ACHIEVEMENT)
-	then
-		Mod.PersistGameData:TryUnlock(Mod.Item.SPECTER.ACHIEVEMENT)
-	end
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_ACHIEVEMENT_UNLOCK, onAchievementUnlock)

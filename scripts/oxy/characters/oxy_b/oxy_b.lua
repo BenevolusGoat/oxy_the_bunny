@@ -4,7 +4,6 @@ local OXY_B = {}
 
 OxyTheBunny.Character.OXY_B = OXY_B
 
-Mod.Include("scripts.oxy.characters.oxy_b.specter")
 Mod.Include("scripts.oxy.characters.oxy_b.manifest")
 
 ---@param player EntityPlayer
@@ -16,7 +15,6 @@ end
 function OXY_B:OxyBHasBirthright(player)
 	return OXY_B:IsOxyB(player) and player:HasCollectible(CollectibleType.COLLECTIBLE_BIRTHRIGHT)
 end
-
 
 ---@param player EntityPlayer
 ---@param tearParams TearParams

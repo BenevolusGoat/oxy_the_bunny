@@ -25,10 +25,10 @@ function WHITE_PETAL:ReplaceAngelRooms(targetIdx, dimension)
 			RoomShape.ROOMSHAPE_1x1,
 			nil,
 			nil,
+			0,
+			0,
 			nil,
-			nil,
-			nil,
-			55
+			500
 		)
 		roomDesc.Data = newRoomConfig
 	end

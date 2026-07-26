@@ -19,10 +19,10 @@ function SANCTUARY:ReplaceSecretRooms(slot, roomConfig, seed)
 			RoomShape.ROOMSHAPE_1x1,
 			nil,
 			nil,
+			0,
+			0,
 			nil,
-			nil,
-			nil,
-			55
+			500
 		)
 		if newRoomConfig then
 			return newRoomConfig

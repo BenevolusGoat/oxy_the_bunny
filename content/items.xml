@@ -13,7 +13,7 @@
 	<!-- Trinkets -->
 	<trinket id="0" name="Tuft of Fur" achievement="Tuft of Fur" description="Fluffy...Hairy..." gfx="tuft_of_fur.png" />
 	<trinket id="1" name="Passage" achievement="Passage" description="Another way through" gfx="passage.png" bombs="1" tags="lazarussharedglobal nogreed" />
-	<trinket id="2" name="White Petal" achievement="White Petal" description="Another way through" gfx="white_petal.png" />
+	<trinket id="2" name="White Petal" achievement="White Petal" description="A pure blessing" gfx="white_petal.png" />
 	<trinket id="3" name="Four Leaf Clover" achievement="Four Leaf Clover" description="You feel protected!" gfx="four_leaf_clover.png" />
 
 	<!-- Null -->

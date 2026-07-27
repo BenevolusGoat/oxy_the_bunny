@@ -40,7 +40,7 @@
 	<achievement name="Four Leaf Clover" gfx="achievement_four_leaf_clover.png" />
 	<achievement name="Chainsaw" gfx="achievement_chainsaw.png" />
 	<!-- Mother Unlock -->
-	<achievement name="Sanctuary" gfx="achievement_tuft_of_fur.png" />
+	<achievement name="Sanctuary" gfx="achievement_sanctuary.png" />
 	<achievement name="The Inhabited" gfx="achievement_tainted_oxy.png" />
 
 	<!-- Tainted Oxy -->

@@ -4,7 +4,7 @@
     </entity>
 	<entity id="3" variant="3784" name="Little Oxy" anm2path="familiar_little_oxy.anm2"
 		friction="1" collisionMass="3" collisionRadius="13" numGridCollisionPoints="12" shadowSize="11"
-		tags="cansacrifice" customtags="">
+		tags="cansacrifice">
 		<gibs amount="0" blood="3" bone="0" eye="0" gut="0" large="0" />
 	</entity>
     <entity id="5" variant="300" name="Steel Card" anm2path="pickup_steel_card.anm2" subtype="847"
@@ -13,4 +13,8 @@
     <entity id="5" variant="300" name="Soul of Oxy" anm2path="pickup_soul_of_oxy.anm2" subtype="848"
 		friction="1" collisionMass="3" collisionRadius="12" numGridCollisionPoints="24" shadowSize="16">
     </entity>
+	<entity id="3" variant="3785" name="Red Keychain" anm2path="familiar_red_keychain.anm2"
+		friction="1" collisionMass="3" collisionRadius="13" numGridCollisionPoints="12" shadowSize="11"
+		tags="cansacrifice">
+	</entity>
 </entities>

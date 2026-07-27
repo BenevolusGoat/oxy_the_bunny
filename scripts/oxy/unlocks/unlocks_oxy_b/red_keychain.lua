@@ -51,7 +51,7 @@ function RED_KEYCHAIN:AddKeys(familiar, num)
 end
 
 ---@param player EntityPlayer
-function RED_KEYCHAIN:GetKeychain(player)
+function RED_KEYCHAIN:TryGetKeychain(player)
 	return Mod.Foreach.Familiar(function(_familiar, index)
 		if GetPtrHash(_familiar.Player) == GetPtrHash(player) then
 			return _familiar
@@ -221,8 +221,7 @@ Mod:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, RED_KEYCHAIN.DetectPlayer
 --#region Innate red key
 
 ---@param player EntityPlayer
-function RED_KEYCHAIN:HandleInnateKey(player)
-	local hasKeychain = player:HasCollectible(RED_KEYCHAIN.ID)
+function RED_KEYCHAIN:HandleInnateKey(player, hasKeychain)
 	local hasKey = RED_KEYCHAIN:HasInnateRedKey(player)
 	if hasKeychain and not hasKey then
 		RED_KEYCHAIN:AddInnateRedKey(player)
@@ -236,9 +235,9 @@ end
 --#region Set closest door outline as target
 
 ---@param player EntityPlayer
-function RED_KEYCHAIN:MarkNearestDoor(player)
+function RED_KEYCHAIN:MarkNearestDoor(player, hasKeychain)
 	if not player:HasCollectible(RED_KEYCHAIN.ID)
-		or not RED_KEYCHAIN:GetKeychain(player)
+		or not hasKeychain
 	then
 		tryRemoveDoorOutlineTarget(player)
 		return
@@ -307,8 +306,9 @@ end
 
 ---@param player EntityPlayer
 function RED_KEYCHAIN:OnPeffectUpdate(player)
-	RED_KEYCHAIN:HandleInnateKey(player)
-	RED_KEYCHAIN:MarkNearestDoor(player)
+	local hasKeychain = RED_KEYCHAIN:TryGetKeychain(player) ~= nil
+	RED_KEYCHAIN:HandleInnateKey(player, hasKeychain)
+	RED_KEYCHAIN:MarkNearestDoor(player, hasKeychain)
 	RED_KEYCHAIN:UpdateCollisionTime(player)
 end
 
@@ -378,7 +378,7 @@ function RED_KEYCHAIN:OpenDoor(player, doorSlot)
 		selectedDoors[GetPtrHash(door)] = nil
 	end
 	data.ClosestDoorOutline = nil
-	local keychain = RED_KEYCHAIN:GetKeychain(player)
+	local keychain = RED_KEYCHAIN:TryGetKeychain(player)
 	RED_KEYCHAIN:AddKeys(keychain, -1)
 end
 

@@ -23,6 +23,8 @@ RED_KEYCHAIN.PLAYBACK_SPEED = 0.85
 RED_KEYCHAIN.DETECTION_RANGE = 120
 --Color of poof when losing a key
 RED_KEYCHAIN.POOF_COLOR = Color(151 / 255,35 / 255, 35 / 255)
+--How many game ticks must pass until it is decided you are no longer touching the door outline to unlock it (30 ticks a second)
+RED_KEYCHAIN.DOOR_GRACE_PERIOD = 4
 
 --#endregion
 
@@ -46,6 +48,7 @@ function RED_KEYCHAIN:AddKeys(familiar, num)
 	if familiar.Keys <= 0 then
 		local player = familiar.Player
 		Mod:DebugLog("Keys expended! Removing keychain...")
+		familiar:Remove()
 		RED_KEYCHAIN:SetRemovedKeychains(player, RED_KEYCHAIN:GetRemovedKeychains(player) + 1)
 	end
 end
@@ -205,7 +208,7 @@ function RED_KEYCHAIN:DetectPlayerAgainstDoor(player, gridIndex, gridEnt)
 			and room:GetGridIndex(doorOutline.Position) == gridIndex
 		then
 			local data = Mod:GetData(player)
-			data.CollidingOnDoorOutline = true
+			data.CollidingOnDoorOutline = RED_KEYCHAIN.DOOR_GRACE_PERIOD
 			data.DoorOutlineIndex = gridIndex
 			return true
 		end
@@ -279,10 +282,12 @@ end
 
 ---@param player EntityPlayer
 function RED_KEYCHAIN:UpdateCollisionTime(player)
-
 	local data = Mod:GetData(player)
-	if data.CollidingOnDoorOutline then
+	if not data.CollidingOnDoorOutline then return end
+
+	if data.CollidingOnDoorOutline > 0 then
 		data.DoorOutlineCollisionTime = (data.DoorOutlineCollisionTime or 0) + 1
+		data.CollidingOnDoorOutline = data.CollidingOnDoorOutline - 1
 		if data.DoorOutlineCollisionTime == RED_KEYCHAIN.DOOR_COLLISION_TIME then
 			local gridIndex = data.DoorOutlineIndex
 			local room = Mod.Room()
@@ -295,11 +300,11 @@ function RED_KEYCHAIN:UpdateCollisionTime(player)
 				end
 			end
 		end
-	elseif data.DoorOutlineCollisionTime then
+	else
 		data.DoorOutlineCollisionTime = nil
 		data.DoorOutlineIndex = nil
+		data.CollidingOnDoorOutline = nil
 	end
-	data.CollidingOnDoorOutline = false
 end
 
 --#endregion

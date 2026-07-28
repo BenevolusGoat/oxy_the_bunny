@@ -5,7 +5,7 @@ local BORING_HORROR = {}
 
 OxyTheBunny.Item.BORING_HORROR = BORING_HORROR
 
-BORING_HORROR.ID = Isaac.GetItemIdByName("Boring Horror")
+BORING_HORROR.ID = Isaac.GetItemIdByName("The Counterpart")
 
 ---@param player EntityPlayer
 ---@param ent Entity

@@ -28,7 +28,7 @@ OxyTheBunny.Item.BUNNY_EARS.ACHIEVEMENT = achievement("Bunny Ears")
 OxyTheBunny.Trinket.TUFT_OF_FUR.ACHIEVEMENT = achievement("Tuft of Fur")
 --[[ Mega Satan Unlock Here ]]
 --[[ Greed Mode Unlock Here ]]
-OxyTheBunny.Item.BORING_HORROR.ACHIEVEMENT = achievement("Boring Horror")
+OxyTheBunny.Item.COUNTERPART.ACHIEVEMENT = achievement("The Counterpart")
 OxyTheBunny.Trinket.FOUR_LEAF_CLOVER.ACHIEVEMENT = achievement("Four Leaf Clover")
 OxyTheBunny.Item.CHAINSAW.ACHIEVEMENT = achievement("Chainsaw")
 --[[ Mother Unlock Here ]]
@@ -44,7 +44,7 @@ OxyTheBunny.CompletionMarkToAchievement.OXY = {
 	[CompletionType.LAMB] = Mod.Trinket.TUFT_OF_FUR.ACHIEVEMENT,
 	--[CompletionType.MEGA_SATAN] = Mod.Item.MECHANICAL_EYE.ACHIEVEMENT,
 	--[CompletionType.ULTRA_GREED] = Mod.Trinket.INFESTED_PENNY.ACHIEVEMENT,
-	[CompletionType.HUSH] = Mod.Item.BORING_HORROR.ACHIEVEMENT,
+	[CompletionType.HUSH] = Mod.Item.COUNTERPART.ACHIEVEMENT,
 	[CompletionType.ULTRA_GREEDIER] = Mod.Trinket.FOUR_LEAF_CLOVER.ACHIEVEMENT,
 	[CompletionType.DELIRIUM] = Mod.Item.CHAINSAW.ACHIEVEMENT,
 	--[CompletionType.MOTHER] = Mod.Item.YARN_HEART.ACHIEVEMENT,

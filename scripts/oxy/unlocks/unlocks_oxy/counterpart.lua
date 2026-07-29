@@ -1,15 +1,15 @@
 local Mod = OxyTheBunny
 local floor = math.floor
 
-local BORING_HORROR = {}
+local COUNTERPART = {}
 
-OxyTheBunny.Item.BORING_HORROR = BORING_HORROR
+OxyTheBunny.Item.COUNTERPART = COUNTERPART
 
-BORING_HORROR.ID = Isaac.GetItemIdByName("The Counterpart")
+COUNTERPART.ID = Isaac.GetItemIdByName("The Counterpart")
 
 ---@param player EntityPlayer
 ---@param ent Entity
-function BORING_HORROR:FireOOBTear(player, ent)
+function COUNTERPART:FireOOBTear(player, ent)
 	local room = Mod.Room()
 	local topLeft = room:GetTopLeftPos()
 	local bottomRight = room:GetBottomRightPos()
@@ -37,7 +37,7 @@ function BORING_HORROR:FireOOBTear(player, ent)
 	tear:ResetSpriteScale(true)
 	tear:AddTearFlags(TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_HOMING)
 	tear:AddVelocity((ent.Position - pos):Resized(20))
-	Mod:GetData(tear).BoringHorror = true
+	Mod:GetData(tear).CounterpartTear = true
 end
 
 ---@param ent Entity
@@ -45,7 +45,7 @@ end
 ---@param flags DamageFlag
 ---@param source EntityRef
 ---@param countdown integer
-function BORING_HORROR:OnTakeDamage(ent, amount, flags, source, countdown)
+function COUNTERPART:OnTakeDamage(ent, amount, flags, source, countdown)
 	if amount > 0
 		and ent:ToNPC()
 		and ent:IsActiveEnemy(false)
@@ -55,14 +55,14 @@ function BORING_HORROR:OnTakeDamage(ent, amount, flags, source, countdown)
 		and source.Entity
 	then
 		local data = Mod:TryGetData(source.Entity)
-		if data and data.BoringHorror then
+		if data and data.CounterpartTear then
 			return
 		end
 		local player = Mod:TryGetPlayer(source)
-		if player and player:HasCollectible(BORING_HORROR.ID) then
-			BORING_HORROR:FireOOBTear(player, ent)
+		if player and player:HasCollectible(COUNTERPART.ID) then
+			COUNTERPART:FireOOBTear(player, ent)
 		end
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, BORING_HORROR.OnTakeDamage)
+Mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, COUNTERPART.OnTakeDamage)

@@ -2,7 +2,7 @@
 	<Pool Name="treasure">
 		<Item Name="Bunny Ears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Boring Horror" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="The Counterpart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Bodysuit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Chainsaw" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
 		<Item Name="Red Keychain" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>

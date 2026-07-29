@@ -6,7 +6,7 @@ local prefix = "scripts.oxy.unlocks.unlocks_"
 
 local oxy = {
 	"bodysuit",
-	"boring_horror",
+	"counterpart",
 	"bunny_ears",
 	"four_leaf_clover",
 	"little_oxy",

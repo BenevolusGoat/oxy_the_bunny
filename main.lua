@@ -138,7 +138,8 @@ local tools = {
 
 local core = {
 	"custom_callbacks",
-	"console_commands"
+	"console_commands",
+	"hair_costumes"
 }
 
 local config = {
@@ -150,6 +151,16 @@ local config = {
 
 OxyTheBunny.Spawn = include("scripts.helpers.spawn")
 OxyTheBunny.Foreach = include("scripts.helpers.for_each")
+OxyTheBunny.PlayerType = {
+	OXY = Isaac.GetPlayerTypeByName("Oxy", false),
+	OXY_B = Isaac.GetPlayerTypeByName("Oxy", true)
+}
+
+---@param player EntityPlayer
+function OxyTheBunny:IsAnyOxy(player)
+	local playerType = player:GetPlayerType()
+	return playerType == Mod.PlayerType.OXY or playerType == Mod.PlayerType.OXY_B
+end
 
 include("scripts.tools.debug_tools")
 Mod.LoopInclude(helpers, "scripts.helpers")
@@ -160,11 +171,6 @@ Mod.LoopInclude(core, "scripts.oxy.core")
 Mod.LoopInclude(config, "scripts.oxy.config")
 
 OxyTheBunny.TearModifier = include("scripts.oxy.core.tear_modifiers")
-
-OxyTheBunny.PlayerType = {
-	OXY = Isaac.GetPlayerTypeByName("Oxy", false),
-	OXY_B = Isaac.GetPlayerTypeByName("Oxy", true)
-}
 
 local characters = {
 	"oxy.oxy",

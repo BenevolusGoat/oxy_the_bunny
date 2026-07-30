@@ -1,6 +1,9 @@
 <costumes anm2root="gfx/characters/">
+	<!-- Null -->
 	<costume id="0" anm2path="character_oxy_extra.anm2" priority="99" type="none"/>
 	<costume id="1" anm2path="character_oxy_b_extra.anm2" priority="99" type="none"/>
+	<costume id="2" anm2path="costume_bunny_transformation.anm2" priority="19" type="none"/>
+	<!-- Collectible -->
 	<costume id="3" anm2path="costume_bodysuit.anm2" type="passive"/>
 	<costume id="4" anm2path="costume_bunny_ears.anm2" type="passive"/>
 </costumes>

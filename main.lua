@@ -207,9 +207,9 @@ function OxyTheBunny:DisableItems()
 		for _, itemTable in pairs(Mod.Item) do
 			itemPool:RemoveCollectible(itemTable.ID)
 		end
-		--[[ for _, trinketTable in pairs(Mod.Trinket) do
-
-		end ]]
+		for _, trinketTable in pairs(Mod.Trinket) do
+			itemPool:RemoveTrinket(trinketTable.ID)
+		end
 	end
 end
 
@@ -217,6 +217,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Mod.DisableItems)
 
 --!End of file
 
+Mod.Include("scripts.oxy.misc.transformation_bunny")
 --Mod.Include("scripts.compatibility.patches.eid_support")
 Mod.Include("scripts.compatibility.patches_loader")
 

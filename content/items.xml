@@ -19,4 +19,5 @@
 
 	<!-- Null -->
 	<null name="steel card" tearsmult="1.5" damagemult="1.5" />
+	<null id="2" name="bunny transformation" persistent="true" />
 </items>

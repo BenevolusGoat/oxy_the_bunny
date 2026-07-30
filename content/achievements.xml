@@ -29,7 +29,7 @@
 	<!-- Oxy -->
 	<achievement name="Oxy" gfx="achievement_oxy.png" />
 	<achievement name="Little Oxy" gfx="achievement_little_oxy.png" />
-	<!-- Isaac Unlock -->
+	<achievement name="Sleepyhead" gfx="achievement_sleepyhead.png" />
 	<achievement name="Bodysuit" gfx="achievement_bodysuit.png" />
 	<achievement name="Bunny Ears" gfx="achievement_bunny_ears.png" />
 	<achievement name="Mutus Liber" gfx="achievement_mutus_liber.png" />

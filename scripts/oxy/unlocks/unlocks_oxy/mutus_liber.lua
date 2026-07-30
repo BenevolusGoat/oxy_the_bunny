@@ -125,7 +125,7 @@ function MUTUS_LIBER:OnUse(item, rng, player)
 		elseif pickup.Variant == PickupVariant.PICKUP_PILL then
 			local itemPool = Mod.Game:GetItemPool()
 			local curPillColor = pickup.SubType
-			local isHorsePill = curPillColor & PillColor.PILL_GIANT_FLAG == PillColor.PILL_GIANT_FLAG
+			local isHorsePill = Mod:HasBitFlags(curPillColor, PillColor.PILL_GIANT_FLAG)
 			local curPillEffect = itemPool:GetPillEffect(curPillColor)
 			local newPillEffect = MUTUS_LIBER.PILL_EFFECT_MAP[curPillEffect]
 			if not newPillEffect then return end

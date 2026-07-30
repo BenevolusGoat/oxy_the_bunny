@@ -51,7 +51,7 @@ end
 ---@param variant PickupVariant
 ---@param subtype integer
 ---@return PickupVariant, integer
-local function checkPickupUnlocks(variant, subtype)
+function Spawn.CheckPickupUnlocks(variant, subtype)
 	local isUnlocked
 	if variant == PickupVariant.PICKUP_TRINKET and subtype & TrinketType.TRINKET_GOLDEN_FLAG == TrinketType.TRINKET_GOLDEN_FLAG then
 		isUnlocked = PickupUnlocks[PickupVariant.PICKUP_TRINKET][TrinketType.TRINKET_GOLDEN_FLAG]()
@@ -88,7 +88,7 @@ end
 
 ---@type fun(variant: PickupVariant, subtype: integer, position: Vector, velocity: VectorOrNil, spawner: EntityOrNil, seed: IntOrNil): EntityPickup
 local function spawnPickup(variant, subtype, position, velocity, spawner, seed)
-	variant, subtype = checkPickupUnlocks(variant, subtype)
+	variant, subtype = Spawn.CheckPickupUnlocks(variant, subtype)
 	local pickup =  game:Spawn(
 		EntityType.ENTITY_PICKUP, variant,
 		position, velocity or Vector.Zero,

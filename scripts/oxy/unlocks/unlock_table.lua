@@ -24,7 +24,7 @@ OxyTheBunny.Item.LITTLE_OXY.ACHIEVEMENT = achievement("Little Oxy")
 --[[ Isaac Unlock Here ]]
 OxyTheBunny.Item.BODYSUIT.ACHIEVEMENT = achievement("Bodysuit")
 OxyTheBunny.Item.BUNNY_EARS.ACHIEVEMENT = achievement("Bunny Ears")
---[[ BB Unlock Here ]]
+OxyTheBunny.Item.MUTUS_LIBER.ACHIEVEMENT = achievement("Mutus Liber")
 OxyTheBunny.Trinket.TUFT_OF_FUR.ACHIEVEMENT = achievement("Tuft of Fur")
 --[[ Mega Satan Unlock Here ]]
 --[[ Greed Mode Unlock Here ]]
@@ -40,7 +40,7 @@ OxyTheBunny.CompletionMarkToAchievement.OXY = {
 	--[CompletionType.ISAAC] = Mod.Item.ARACHNAS_SPOOL.ACHIEVEMENT,
 	[CompletionType.SATAN] = Mod.Item.BODYSUIT.ACHIEVEMENT,
 	[CompletionType.BOSS_RUSH] = Mod.Item.BUNNY_EARS.ACHIEVEMENT,
-	--[CompletionType.BLUE_BABY] = Mod.Trinket.WHITE_STRING.ACHIEVEMENT,
+	[CompletionType.BLUE_BABY] = Mod.Item.MUTUS_LIBER.ACHIEVEMENT,
 	[CompletionType.LAMB] = Mod.Trinket.TUFT_OF_FUR.ACHIEVEMENT,
 	--[CompletionType.MEGA_SATAN] = Mod.Item.MECHANICAL_EYE.ACHIEVEMENT,
 	--[CompletionType.ULTRA_GREED] = Mod.Trinket.INFESTED_PENNY.ACHIEVEMENT,

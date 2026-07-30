@@ -32,7 +32,7 @@
 	<!-- Isaac Unlock -->
 	<achievement name="Bodysuit" gfx="achievement_bodysuit.png" />
 	<achievement name="Bunny Ears" gfx="achievement_bunny_ears.png" />
-	<!-- Polaroid/BB Unlock -->
+	<achievement name="Mutus Liber" gfx="achievement_mutus_liber.png" />
 	<achievement name="Tuft of Fur" gfx="achievement_tuft_of_fur.png" />
 	<!-- Mega Satan Unlock -->
 	<!-- Greed Mode Unlock -->

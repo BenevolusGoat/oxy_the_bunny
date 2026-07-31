@@ -273,30 +273,21 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, CHAINSAW.ChainsawUpdate, CHA
 
 --#region Fire Chainsaw
 
-local STUCK_KNIVES = Mod:Set({
-	KnifeVariant.MOMS_KNIFE,
-	KnifeVariant.SUMPTORIUM,
-	KnifeVariant.BONE_CLUB,
-	KnifeVariant.BONE_SCYTHE,
-})
-
 ---@param player EntityPlayer
 function CHAINSAW:PeffectUpdate(player)
 	local data = Mod:GetData(player)
 	local canUseChainsaw = CHAINSAW:CanUseChainsaw(player)
 	local canShoot = player:CanShoot()
 	if canUseChainsaw and not data.ChainsawBlindfold then
+		local weapon = Isaac.GetPlayer():GetWeapon(1)
+		if not weapon then return end
+		local wType = weapon:GetWeaponType()
+		Isaac.DestroyWeapon(weapon)
 		if canShoot then
 			Mod:SetBlindfold(player, true)
 		end
-		Mod.Foreach.Knife(function (knife, index)
-			if knife.Parent
-				and GetPtrHash(player) == GetPtrHash(knife.Parent)
-				and STUCK_KNIVES[knife.Variant]
-			then
-				knife:Remove()
-			end
-		end, nil, 0, {Inverse = true})
+		local newWeapon = Isaac.CreateWeapon(wType, Isaac.GetPlayer())
+		Isaac.GetPlayer():SetWeapon(newWeapon, 1)
 		data.ChainsawBlindfold = true
 	elseif not canUseChainsaw and data.ChainsawBlindfold then
 		if not canShoot then

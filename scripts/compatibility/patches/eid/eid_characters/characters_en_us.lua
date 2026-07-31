@@ -5,7 +5,8 @@ return function()
 		[Mod.PlayerType.OXY] = {
 			Name = "Oxy",
 			Description = {
-				"buny"
+				"I am",
+				"#a bunny"
 			}
 		},
 		[Mod.PlayerType.OXY_B] = {

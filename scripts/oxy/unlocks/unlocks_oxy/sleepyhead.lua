@@ -6,7 +6,7 @@ local SLEEPYHEAD = {}
 
 OxyTheBunny.Item.SLEEPYHEAD = SLEEPYHEAD
 
-SLEEPYHEAD.ID = Isaac.GetItemIdByName("Sleepyhead")
+SLEEPYHEAD.ID = Isaac.GetItemIdByName("Hypersomnia")
 
 SLEEPYHEAD.BLOCKED_STAGES = Mod:Set({
 	LevelStage.STAGE4_3, --Blue Womb

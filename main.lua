@@ -215,10 +215,11 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, Mod.DisableItems)
 
+Mod.Include("scripts.oxy.misc.transformation_bunny")
+
 --!End of file
 
-Mod.Include("scripts.oxy.misc.transformation_bunny")
---Mod.Include("scripts.compatibility.patches.eid_support")
+Mod.Include("scripts.compatibility.patches.eid.eid_support")
 Mod.Include("scripts.compatibility.patches_loader")
 
 if Mod.FileLoadError then

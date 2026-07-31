@@ -140,7 +140,7 @@ _ = {} ---@type any
 ---@param variant integer
 ---@param subtype integer
 ---@param func fun(): boolean
----@param iconGroup "slots" | "keys" | "cards" | "coins" | "other" | "hearts" | "bombs"
+---@param iconGroup "slots" | "keys" | "cards" | "coins" | "other" | "hearts" | "bombs" | "runes"
 ---@param number? number @default: `13000`
 function MinimapAPI:AddPickup(id, icon, entType, variant, subtype, func, iconGroup, number)
 end

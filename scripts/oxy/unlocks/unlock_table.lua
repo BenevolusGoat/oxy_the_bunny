@@ -4,7 +4,7 @@ local function achievement(str)
 	return Isaac.GetAchievementIdByName(str)
 end
 
----@alias CompletionTable {[CompletionType|ArachnaCompletionType]: Achievement}
+---@alias CompletionTable {[CompletionType|OxyCompletionType]: Achievement}
 
 ---@type {[string]: CompletionTable}
 OxyTheBunny.CompletionMarkToAchievement = {}
@@ -12,7 +12,7 @@ OxyTheBunny.CompletionMarkToAchievement = {}
 ---@type {[PlayerType]: CompletionTable}
 OxyTheBunny.PlayerTypeToCompletionTable = {}
 
----@enum ArachnaCompletionType
+---@enum OxyCompletionType
 OxyTheBunny.CompletionType = {
 	ALL = 18
 }

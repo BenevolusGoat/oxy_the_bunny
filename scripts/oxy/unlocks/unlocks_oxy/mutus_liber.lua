@@ -108,7 +108,12 @@ MUTUS_LIBER.PILL_EFFECT_MAP = {
 	[PillEffect.PILLEFFECT_LUCK_DOWN] =			PillEffect.PILLEFFECT_LUCK_UP
 }
 
-function MUTUS_LIBER:OnUse(item, rng, player)
+---@param item any
+---@param rng RNG
+---@param player any
+---@param flags UseFlag
+function MUTUS_LIBER:OnUse(item, rng, player, flags)
+	if Mod:HasBitFlags(flags, UseFlag.USE_CARBATTERY) then return end
 	Mod.Foreach.Pickup(function (pickup, index)
 		local transformedData = MUTUS_LIBER.PICKUP_MAP[pickup.Variant] and MUTUS_LIBER.PICKUP_MAP[pickup.Variant][pickup.SubType]
 		if transformedData then

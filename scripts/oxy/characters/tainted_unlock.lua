@@ -27,7 +27,7 @@ Mod:AddCallback(ModCallbacks.MC_PRE_ROOM_ENTITY_SPAWN, TAINTED_UNLOCK.OnSlotSpaw
 ---@param slot EntitySlot
 function TAINTED_UNLOCK:CryingTaintedSpriteOnInit(slot)
 	local player = Isaac.GetPlayer()
-	if player:GetPlayerType() == Mod.PlayerType.ARACHNA then
+	if player:GetPlayerType() == Mod.PlayerType.OXY then
 		local sprite = slot:GetSprite()
 		sprite:ReplaceSpritesheet(0, player:GetEntityConfigPlayer():GetTaintedCounterpart():GetSkinPath(), true)
 	end
@@ -39,7 +39,7 @@ Mod:AddCallback(ModCallbacks.MC_POST_SLOT_INIT, TAINTED_UNLOCK.CryingTaintedSpri
 function TAINTED_UNLOCK:UnlockTainted(slot)
 	if checkOxyTaintedLocked() then
 		local sprite = slot:GetSprite()
-		local unlock_table = Mod.PlayerTypeToCompletionTable[Mod.PlayerType.ARACHNA]
+		local unlock_table = Mod.PlayerTypeToCompletionTable[Mod.PlayerType.OXY]
 		local tainted = unlock_table[CompletionType.TAINTED]
 		local persistGameData = Isaac.GetPersistentGameData()
 		if sprite:IsFinished("PayPrize") then

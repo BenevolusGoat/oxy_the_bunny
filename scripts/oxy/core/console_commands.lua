@@ -144,7 +144,7 @@ local commandFuncs = {
 	end
 }
 
-local description = "The following commands can be accessed by typing \"arachnaMod <command name>\""
+local description = "The following commands can be accessed by typing \"" .. rootCommand .. " <command name>\""
 for _, commandTable in ipairs(commands) do
 	description = description .. "\n  - " .. commandTable[1] .. " - " .. commandTable[2]
 	if helpText[commandTable[1]] then

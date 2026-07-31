@@ -10,7 +10,7 @@
 	<familiar id="7" name="Little Oxy" achievement="Little Oxy" description="Bunny friend" gfx="little_oxy.png" quality="1" tags="baby" />
 	<familiar id="8" name="Red Keychain" achievement="Red Keychain" description="Visit the other side" gfx="red_keychain.png" quality="3" tags="nogreed" />
 	<active id="9" name="Mutus Liber" achievement="Mutus Liber" description="Reusable Transmutation" gfx="mutus_liber.png" quality="2" maxcharges="4" tags="book" />
-	<passive id="10" name="Hypersomnia" achievement="Sleepyhead" description="I drag you back a sleepyhead" gfx="hypersomnia.png" quality="2" tags="lazarussharedglobal nogreed" cache="damage" />
+	<passive id="10" name="Hypersomnia" achievement="Hypersomnia" description="I drag you back a sleepyhead" gfx="hypersomnia.png" quality="2" tags="lazarussharedglobal nogreed" cache="damage" />
 
 	<!-- Trinkets -->
 	<trinket id="0" name="Tuft of Fur" achievement="Tuft of Fur" description="Fluffy...Hairy..." gfx="tuft_of_fur.png" />

@@ -13,7 +13,7 @@ local oxy = {
 	"sanctuary",
 	"tuft_of_fur",
 	"mutus_liber",
-	"sleepyhead"
+	"hypersomnia"
 }
 
 Mod.LoopInclude(oxy, prefix .. "oxy")

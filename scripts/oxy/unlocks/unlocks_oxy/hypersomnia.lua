@@ -2,13 +2,13 @@
 
 local Mod = OxyTheBunny
 
-local SLEEPYHEAD = {}
+local HYPERSOMNIA = {}
 
-OxyTheBunny.Item.SLEEPYHEAD = SLEEPYHEAD
+OxyTheBunny.Item.HYPERSOMNIA = HYPERSOMNIA
 
-SLEEPYHEAD.ID = Isaac.GetItemIdByName("Hypersomnia")
+HYPERSOMNIA.ID = Isaac.GetItemIdByName("Hypersomnia")
 
-SLEEPYHEAD.BLOCKED_STAGES = Mod:Set({
+HYPERSOMNIA.BLOCKED_STAGES = Mod:Set({
 	LevelStage.STAGE4_3, --Blue Womb
 	LevelStage.STAGE7, --Void
 	LevelStage.STAGE8, --Home
@@ -19,34 +19,34 @@ SLEEPYHEAD.BLOCKED_STAGES = Mod:Set({
 --#region Darkness
 
 ---@param curses integer
-function SLEEPYHEAD:CurseOfDarkness(curses)
-	if PlayerManager.AnyoneHasCollectible(SLEEPYHEAD.ID)
+function HYPERSOMNIA:CurseOfDarkness(curses)
+	if PlayerManager.AnyoneHasCollectible(HYPERSOMNIA.ID)
 		and not Mod.Game:IsGreedMode()
-		and not SLEEPYHEAD.BLOCKED_STAGES[Mod.Level():GetStage()]
+		and not HYPERSOMNIA.BLOCKED_STAGES[Mod.Level():GetStage()]
 	then
 		return Mod:AddBitFlags(curses, LevelCurse.CURSE_OF_DARKNESS)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL, SLEEPYHEAD.CurseOfDarkness)
+Mod:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL, HYPERSOMNIA.CurseOfDarkness)
 
 --#endregion
 
 --#region Sleeping in bed
 
-function SLEEPYHEAD:PostBedSleep()
-	if PlayerManager.AnyoneHasCollectible(SLEEPYHEAD.ID) then
+function HYPERSOMNIA:PostBedSleep()
+	if PlayerManager.AnyoneHasCollectible(HYPERSOMNIA.ID) then
 		local floor_save = Mod:FloorSave()
 		Mod.Level():RemoveCurses(LevelCurse.CURSE_OF_DARKNESS)
 		floor_save.BedsSlept = (floor_save.BedsSlept or 0) + 1
-		Mod.Foreach.Player(function (player, index)
+		Mod.Foreach.Player(function(player, index)
 			player:AddCacheFlags(CacheFlag.CACHE_DAMAGE, true)
 		end)
 	end
 end
 
 ---@diagnostic disable-next-line: undefined-field
-Mod:AddPriorityCallback(ModCallbacks.MC_PRE_TRIGGER_BED_SLEEP_EFFECT, CallbackPriority.LATE, SLEEPYHEAD.PostBedSleep)
+Mod:AddPriorityCallback(ModCallbacks.MC_PRE_TRIGGER_BED_SLEEP_EFFECT, CallbackPriority.LATE, HYPERSOMNIA.PostBedSleep)
 
 --#endregion
 
@@ -54,13 +54,13 @@ Mod:AddPriorityCallback(ModCallbacks.MC_PRE_TRIGGER_BED_SLEEP_EFFECT, CallbackPr
 
 ---@param player EntityPlayer
 ---@param value number
-function SLEEPYHEAD:DamageBonus(player, stat, value)
-	if player:HasCollectible(SLEEPYHEAD.ID) then
+function HYPERSOMNIA:DamageBonus(player, stat, value)
+	if player:HasCollectible(HYPERSOMNIA.ID) then
 		return value + (Mod:FloorSave().BedsSlept or 0)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_EVALUATE_STAT, SLEEPYHEAD.DamageBonus, EvaluateStatStage.DAMAGE_UP)
+Mod:AddCallback(ModCallbacks.MC_EVALUATE_STAT, HYPERSOMNIA.DamageBonus, EvaluateStatStage.DAMAGE_UP)
 
 --#endregion
 
@@ -149,7 +149,9 @@ function RoomGenHelper:TryGetValidRandomRoom(rng, stage, type, shape, minVariant
 				mode
 			)
 			numTries = numTries + 1
-			hasValidLocations = roomConfig and #level:FindValidRoomPlacementLocations(roomConfig, Dimension.CURRENT, allowMultipleDoors, allowSpecialNeighbors) > 0 or false
+			hasValidLocations = roomConfig and
+			#level:FindValidRoomPlacementLocations(roomConfig, Dimension.CURRENT, allowMultipleDoors,
+				allowSpecialNeighbors) > 0 or false
 		until hasValidLocations
 			or numTries >= MAX_ROOM_GEN_ATTEMPTS
 	end
@@ -187,9 +189,11 @@ function RoomGenHelper:TryGetValidRoomByStbAndVariant(stbType, roomType, variant
 	local function generateRoom()
 		local numTries = 0
 		repeat
-			roomConfig = RoomConfig.GetRoomByStageTypeAndVariant(stbType, roomType, variants[rng:RandomInt(#variants) + 1], difficulty)
+			roomConfig = RoomConfig.GetRoomByStageTypeAndVariant(stbType, roomType,
+				variants[rng:RandomInt(#variants) + 1], difficulty)
 			numTries = numTries + 1
-			hasValidLocations = #level:FindValidRoomPlacementLocations(roomConfig, Dimension.CURRENT, allowMultipleDoors, allowSpecialNeighbors) > 0
+			hasValidLocations = #level:FindValidRoomPlacementLocations(roomConfig, Dimension.CURRENT, allowMultipleDoors,
+				allowSpecialNeighbors) > 0
 		until hasValidLocations
 			or numTries >= MAX_ROOM_GEN_ATTEMPTS
 	end
@@ -245,17 +249,17 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 		local roomSubtype = 0
 		---@cast roomTypeOrConfig RoomType
 		roomType = roomTypeOrConfig
---[[ 		if RoomGenHelper.RoomTypeToSubtype[roomType] then
+		--[[ 		if RoomGenHelper.RoomTypeToSubtype[roomType] then
 			roomSubtype = RoomGenHelper.RoomTypeToSubtype[roomType](rng)
 		end ]]
 
 		local stbType = StbType.SPECIAL_ROOMS
---[[ 		if roomType == RoomType.ROOM_DEFAULT then
+		--[[ 		if roomType == RoomType.ROOM_DEFAULT then
 			stbType = Isaac.GetCurrentStageConfigId()
 		end ]]
 
 		local minVariant, maxVariant = -1, -1
---[[ 		if roomType == RoomType.ROOM_CHALLENGE then
+		--[[ 		if roomType == RoomType.ROOM_CHALLENGE then
 			local stageType = level:GetStageType()
 			local stage = level:GetStage()
 			if (stage == LevelStage.STAGE2_1 or stage == LevelStage.STAGE2_2)
@@ -281,7 +285,8 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 
 		allowMultipleDoors, allowSpecialNeighbors = getDefaultValidRoomPlacementArgs(roomType)
 
-		roomConfig = RoomGenHelper:TryGetValidRandomRoom(rng, stbType, roomType, nil, minVariant, maxVariant, nil, nil, nil, roomSubtype, mode)
+		roomConfig = RoomGenHelper:TryGetValidRandomRoom(rng, stbType, roomType, nil, minVariant, maxVariant, nil, nil,
+			nil, roomSubtype, mode)
 	else
 		---@cast roomTypeOrConfig RoomConfigRoom
 		roomConfig = roomTypeOrConfig
@@ -290,12 +295,17 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 	end
 
 	local roomName = Mod:FindInTable(RoomType, roomType)
-	if not roomConfig then Mod:DebugLog("Failed to obtain room to generate with type", roomName) return end
+	if not roomConfig then
+		Mod:DebugLog("Failed to obtain room to generate with type", roomName)
+		return
+	end
 
-	Mod:DebugLog("Attempting spawn for", roomName .. ".", "MultipleDoors:", tostring(allowMultipleDoors) .. ",", "SpecialNeighbors:", allowSpecialNeighbors)
+	Mod:DebugLog("Attempting spawn for", roomName .. ".", "MultipleDoors:", tostring(allowMultipleDoors) .. ",",
+		"SpecialNeighbors:", allowSpecialNeighbors)
 
 	-- Fetch all valid locations.
-	local options = level:FindValidRoomPlacementLocations(roomConfig, dimension, allowMultipleDoors, allowSpecialNeighbors)
+	local options = level:FindValidRoomPlacementLocations(roomConfig, dimension, allowMultipleDoors,
+		allowSpecialNeighbors)
 	local isSecret = roomType == RoomType.ROOM_SECRET or roomType == RoomType.ROOM_SUPERSECRET
 	Mod:DebugLog("Num available placement options:", #options)
 
@@ -317,7 +327,8 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 				numNeighbors = numNeighbors + 1
 			end
 			if numNeighbors < preferredSecretNeighbors then
-				Mod:DebugLog("Skipping. Secret with only", numNeighbors, "when searching for at least", preferredSecretNeighbors)
+				Mod:DebugLog("Skipping. Secret with only", numNeighbors, "when searching for at least",
+					preferredSecretNeighbors)
 				goto skipOption
 			end
 		end
@@ -331,7 +342,8 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 				hasNonSecretNeighbor = true
 			end
 			if hasSecretNeighbor and not hasNonSecretNeighbor then
-				Mod:DebugLog("Invalid neighbor found at", neighborDesc.GridIndex .. ", skip placement (Secret neighbor with no non-secret neighbors).")
+				Mod:DebugLog("Invalid neighbor found at",
+					neighborDesc.GridIndex .. ", skip placement (Secret neighbor with no non-secret neighbors).")
 				invalidSecretNeighbor = true
 				break
 			end
@@ -340,7 +352,9 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 				or neighborType == RoomType.ROOM_ULTRASECRET
 				or (greedMode and neighborType == RoomType.ROOM_DEFAULT) --Would block angel/devil otherwise
 			then
-				Mod:DebugLog("Invalid neighbor found at", neighborDesc.GridIndex .. ", skip placement (Super secret, ultra secret, secret next to secret, or a default room in greed mode).")
+				Mod:DebugLog("Invalid neighbor found at",
+					neighborDesc.GridIndex ..
+					", skip placement (Super secret, ultra secret, secret next to secret, or a default room in greed mode).")
 				invalidSecretNeighbor = true
 				break
 			end
@@ -353,7 +367,8 @@ function RoomGenHelper:AddRoom(roomTypeOrConfig)
 		local room = level:TryPlaceRoom(roomConfig, gridIndex, dimension, seed, allowMultipleDoors, allowSpecialNeighbors)
 		if room then
 			if level:HasMirrorDimension() then
-				level:TryPlaceRoom(roomConfig, gridIndex, Dimension.MIRROR, seed, allowMultipleDoors, allowSpecialNeighbors)
+				level:TryPlaceRoom(roomConfig, gridIndex, Dimension.MIRROR, seed, allowMultipleDoors,
+					allowSpecialNeighbors)
 			end
 			Mod:DebugLog(roomName, "variant", room.Data.OriginalVariant, "generated at index", gridIndex)
 			RoomGenHelper:UpdateMinimAPI()
@@ -378,30 +393,30 @@ end
 
 --#region Spawn Bedroom
 
-function SLEEPYHEAD:OnNewLevel()
+function HYPERSOMNIA:OnNewLevel()
 	local stage = Mod.Level():GetStage()
-	if PlayerManager.AnyoneHasCollectible(SLEEPYHEAD.ID)
+	if PlayerManager.AnyoneHasCollectible(HYPERSOMNIA.ID)
 		and not Mod.Game:IsGreedMode()
-		and not SLEEPYHEAD.BLOCKED_STAGES[stage]
+		and not HYPERSOMNIA.BLOCKED_STAGES[stage]
 	then
-		for i = 1, PlayerManager.GetNumCollectibles(SLEEPYHEAD.ID) do
+		for i = 1, PlayerManager.GetNumCollectibles(HYPERSOMNIA.ID) do
 			RoomGenHelper:AddRoom(RoomType.ROOM_ISAACS)
 		end
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, SLEEPYHEAD.OnNewLevel)
+Mod:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, HYPERSOMNIA.OnNewLevel)
 
 --#endregion
 
 --#region Unlock Bedroom door for free
 
-function SLEEPYHEAD:TryOpenBedroomDoor()
-	if PlayerManager.AnyoneHasCollectible(SLEEPYHEAD.ID) then
-		Mod.Foreach.Player(function (player, index)
+function HYPERSOMNIA:TryOpenBedroomDoor()
+	if PlayerManager.AnyoneHasCollectible(HYPERSOMNIA.ID) then
+		Mod.Foreach.Player(function(player, index)
 			player:AddCacheFlags(CacheFlag.CACHE_DAMAGE, true)
 		end)
-		Mod.Foreach.Door(function (door, doorSlot)
+		Mod.Foreach.Door(function(door, doorSlot)
 			local targetIdx = door.TargetRoomIndex
 			local listIndex = Mod.Level():GetRoomByIdx(targetIdx).ListIndex
 			if door.TargetRoomType == RoomType.ROOM_ISAACS
@@ -414,6 +429,6 @@ function SLEEPYHEAD:TryOpenBedroomDoor()
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, SLEEPYHEAD.TryOpenBedroomDoor)
+Mod:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, HYPERSOMNIA.TryOpenBedroomDoor)
 
 --#endregion

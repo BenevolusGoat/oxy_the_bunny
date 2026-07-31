@@ -21,7 +21,7 @@ OxyTheBunny.CompletionType = {
 
 OxyTheBunny.Character.OXY.ACHIEVEMENT = achievement("Oxy")
 OxyTheBunny.Item.LITTLE_OXY.ACHIEVEMENT = achievement("Little Oxy")
-OxyTheBunny.Item.SLEEPYHEAD.ACHIEVEMENT = achievement("Sleepyhead")
+OxyTheBunny.Item.HYPERSOMNIA.ACHIEVEMENT = achievement("Hypersomnia")
 OxyTheBunny.Item.BODYSUIT.ACHIEVEMENT = achievement("Bodysuit")
 OxyTheBunny.Item.BUNNY_EARS.ACHIEVEMENT = achievement("Bunny Ears")
 OxyTheBunny.Item.MUTUS_LIBER.ACHIEVEMENT = achievement("Mutus Liber")
@@ -37,7 +37,7 @@ OxyTheBunny.Character.OXY_B.ACHIEVEMENT = achievement("The Inhabited")
 
 OxyTheBunny.CompletionMarkToAchievement.OXY = {
 	[CompletionType.MOMS_HEART] = Mod.Item.LITTLE_OXY.ACHIEVEMENT,
-	[CompletionType.ISAAC] = Mod.Item.SLEEPYHEAD.ACHIEVEMENT,
+	[CompletionType.ISAAC] = Mod.Item.HYPERSOMNIA.ACHIEVEMENT,
 	[CompletionType.SATAN] = Mod.Item.BODYSUIT.ACHIEVEMENT,
 	[CompletionType.BOSS_RUSH] = Mod.Item.BUNNY_EARS.ACHIEVEMENT,
 	[CompletionType.BLUE_BABY] = Mod.Item.MUTUS_LIBER.ACHIEVEMENT,

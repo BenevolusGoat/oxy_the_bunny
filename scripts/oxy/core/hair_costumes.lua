@@ -25,10 +25,12 @@ COSTUMES.CostumeInfo = {
 	[Mod.PlayerType.OXY] = {
 		CostumeConfig = Mod.ItemConfig:GetNullItem(Isaac.GetCostumeIdByPath(ANM2_PATH .. "character_oxy_extra.anm2")),
 		CostumePath = "gfx/characters/costumes/character_01_oxy_hair.png",
+		Suffix = "oxy"
 	},
 	[Mod.PlayerType.OXY_B] = {
 		CostumeConfig = Mod.ItemConfig:GetNullItem(Isaac.GetCostumeIdByPath(ANM2_PATH .. "character_oxy_b_extra.anm2")),
 		CostumePath = "gfx/characters/costumes/character_01b_oxy_hair.png",
+		Suffix = "oxy_b"
 	}
 }
 
@@ -118,3 +120,40 @@ end
 
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_ADD_COSTUME, COSTUMES.UpdateCostumesOnAddAndRemove)
 Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_REMOVE_COSTUME, COSTUMES.UpdateCostumesOnAddAndRemove)
+
+---@param player EntityPlayer
+---@param itemConfigItem ItemConfigItem
+function COSTUMES:ShouldRemoveCostume(player, itemConfigItem)
+	local sprite = Sprite(itemConfigItem.Costume.Anm2Path)
+	local headLayer, bodyLayer = sprite:GetLayer("head"), sprite:GetLayer("body")
+	if itemConfigItem:IsNull() and itemConfigItem.ID == player:GetEntityConfigPlayer():GetCostumeID() then return end
+	local name = COSTUMES.CostumeInfo[player:GetPlayerType()].Suffix
+
+	if headLayer then
+		local spritePathHead = headLayer:GetSpritesheetPath()
+		if not spritePathHead:find("costumes_" .. name) then
+			return true
+		end
+	end
+	if bodyLayer then
+		local spritePathBody = bodyLayer:GetSpritesheetPath()
+		if not spritePathBody:find("costumes_" .. name) then
+			return true
+		end
+	end
+
+	return false
+end
+
+---@param itemConfigItem ItemConfigItem
+---@param player EntityPlayer
+function COSTUMES:RemoveIncompatibleCostumes(itemConfigItem, player)
+	if Mod:IsAnyOxy(player)
+		and not itemConfigItem.Costume.IsFlying --Permit flying costumes
+		and COSTUMES:ShouldRemoveCostume(player, itemConfigItem)
+	then
+		return true
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_PRE_PLAYER_ADD_COSTUME, COSTUMES.RemoveIncompatibleCostumes)

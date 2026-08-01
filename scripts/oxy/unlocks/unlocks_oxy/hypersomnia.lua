@@ -7,6 +7,13 @@ local HYPERSOMNIA = {}
 OxyTheBunny.Item.HYPERSOMNIA = HYPERSOMNIA
 
 HYPERSOMNIA.ID = Isaac.GetItemIdByName("Hypersomnia")
+HYPERSOMNIA.TEMP_POOL_ITEM = {
+	itemID = HYPERSOMNIA.ID,
+	name = "Hypersomnia",
+	weight = 0.2,
+	decreaseBy = 0.2,
+	removeOn = 0.1
+}
 
 HYPERSOMNIA.BLOCKED_STAGES = Mod:Set({
 	LevelStage.STAGE4_3, --Blue Womb
@@ -29,6 +36,35 @@ function HYPERSOMNIA:CurseOfDarkness(curses)
 end
 
 Mod:AddCallback(ModCallbacks.MC_POST_CURSE_EVAL, HYPERSOMNIA.CurseOfDarkness)
+
+--#endregion
+
+--#region Hypersomnia in all pools during Curse of Darkness
+
+local tempHypersomniaActive = false
+
+function HYPERSOMNIA:InsertIntoPoolDuringDarkness()
+	local itemPool = Mod.Game:GetItemPool()
+	local curses = Mod.Level():GetCurses()
+	if not itemPool:CanSpawnCollectible(HYPERSOMNIA.ID, false) then return end
+	if Mod:HasBitFlags(curses, LevelCurse.CURSE_OF_DARKNESS)
+		and not tempHypersomniaActive
+	then
+		for poolType = 0, itemPool:GetNumItemPools() - 1 do
+			itemPool:AddTemporaryCollectible(poolType, HYPERSOMNIA.TEMP_POOL_ITEM)
+		end
+		tempHypersomniaActive = true
+	elseif not Mod:HasBitFlags(curses, LevelCurse.CURSE_OF_DARKNESS)
+		and tempHypersomniaActive
+	then
+		for poolType = 0, itemPool:GetNumItemPools() - 1 do
+			itemPool:RemoveTemporaryCollectible(poolType, HYPERSOMNIA.TEMP_POOL_ITEM)
+		end
+		tempHypersomniaActive = false
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_UPDATE, HYPERSOMNIA.InsertIntoPoolDuringDarkness)
 
 --#endregion
 

@@ -3,9 +3,19 @@
 		<Item Name="Bunny Ears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="The Counterpart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<Item Name="Bodysuit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Chainsaw" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
 		<Item Name="Red Keychain" Weight="0.2" DecreaseBy="0.2" RemoveOn="0.1"/>
+		<Item Name="Hypersomnia" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Mutus Liber" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="shop">
+		<Item Name="Mutus Liber" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="library">
+		<Item Name="Mutus Liber" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="boss">
+		<Item Name="Bodysuit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="devil">
 		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -26,9 +36,13 @@
 	</Pool>
 	<Pool Name="curse">
 		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Hypersomnia" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="keyMaster">
 		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="goldenChest">
+		<Item Name="Bodysuit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 	<Pool Name="redChest">
 		<Item Name="Red Keychain" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
@@ -38,5 +52,20 @@
 	</Pool>
 	<Pool Name="babyShop">
 		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="greedTreasure">
+		<Item Name="Bunny Ears" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="The Counterpart" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="greedDevil">
+		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="greedAngel">
+		<Item Name="Little Oxy" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+	</Pool>
+	<Pool Name="greedShop">
+	</Pool>
+	<Pool Name="greedBoss">
+		<Item Name="Bodysuit" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
 </ItemPools>

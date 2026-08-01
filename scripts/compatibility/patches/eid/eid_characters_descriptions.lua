@@ -29,7 +29,6 @@ for playerId, charDescData in pairs(allDescData) do
 		if not DD:IsValidDescription(descData.Description) or DD:ContainsFunction(descData.Description) then
 			Mod:Log("Invalid character description for " .. descData.Name, "Language: " .. lang)
 		else
-			print("awawa")
 			EID:addCharacterInfo(playerId, table.concat(descData.Description, ""), descData.Name, lang)
 		end
 	end

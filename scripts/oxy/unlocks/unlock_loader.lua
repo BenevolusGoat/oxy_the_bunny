@@ -36,3 +36,4 @@ Mod.LoopInclude(oxy_b, prefix .. "oxy_b")
 
 Mod.Include("scripts.oxy.unlocks.unlock_table")
 Mod.Include("scripts.oxy.unlocks.unlock_tracker_marks")
+Mod.Include("scripts.oxy.unlocks.unlock_tracker_misc")

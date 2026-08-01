@@ -35,8 +35,8 @@ function HOLSTER:ChainsawCooldownOnHit(ent, amount, flags, source, cooldown)
 		local hasOxySaw = player:GetInnateCollectibleCount(item, "Oxy") > 0
 		if hasOxySaw then
 			player:RemoveInnateCollectible(item, 1, "Oxy")
-			Mod:RunSave(player).ChainsawDisabled = true
 		end
+		Mod:RunSave(player).ChainsawDisabled = true
 	end
 end
 

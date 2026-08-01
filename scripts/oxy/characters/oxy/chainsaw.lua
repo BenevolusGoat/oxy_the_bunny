@@ -88,6 +88,10 @@ end
 ---@param displacement integer
 ---@param isSpecter? boolean
 function CHAINSAW:SpawnChainsaw(player, angle, pos, displacement, isSpecter)
+	local spritesheet = Isaac.RunCallback(Mod.ModCallbacks.CHAINSAW_GET_SKIN, player)
+	if not spritesheet then
+		spritesheet = "gfx/effects/weapon_chainsaw.png"
+	end
 	local chainsaw = Mod.Spawn.Effect(CHAINSAW.KNIFE, 0, pos, nil, player)
 	local sprite = chainsaw:GetSprite()
 	local data = Mod:GetData(chainsaw)
@@ -97,6 +101,7 @@ function CHAINSAW:SpawnChainsaw(player, angle, pos, displacement, isSpecter)
 	chainsaw.Color = tearParams.TearColor
 	chainsaw.Rotation = angle
 	sprite.Rotation = angle
+	sprite:ReplaceSpritesheet(0, spritesheet, true)
 	sprite:Play("Swing", true)
 	chainsaw.Parent = player
 	if isSpecter then
@@ -156,12 +161,14 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 			local pos = npc.Position + (chainsaw.Position - npc.Position):Resized(npc.Size)
 			npc:ApplyTearflagEffects(pos, tearFlags, chainsaw, damage)
 			if not npc:HasEntityFlags(EntityFlag.FLAG_NO_FLASH_ON_DAMAGE) then
-				local sfx = isTip and SoundEffect.SOUND_TOOTH_AND_NAIL or SoundEffect.SOUND_MEATY_DEATHS
-				Mod.SFXMan:Play(sfx)
 				if isTip then
-					local impact = Mod.Spawn.Effect(EffectVariant.IMPACT, 0, pos, nil, chainsaw)
+					local impact = Mod.Spawn.Effect(EffectVariant.IMPACT, 0, npc.Position, nil, chainsaw)
+					impact.DepthOffset = 10
 					impact.SpriteScale = Vector(1.5, 1.5)
 					impact.Color = chainsaw.Color
+					Mod.SFXMan:Play(SoundEffect.SOUND_KNIFE_PULL, 1, 2, false, 1.2)
+				else
+					Mod.SFXMan:Play(SoundEffect.SOUND_MEATY_DEATHS)
 				end
 			end
 			hitEnemies[ent.Index] = true
@@ -213,6 +220,10 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 		tearFlags = data.ChainsawTearFlags
 		chainsaw.Color = tearParams.TearColor
 	end
+	local hasKnife = false
+	if player then
+		hasKnife = player:HasWeaponType(WeaponType.WEAPON_KNIFE)
+	end
 
 	chainsaw.CollisionDamage = damage
 
@@ -220,10 +231,10 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 		damageInCapsule(chainsaw, capsuleTip, damage * 2, source, tearFlags, hitEnemies, hitGrids, true)
 	end
 	if null1 and null1:IsVisible() then
-		damageInCapsule(chainsaw, capsule1, damage, source, tearFlags, hitEnemies, hitGrids)
+		damageInCapsule(chainsaw, capsule1, damage, source, tearFlags, hitEnemies, hitGrids, hasKnife)
 	end
 	if null2 and null2:IsVisible() then
-		damageInCapsule(chainsaw, capsule2, damage, source, tearFlags, hitEnemies, hitGrids)
+		damageInCapsule(chainsaw, capsule2, damage, source, tearFlags, hitEnemies, hitGrids, hasKnife)
 	end
 end
 

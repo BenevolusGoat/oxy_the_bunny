@@ -24,3 +24,12 @@ function OXY_B:FearEffect(player, tearParams)
 end
 
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, OXY_B.FearEffect, Mod.PlayerType.OXY_B)
+
+---@param player EntityPlayer
+function OXY_B:Specter(player)
+	if OXY_B:IsOxyB(player) then
+		return "gfx/effects/weapon_specter.png"
+	end
+end
+
+Mod:AddPriorityCallback(Mod.ModCallbacks.CHAINSAW_GET_SKIN, CallbackPriority.IMPORTANT, OXY_B.Specter)

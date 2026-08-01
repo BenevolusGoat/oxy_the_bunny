@@ -2,7 +2,7 @@
     <Info CreatedBy="Unknown" CreatedOn="7/15/2026 1:39:43 AM" Fps="30" Version="3"/>
     <Content>
         <Spritesheets>
-            <Spritesheet Id="0" Path="weapon_chainsaw.png"/>
+            <Spritesheet Id="0" Path="effects/weapon_chainsaw.png"/>
         </Spritesheets>
         <Layers>
             <Layer Id="0" Name="main" SpritesheetId="0"/>

@@ -15,7 +15,9 @@ OxyTheBunny.ModCallbacks = {
 	--(Vector FireDirection, integer FireAmount, EntityPlayer Player, integer NumFired, EntityEffect Chainsaw)
 	POST_CHAINSAW_FIRE = "OXY_POST_CHAINSAW_FIRE",
 	--(EntityPlayer Player) - Return a table of rotation offsets for extra chainsaws that only swing once
-	CHAINSAW_GET_EXTRA_SAWS = "OXY_CHAINSAW_GET_EXTRA_SAWS"
+	CHAINSAW_GET_EXTRA_SAWS = "OXY_CHAINSAW_GET_EXTRA_SAWS",
+	--(EntityPlayer Player) - Return a string containing a png filepath to overwrite the spritesheet used by Chainsaw.
+	CHAINSAW_GET_SKIN = "OXY_CHAINSAW_GET_SKIN"
 }
 
 ---@param npc EntityNPC

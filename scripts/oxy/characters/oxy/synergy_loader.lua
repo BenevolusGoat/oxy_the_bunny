@@ -20,6 +20,7 @@ local synergyList = {
 	"lacryphagy",
 	"large_zit",
 	"lead_pencil",
+	"moms_knife",
 	"moms_wig",
 	"mucormycosis",
 	"mulligan",
@@ -30,6 +31,7 @@ local synergyList = {
 	"sinus_infection",
 	"sulfuric_acid",
 	"technology_2",
+	"technology",
 	"terra"
 }
 

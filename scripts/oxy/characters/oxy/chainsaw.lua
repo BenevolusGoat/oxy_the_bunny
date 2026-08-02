@@ -7,11 +7,10 @@ local CHAINSAW = {}
 OxyTheBunny.Item.CHAINSAW = CHAINSAW
 
 CHAINSAW.ID = Isaac.GetItemIdByName("Chainsaw")
+CHAINSAW.NULL_ID = Isaac.GetNullItemIdByName("chainsaw stats")
 CHAINSAW.KNIFE = Isaac.GetEntityVariantByName("Oxy's Chainsaw")
 
 CHAINSAW.DEFAULT_HIT_COUNTDOWN = 3
-CHAINSAW.FIREDELAY_DIV = 0.33
-CHAINSAW.DAMAGE_MULT = 0.85
 
 local BACKGROUND_BUGS = Mod:Set({
 	EffectVariant.BEETLE,
@@ -38,16 +37,75 @@ function CHAINSAW:CanUseChainsaw(player)
 	return player:HasCollectible(CHAINSAW.ID) or player:GetPlayerType() == Mod.PlayerType.OXY_B
 end
 
----@class PlayerChainsawData
----@field Pointer EntityPtr
+---@class ChainsawWeapon
+---@field Pointer EntityPtr?
 ---@field RotationOffset number
+---@field Damage number
+---@field DamageScale number
+---@field TearFlags TearFlags
+---@field HitList table
+---@field GridList table
+
+---@class PlayerChainsawData
+---@field Weapons ChainsawWeapon[]
+---@field LastFrameFired integer\
+---@field NumFired integer
+---@field Blindfold boolean
+---@field TearDisplacement integer
+---@field Charge number
+---@field MaxCharge number
+---@field UsesCharge boolean
 
 ---@param player EntityPlayer
----@return PlayerChainsawData[]
-function CHAINSAW:GetChainsaws(player)
+---@return PlayerChainsawData
+function CHAINSAW:GetPlayerData(player)
 	local data = Mod:GetData(player)
-	data.ChainsawWeapons = data.ChainsawWeapons or {}
-	return data.ChainsawWeapons
+	if not data.Chainsaw then
+		---@diagnostic disable-next-line: inject-field
+		data.Chainsaw = {
+			Weapons = {},
+			LastFrameFired = 0,
+			NumFired = 0,
+			Blindfold = false,
+			TearDisplacement = -1,
+			Charge = 0,
+			MaxCharge = 0
+		}
+	end
+	return data.Chainsaw
+end
+
+---@param chainsaw EntityEffect
+---@return ChainsawWeapon
+local function initChainsawWeapon(chainsaw)
+	return {
+		Pointer = EntityPtr(chainsaw),
+		RotationOffset = 0,
+		Damage = 3.5,
+		DamageScale = 1,
+		TearFlags = TearFlags.TEAR_NORMAL,
+		HitList = {},
+		GridList = {}
+	}
+end
+
+---@param chainsaw EntityEffect
+---@return ChainsawWeapon
+function CHAINSAW:GetChainsawData(chainsaw)
+	local data = Mod:GetData(chainsaw)
+	if not data.Chainsaw then
+		---@diagnostic disable-next-line: inject-field
+		data.Chainsaw = initChainsawWeapon(chainsaw)
+	end
+	return data.Chainsaw
+end
+
+---@param player EntityPlayer
+---@return ChainsawWeapon[]
+function CHAINSAW:GetChainsaws(player)
+	local data = CHAINSAW:GetPlayerData(player)
+	data.Weapons = data.Weapons or {}
+	return data.Weapons
 end
 
 ---@param player EntityPlayer
@@ -59,54 +117,60 @@ end
 ---@param chainsaw EntityEffect
 ---@param tearFlags TearFlags
 function CHAINSAW:HasTearFlags(chainsaw, tearFlags)
-	local data = Mod:GetData(chainsaw)
-	if not data.ChainsawTearFlags then return false end
-	return Mod:HasBitFlags(data.ChainsawTearFlags, tearFlags)
+	local data = CHAINSAW:GetChainsawData(chainsaw)
+	return Mod:HasBitFlags(data.TearFlags, tearFlags)
 end
 
 ---@param player EntityPlayer
 ---@param advance? boolean
 function CHAINSAW:GetTearDisplacement(player, advance)
-	local data = Mod:GetData(player)
-	if not data.ChainsawTearDisplacement then
-		data.ChainsawTearDisplacement = -1
+	local data = CHAINSAW:GetPlayerData(player)
+	if not data.TearDisplacement then
+		data.TearDisplacement = -1
 	end
 	if advance then
-		local displacement = data.ChainsawTearDisplacement
+		local displacement = data.TearDisplacement
 		if displacement == -1 then
-			data.ChainsawTearDisplacement = 1
+			data.TearDisplacement = 1
 		else
-			data.ChainsawTearDisplacement = -1
+			data.TearDisplacement = -1
 		end
 	end
-	return data.ChainsawTearDisplacement
+	return data.TearDisplacement
+end
+
+---@param player EntityPlayer
+---@param chainsaw EntityEffect
+---@param displacement integer
+local function updateChainsawParams(player, chainsaw, damageScale, displacement)
+	local data = CHAINSAW:GetChainsawData(chainsaw)
+	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, damageScale, displacement, chainsaw)
+	data.Damage = tearParams.TearDamage
+	data.DamageScale = damageScale
+	data.TearFlags = tearParams.TearFlags
+	chainsaw.Color = tearParams.TearColor
+	local tearDelay = (30 / (player.MaxFireDelay + 1))
+	chainsaw:GetSprite().PlaybackSpeed = Mod:Clamp(1 + ((tearDelay - 1) * 0.4), 0.25, 1.5)
 end
 
 ---@param player EntityPlayer
 ---@param angle number
 ---@param pos Vector
 ---@param displacement integer
----@param isSpecter? boolean
-function CHAINSAW:SpawnChainsaw(player, angle, pos, displacement, isSpecter)
+function CHAINSAW:SpawnChainsaw(player, angle, pos, damageScale, displacement)
 	local spritesheet = Isaac.RunCallback(Mod.ModCallbacks.CHAINSAW_GET_SKIN, player)
 	if not spritesheet then
 		spritesheet = "gfx/effects/weapon_chainsaw.png"
 	end
 	local chainsaw = Mod.Spawn.Effect(CHAINSAW.KNIFE, 0, pos, nil, player)
 	local sprite = chainsaw:GetSprite()
-	local data = Mod:GetData(chainsaw)
-	local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
-	data.ChainsawDamage = tearParams.TearDamage
-	data.ChainsawTearFlags = tearParams.TearFlags
-	chainsaw.Color = tearParams.TearColor
+	updateChainsawParams(player, chainsaw, damageScale, displacement)
 	chainsaw.Rotation = angle
+	Mod:DebugLog("Playback Speed:", chainsaw:GetSprite().PlaybackSpeed)
 	sprite.Rotation = angle
 	sprite:ReplaceSpritesheet(0, spritesheet, true)
 	sprite:Play("Swing", true)
 	chainsaw.Parent = player
-	if isSpecter then
-		sprite:ReplaceSpritesheet(0, "gfx/weapon_specter.png", true)
-	end
 	return chainsaw
 end
 
@@ -176,16 +240,33 @@ local function damageInCapsule(chainsaw, capsule, damage, source, tearFlags, hit
 			ent:Die()
 		end
 	end
-	Mod.Foreach.GridInRadius(capsule:GetPosition(), capsule:GetF1(), function(gridEnt, gridIndex)
-		if hitGrids[gridIndex] then return end
-		local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_PRE_HIT_GRID, gridEnt:GetType(),
-			gridEnt, gridIndex, chainsaw)
-		if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) then
-			gridEnt:HurtWithSource(1, source)
-			Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex, chainsaw)
+end
+
+---@param topLeft Vector
+---@param bottomRight Vector
+---@function
+local function getGridEntitiesInRectangle(topLeft, bottomRight)
+	topLeft = Vector(topLeft.X // 40, topLeft.Y // 40)
+	bottomRight = Vector(bottomRight.X // 40, bottomRight.Y // 40)
+
+	local room = Mod.Room()
+	local size = room:GetGridSize()
+	local gridEntities = {}
+
+	for x = topLeft.X, bottomRight.X do
+		for y = topLeft.Y, bottomRight.Y do
+			local gridIndex = room:GetGridIndex(Vector(x, y) * 40)
+			--Very rarely, can encounter a garbage grid entity with an index below 1 that crashes with cast functions
+			if gridIndex > 0 and gridIndex < size then
+				local gridEntity = room:GetGridEntity(gridIndex)
+				if gridEntity then
+					gridEntities[#gridEntities + 1] = gridEntity
+				end
+			end
 		end
-		hitGrids[gridIndex] = true
-	end)
+	end
+
+	return gridEntities
 end
 
 ---@param chainsaw EntityEffect
@@ -193,32 +274,27 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	local capsule1 = chainsaw:GetNullCapsule("Hit")
 	local capsule2 = chainsaw:GetNullCapsule("Hit2")
 	local capsuleTip = chainsaw:GetNullCapsule("tip")
-	local data = Mod:GetData(chainsaw)
-	data.HitList = data.HitList or {}
+	local data = CHAINSAW:GetChainsawData(chainsaw)
 	local hitEnemies = data.HitList
-	data.GridList = data.GridList or {}
 	local hitGrids = data.GridList
 	local source = EntityRef(chainsaw)
-	local damage = data.ChainsawDamage or 3.5
+	local damage = data.Damage
 	local sprite = chainsaw:GetSprite()
 	local null1 = sprite:GetNullFrame("Hit")
 	local null2 = sprite:GetNullFrame("Hit2")
 	local nullTip = sprite:GetNullFrame("tip")
 	local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 	---@type TearFlags
-	local tearFlags = data.ChainsawTearFlags or TearFlags.TEAR_NORMAL
+	local tearFlags = data.TearFlags
 	if player and (sprite:IsEventTriggered("Swing") or sprite:GetFrame() == 0) then
 		local displacement = CHAINSAW:GetTearDisplacement(player, true)
-		local tearParams = player:GetTearHitParams(WeaponType.WEAPON_KNIFE, 1, displacement, chainsaw)
-		data.ChainsawDamage = tearParams.TearDamage
-		data.ChainsawTearFlags = tearParams.TearFlags
+		updateChainsawParams(player, chainsaw, data.DamageScale, displacement)
 		data.HitList = {}
 		data.GridList = {}
 		hitEnemies = data.HitList
 		hitGrids = data.GridList
-		damage = data.ChainsawDamage
-		tearFlags = data.ChainsawTearFlags
-		chainsaw.Color = tearParams.TearColor
+		damage = data.Damage
+		tearFlags = data.TearFlags
 	end
 	local hasKnife = false
 	if player then
@@ -232,6 +308,18 @@ function CHAINSAW:HitboxUpdate(chainsaw)
 	end
 	if null1 and null1:IsVisible() then
 		damageInCapsule(chainsaw, capsule1, damage, source, tearFlags, hitEnemies, hitGrids, hasKnife)
+		--local grids = getGridEntitiesInRectangle(topLeft, bottomRight)
+		Mod.Foreach.GridInRadius(capsule1:GetPosition(), capsule1:GetF1(), function(gridEnt, gridIndex)
+			if hitGrids[gridIndex] then return end
+			local result = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_PRE_HIT_GRID, gridEnt:GetType(),
+				gridEnt, gridIndex, chainsaw)
+			if (result == true or gridEnt:ToPoop() or gridEnt:ToTNT()) then
+				gridEnt:HurtWithSource(1, source)
+				Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_POST_HIT_GRID, gridEnt:GetType(), gridEnt, gridIndex,
+					chainsaw)
+			end
+			hitGrids[gridIndex] = true
+		end)
 	end
 	if null2 and null2:IsVisible() then
 		damageInCapsule(chainsaw, capsule2, damage, source, tearFlags, hitEnemies, hitGrids, hasKnife)
@@ -257,17 +345,17 @@ function CHAINSAW:ChainsawUpdate(chainsaw)
 		Mod.SFXMan:Play(SoundEffect.SOUND_SWORD_SPIN)
 		local player = chainsaw.SpawnerEntity and chainsaw.SpawnerEntity:ToPlayer()
 		if player then
-			local data = Mod:GetData(player)
-			if (data.LastChainsawFired or -1) ~= Mod.Game:GetFrameCount() then
-				data.LastChainsawFired = data.LastChainsawFired
-				data.ChainsawNumFired = (data.ChainsawNumFired or 0) + 1
+			local data = CHAINSAW:GetPlayerData(player)
+			if (data.LastFrameFired or -1) ~= Mod.Game:GetFrameCount() then
+				data.LastFrameFired = data.LastFrameFired
+				data.NumFired = (data.NumFired or 0) + 1
 			end
 			local fireDir = Vector.FromAngle(chainsaw.Rotation + 90)
 			local fireAmount = 1
 			if player:HasCollectible(CollectibleType.COLLECTIBLE_MONSTROS_LUNG) then
 				fireAmount = 12
 			end
-			Isaac.RunCallback(Mod.ModCallbacks.POST_CHAINSAW_FIRE, fireDir, fireAmount, player, data.ChainsawNumFired, chainsaw)
+			Isaac.RunCallback(Mod.ModCallbacks.POST_CHAINSAW_FIRE, fireDir, fireAmount, player, data.NumFired, chainsaw)
 		end
 	end
 
@@ -286,11 +374,17 @@ Mod:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, CHAINSAW.ChainsawUpdate, CHA
 
 ---@param player EntityPlayer
 function CHAINSAW:PeffectUpdate(player)
-	local data = Mod:GetData(player)
+	local data = CHAINSAW:GetPlayerData(player)
 	local canUseChainsaw = CHAINSAW:CanUseChainsaw(player)
 	local canShoot = player:CanShoot()
-	if canUseChainsaw and not data.ChainsawBlindfold then
-		local weapon = Isaac.GetPlayer():GetWeapon(1)
+	local weapon = Isaac.GetPlayer():GetWeapon(1)
+	data.MaxCharge = weapon
+		and Isaac.RunCallback(Mod.ModCallbacks.CHAINSAW_GET_MAX_CHARGE, player)
+		or 0
+	if data.MaxCharge == 0 then
+		data.Charge = 0
+	end
+	if canUseChainsaw and not data.Blindfold then
 		if not weapon then return end
 		local wType = weapon:GetWeaponType()
 		Isaac.DestroyWeapon(weapon)
@@ -299,12 +393,14 @@ function CHAINSAW:PeffectUpdate(player)
 		end
 		local newWeapon = Isaac.CreateWeapon(wType, Isaac.GetPlayer())
 		Isaac.GetPlayer():SetWeapon(newWeapon, 1)
-		data.ChainsawBlindfold = true
-	elseif not canUseChainsaw and data.ChainsawBlindfold then
+		data.Blindfold = true
+	elseif not canUseChainsaw and data.Blindfold then
 		if not canShoot then
 			Mod:SetBlindfold(player, false)
 		end
-		data.ChainsawBlindfold = nil
+		data.Blindfold = nil
+		data.Charge = 0
+		data.MaxCharge = 0
 	end
 end
 
@@ -329,75 +425,89 @@ end
 ---@param fireDir Vector
 ---@param angle number
 ---@param displacement integer
-function CHAINSAW:FireChainsaw(player, fireDir, angle, displacement)
-	local chainsaw = CHAINSAW:SpawnChainsaw(player, angle, player.Position, displacement, player:GetPlayerType() == Mod.PlayerType.OXY_B)
+---@return ChainsawWeapon
+function CHAINSAW:FireChainsaw(player, fireDir, angle, damageScale, displacement)
+	local chainsaw = CHAINSAW:SpawnChainsaw(player, angle, player.Position, damageScale, displacement)
 	local a1m = fireDir:GetAngleDegrees()
 	local a2m = chainsaw.Rotation
-	local angleDiff = math.min(a1m-a2m, 360-a1m-a2m)
-	---@type PlayerChainsawData
-	return {
-		Pointer = EntityPtr(chainsaw),
-		RotationOffset = angleDiff
-	}
+	local angleDiff = math.min(a1m - a2m, 360 - a1m - a2m)
+	---@class ChainsawWeapon
+	local chainsawData = initChainsawWeapon(chainsaw)
+	chainsawData.RotationOffset = angleDiff
+	chainsawData.DamageScale = damageScale
+	Mod:GetData(chainsaw).ChainsawData = chainsawData
+	return chainsawData
 end
 
 ---@param player EntityPlayer
-function CHAINSAW:WeaponFire(player)
-	local fireDir = Mod:GetAttackDirection(player, false, true)
+---@param damageScale? number
+function CHAINSAW:WeaponFire(player, damageScale)
+	damageScale = damageScale or 1
+	local fireDir = Mod:GetAttackDirection(player, true, true)
 	local displacement = CHAINSAW:GetTearDisplacement(player, true)
 	local multiShotParams = player:GetMultiShotParams(WeaponType.WEAPON_KNIFE)
-	local data = Mod:GetData(player)
-	data.ChainsawWeapons = data.ChainsawWeapons or {}
+	local data = CHAINSAW:GetPlayerData(player)
+	data.Weapons = data.Weapons or {}
 	local tears = multiShotParams:GetNumTears()
 	for i = 0, tears - 1 do
-		local multiShot = player:GetMultiShotPositionVelocity(i, WeaponType.WEAPON_KNIFE, fireDir, player.ShotSpeed * 10, multiShotParams)
+		local multiShot = player:GetMultiShotPositionVelocity(i, WeaponType.WEAPON_KNIFE, fireDir, player.ShotSpeed * 10,
+			multiShotParams)
 		local angle = multiShot.Velocity:GetAngleDegrees()
-		local playerChainsawData = CHAINSAW:FireChainsaw(player, fireDir, angle, displacement)
-		Mod.Insert(data.ChainsawWeapons, playerChainsawData)
+		local playerChainsawData = CHAINSAW:FireChainsaw(player, fireDir, angle, damageScale, displacement)
+		Mod.Insert(data.Weapons, playerChainsawData)
 	end
 	local extraSaws = runExtraSawsCallback(player, multiShotParams)
 	for _, rotation in ipairs(extraSaws) do
 		local angle = fireDir:Rotated(rotation):GetAngleDegrees()
-		local playerChainsawData = CHAINSAW:FireChainsaw(player, fireDir, angle, displacement)
-		Mod.Insert(data.ChainsawWeapons, playerChainsawData)
+		local playerChainsawData = CHAINSAW:FireChainsaw(player, fireDir, angle, damageScale, displacement)
+		Mod.Insert(data.Weapons, playerChainsawData)
 	end
 	local weapon = player:GetWeapon(1)
-	if weapon then
-		weapon:SetFireDelay(weapon:GetMaxFireDelay())
-	end
+	---@cast weapon Weapon
+	weapon:SetFireDelay(weapon:GetMaxFireDelay())
+	return data.Weapons
 end
 
 ---@param player EntityPlayer
 function CHAINSAW:OnPlayerUpdate(player)
 	local isShooting = Mod:IsShooting(player)
-	local data = Mod:GetData(player)
+	local data = CHAINSAW:GetPlayerData(player)
 	local chainsaws = CHAINSAW:GetChainsaws(player)
 	local canUseChainsaw = CHAINSAW:CanUseChainsaw(player)
 	local weapon = player:GetWeapon(1)
 	local onCooldown = weapon and weapon:GetFireDelay() > -1 or player.FireDelay > -1
 	local playingAnim = not player:IsExtraAnimationFinished()
-	if canUseChainsaw and isShooting and not playingAnim and not onCooldown and #chainsaws == 0 then
-		CHAINSAW:WeaponFire(player)
+
+	if canUseChainsaw and not playingAnim then
+		---@cast weapon Weapon
+		local canFireChainsaw = Isaac.RunCallbackWithParam(Mod.ModCallbacks.CHAINSAW_CAN_FIRE, weapon:GetWeaponType(),
+			player, data, isShooting, onCooldown)
+		if canFireChainsaw ~= false
+			and isShooting
+			and not onCooldown
+			and ((#chainsaws == 0) or player.MaxFireDelay <= 5.099)
+		then
+			CHAINSAW:WeaponFire(player)
+		end
 	end
+
+	local fireDir = Mod:GetAttackDirection(player, true, true)
 	for i = #chainsaws, 1, -1 do
 		local playerChainsawData = chainsaws[i]
-		local chainsaw = playerChainsawData.Pointer and playerChainsawData.Pointer.Ref and playerChainsawData.Pointer.Ref:ToEffect()
-		if isShooting and chainsaw then
-			local sprite = chainsaw:GetSprite()
-			local fireDir = Mod:GetAttackDirection(player, false, true)
+		local chainsaw = playerChainsawData.Pointer and playerChainsawData.Pointer.Ref and
+			playerChainsawData.Pointer.Ref:ToEffect()
+		if chainsaw then
 			local angle = fireDir:Rotated(playerChainsawData.RotationOffset):GetAngleDegrees() - 90
+			local sprite = chainsaw:GetSprite()
 			chainsaw.Rotation = angle
 			sprite.Rotation = angle
 			chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
-		end
-		if chainsaw then
-			local sprite = chainsaw:GetSprite()
-			if (not isShooting and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) then
+			if (not isShooting and data.MaxCharge == 0 and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) then
 				chainsaw:Remove()
 			end
 		end
 		if not chainsaw or not chainsaw:Exists() then
-			table.remove(data.ChainsawWeapons, i)
+			table.remove(data.Weapons, i)
 		end
 	end
 end
@@ -411,20 +521,25 @@ Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, CHAINSAW.OnPlayerUpdate, Pla
 ---@param player EntityPlayer
 function CHAINSAW:UpdateDamage(player)
 	if CHAINSAW:CanUseChainsaw(player) then
-		player.Damage = player:GetTearPoisonDamage() * CHAINSAW.DAMAGE_MULT
+		player.Damage = player:GetTearPoisonDamage()
 	end
 end
 
-Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_CACHE, CallbackPriority.IMPORTANT, CHAINSAW.UpdateDamage, CacheFlag.CACHE_DAMAGE)
+Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_CACHE, CallbackPriority.IMPORTANT, CHAINSAW.UpdateDamage,
+	CacheFlag.CACHE_DAMAGE)
 
 ---@param player EntityPlayer
-function CHAINSAW:UpdateFirerate(player)
-	if CHAINSAW:CanUseChainsaw(player) then
-		player.MaxFireDelay = player.MaxFireDelay / CHAINSAW.FIREDELAY_DIV
+---@param item CollectibleType
+local function updateChainsawStats(_, player, item)
+	if Mod.Item.CHAINSAW:CanUseChainsaw(player) then
+		player:AddNullItemEffect(CHAINSAW.NULL_ID, false, 0, false)
+	else
+		player:GetEffects():RemoveNullEffect(CHAINSAW.NULL_ID, -1)
 	end
 end
 
-Mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, CHAINSAW.UpdateFirerate, CacheFlag.CACHE_FIREDELAY)
+Mod:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_ADDED, updateChainsawStats, CHAINSAW.ID)
+Mod:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, updateChainsawStats, CHAINSAW.ID)
 
 --#endregion
 
@@ -446,5 +561,50 @@ function CHAINSAW:MultiShot(player, params, weaponType)
 end
 
 Mod:AddCallback(ModCallbacks.MC_EVALUATE_MULTI_SHOT_PARAMS, CHAINSAW.MultiShot)
+
+--#endregion
+
+--#region Chargebar
+
+local chargebar = Sprite("gfx/chargebar.anm2", true)
+
+---@param ent Entity | Vector
+---@param offset Vector
+---@param ignoreShake? boolean
+local function getEntityRenderPos(ent, offset, ignoreShake)
+	local pos
+	if getmetatable(ent).__type == "Vector" then
+		---@cast ent Vector
+		pos = ent
+	else
+		---@cast ent Entity
+		pos = ent.Position + ent.PositionOffset
+		if ent:ToPlayer() and Mod.Room():GetRenderMode() ~= RenderMode.RENDER_WATER_REFLECT then
+			---@cast ent EntityPlayer
+			pos = pos + ent:GetFlyingOffset()
+		end
+	end
+	local renderPos = Isaac.WorldToRenderPosition(pos) + offset
+	if ignoreShake then
+		renderPos = renderPos - Mod.Game.ScreenShakeOffset
+	end
+	return renderPos
+end
+
+---@param player EntityPlayer
+function CHAINSAW:RenderChargebar(player, offset)
+	if Mod.Room():GetRenderMode() ~= RenderMode.RENDER_WATER_REFLECT
+		and Options.ChargeBars
+		and CHAINSAW:CanUseChainsaw(player)
+	then
+		local renderPos = getEntityRenderPos(player, offset)
+		local data = CHAINSAW:GetPlayerData(player)
+		if data.MaxCharge > 0 then
+			HudHelper.RenderChargeBar(chargebar, data.Charge, data.MaxCharge, renderPos + Vector(12, -35))
+		end
+	end
+end
+
+Mod:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, CHAINSAW.RenderChargebar, PlayerVariant.PLAYER)
 
 --#endregion

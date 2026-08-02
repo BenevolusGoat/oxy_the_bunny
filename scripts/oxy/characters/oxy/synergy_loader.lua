@@ -2,6 +2,7 @@ local Mod = OxyTheBunny
 
 local synergyList = {
 	"c_section",
+	"chocolate_milk",
 	"compound_fracture",
 	"crickets_body",
 	"dead_tooth",

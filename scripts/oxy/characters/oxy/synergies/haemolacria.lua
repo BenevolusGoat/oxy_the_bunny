@@ -13,3 +13,14 @@ local function applyHaemolacria(_, npc, pos, tearFlags, source, damage, player)
 end
 
 Mod:AddCallback(Mod.ModCallbacks.CHAINSAW_APPLY_TEARFLAG_EFFECTS, applyHaemolacria, TearFlags.TEAR_BURSTSPLIT)
+
+---@param chainsaw EntityEffect
+local function haemoTrail(_, chainsaw)
+	if not Mod.Item.CHAINSAW:HasTearFlags(chainsaw, TearFlags.TEAR_BURSTSPLIT) then return end
+	local sprite = chainsaw:GetSprite()
+	local nullTip = sprite:GetNullFrame("tip")
+	if not nullTip then return end
+	Mod.Spawn.Effect(EffectVariant.HAEMO_TRAIL, 0, chainsaw.Position + (nullTip:GetPos()):Rotated(chainsaw.Rotation), nil, chainsaw)
+end
+
+Mod:AddCallback(Mod.ModCallbacks.POST_CHAINSAW_UPDATE, haemoTrail)

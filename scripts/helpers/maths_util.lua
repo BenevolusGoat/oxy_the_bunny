@@ -1,4 +1,7 @@
 local Mod = OxyTheBunny
+local floor = math.floor
+local ceil = math.ceil
+local max = math.max
 
 ---@param first number
 ---@param second number
@@ -31,17 +34,9 @@ function OxyTheBunny:Clamp(value, min, max)
 	end
 end
 
----@param rng RNG
----@function
-function OxyTheBunny:RandomNormal(rng)
-	local radius = math.sqrt(math.max(0, -2.0 * math.log(1e-6 + rng:RandomFloat())))
-	local angle = rng:RandomFloat() * 2.0 * math.pi
-	return Vector(math.cos(angle), math.sin(angle)) * radius
-end
-
 ---Exists so that random will never have 0 for a seed, which would otherwise crash the game
 function OxyTheBunny:Random()
-	return math.max(Random(), 1)
+	return max(Random(), 1)
 end
 
 ---@param percent number
@@ -57,12 +52,7 @@ end
 ---@param num number
 ---@function
 function OxyTheBunny.Round(num)
-	return num % 1 >= 0.5 and math.ceil(num) or math.floor(num)
-end
-
----@function
-function OxyTheBunny:RandomFloatRange(range)
-	return Mod.GENERIC_RNG:RandomFloat() * (range or 1.0)
+	return num % 1 >= 0.5 and ceil(num) or floor(num)
 end
 
 ---@param direction Direction
@@ -73,6 +63,15 @@ function OxyTheBunny:DirectionToVector(direction)
 	return Vector(-1, 0):Rotated(90 * direction)
 end
 
+---@param vec Vector
+function OxyTheBunny:VectorToDirection(vec)
+	local angle = vec:GetAngleDegrees()
+	if angle < 0 then
+		angle = 360 + angle
+	end
+	return (floor((angle + 45) / 90) - 2) % 4
+end
+
 ---Takes two 2d vectors and checks them to see if they are equal
 ---@param vec1 Vector
 ---@param vec2 Vector
@@ -81,26 +80,10 @@ function OxyTheBunny:VectorsAreEqual(vec1, vec2)
 		and vec1.Y == vec2.Y
 end
 
----@param color Color
----@param alpha number
-function OxyTheBunny:ColorChangeAlpha(color, alpha)
-	color.A = alpha
-	return color
-end
-
 ---@param Range integer range visualised
 ---@return integer
 function OxyTheBunny:CalculateRange(Range)
 	return (Range * 2.5) / 100
-end
-
----@param startPoint Vector
----@param controlPoint Vector
----@param endPoint Vector
----@param t number @Must be in range [0, 1]
----@return Vector
-function OxyTheBunny:QuadraticBezier(startPoint, controlPoint, endPoint, t)
-	return (1 - t) ^ 2 * startPoint + 2 * (1 - t) * t * controlPoint + t ^ 2 * endPoint
 end
 
 ---@param lower? integer
@@ -113,42 +96,4 @@ function OxyTheBunny:RandomNum(lower, upper)
 	else
 		return Mod.GENERIC_RNG:RandomFloat()
 	end
-end
-
----@param vec Vector
----@return Direction
-function OxyTheBunny:GetRoundedDirection(vec)
-	if vec.X == 0 and vec.Y == 0 then
-		return Direction.DOWN
-	end
-	local angle = vec:Normalized():GetAngleDegrees()
-	if angle < 0 then
-		angle = 360 + angle
-	end
-	local degrees = {
-		0,
-		90,
-		180,
-		270,
-		360
-	}
-	local closestAngle
-	local closestSubtraction
-	for _, degree in ipairs(degrees) do
-		if not closestAngle or math.abs(angle - degree) < closestSubtraction then
-			closestSubtraction = math.abs(angle - degree)
-			closestAngle = degree
-		end
-	end
-	if closestAngle == 360 then
-		closestAngle = 0
-	end
-	local dirAngles = {
-		[0] = Direction.RIGHT,
-		[90] = Direction.DOWN,
-		[180] = Direction.LEFT,
-		[270] = Direction.UP,
-	}
-
-	return dirAngles[closestAngle]
 end

@@ -14,10 +14,14 @@ OxyTheBunny.ModCallbacks = {
 	CHAINSAW_ON_ARC_PEAK = "OXY_CHAINSAW_ON_ARC_PEAK",
 	--(Vector FireDirection, integer FireAmount, EntityPlayer Player, integer NumFired, EntityEffect Chainsaw)
 	POST_CHAINSAW_FIRE = "OXY_POST_CHAINSAW_FIRE",
-	--(EntityPlayer Player) - Return a table of rotation offsets for extra chainsaws that only swing once
+	--(EntityPlayer Player): string - Return a table of rotation offsets for extra chainsaws that only swing once
 	CHAINSAW_GET_EXTRA_SAWS = "OXY_CHAINSAW_GET_EXTRA_SAWS",
-	--(EntityPlayer Player) - Return a string containing a png filepath to overwrite the spritesheet used by Chainsaw.
-	CHAINSAW_GET_SKIN = "OXY_CHAINSAW_GET_SKIN"
+	--(EntityPlayer Player): string - Return a string containing a png filepath to overwrite the spritesheet used by Chainsaw.
+	CHAINSAW_GET_SKIN = "OXY_CHAINSAW_GET_SKIN",
+	--(EntityPlayer Player, PlayerChainsawData data, boolean isShooting, boolean onCooldown)
+	CHAINSAW_CAN_FIRE = "OXY_CHAINSAW_CAN_FIRE",
+	--(EntityPlayer Player): boolean - Called every game tick. Return true to set MaxCharge to its expected value above 0, allowing a chargebar to render
+	CHAINSAW_GET_MAX_CHARGE = "OXY_CHAINSAW_GET_MAX_CHARGE"
 }
 
 ---@param npc EntityNPC

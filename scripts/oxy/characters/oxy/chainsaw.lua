@@ -45,6 +45,7 @@ end
 ---@field TearFlags TearFlags
 ---@field HitList table
 ---@field GridList table
+---@field MaxSwings integer
 
 ---@class PlayerChainsawData
 ---@field Weapons ChainsawWeapon[]
@@ -85,7 +86,8 @@ local function initChainsawWeapon(chainsaw)
 		DamageScale = 1,
 		TearFlags = TearFlags.TEAR_NORMAL,
 		HitList = {},
-		GridList = {}
+		GridList = {},
+		MaxSwings = 3
 	}
 end
 
@@ -149,8 +151,8 @@ local function updateChainsawParams(player, chainsaw, damageScale, displacement)
 	data.DamageScale = damageScale
 	data.TearFlags = tearParams.TearFlags
 	chainsaw.Color = tearParams.TearColor
-	local tearDelay = (30 / (player.MaxFireDelay + 1))
-	chainsaw:GetSprite().PlaybackSpeed = Mod:Clamp(1 + ((tearDelay - 1) * 0.4), 0.25, 1.5)
+	--local tearDelay = (30 / (player.MaxFireDelay + 1))
+	--chainsaw:GetSprite().PlaybackSpeed = Mod:Clamp(1 + ((tearDelay - 1) * 0.4), 0.25, 1.5)
 end
 
 ---@param player EntityPlayer
@@ -166,7 +168,7 @@ function CHAINSAW:SpawnChainsaw(player, angle, pos, damageScale, displacement)
 	local sprite = chainsaw:GetSprite()
 	updateChainsawParams(player, chainsaw, damageScale, displacement)
 	chainsaw.Rotation = angle
-	Mod:DebugLog("Playback Speed:", chainsaw:GetSprite().PlaybackSpeed)
+	--Mod:DebugLog("Playback Speed:", chainsaw:GetSprite().PlaybackSpeed)
 	sprite.Rotation = angle
 	sprite:ReplaceSpritesheet(0, spritesheet, true)
 	sprite:Play("Swing", true)
@@ -387,11 +389,13 @@ function CHAINSAW:PeffectUpdate(player)
 	if canUseChainsaw and not data.Blindfold then
 		if not weapon then return end
 		local wType = weapon:GetWeaponType()
+		local fireDelay = weapon:GetFireDelay()
 		Isaac.DestroyWeapon(weapon)
 		if canShoot then
 			Mod:SetBlindfold(player, true)
 		end
 		local newWeapon = Isaac.CreateWeapon(wType, Isaac.GetPlayer())
+		newWeapon:SetFireDelay(fireDelay)
 		Isaac.GetPlayer():SetWeapon(newWeapon, 1)
 		data.Blindfold = true
 	elseif not canUseChainsaw and data.Blindfold then
@@ -422,6 +426,37 @@ local function runExtraSawsCallback(player, multiShotParams)
 end
 
 ---@param player EntityPlayer
+function CHAINSAW:GetMaxFireDelay(player)
+	local weapon = player:GetWeapon(1)
+	local maxFireDelay = weapon and weapon:GetMaxFireDelay() or player.MaxFireDelay
+	local tears = 30 / (maxFireDelay + 1)
+	local mult = 0.35
+	if maxFireDelay >= 30 then
+		mult = 0.9
+	elseif maxFireDelay >= 20 then
+		mult = 0.6
+	end
+	tears = tears * mult
+	local newMaxFireDelay = (30 / tears) - 1
+	maxFireDelay = newMaxFireDelay
+
+	return maxFireDelay
+end
+
+---@param player EntityPlayer
+function CHAINSAW:GetMaxSwings(player)
+	local weapon = player:GetWeapon(1)
+	local maxFireDelay = weapon and weapon:GetMaxFireDelay() or player.MaxFireDelay
+	if maxFireDelay < 20 then
+		return 3
+	elseif maxFireDelay < 30 then
+		return 2
+	else
+		return 1
+	end
+end
+
+---@param player EntityPlayer
 ---@param fireDir Vector
 ---@param angle number
 ---@param displacement integer
@@ -433,6 +468,7 @@ function CHAINSAW:FireChainsaw(player, fireDir, angle, damageScale, displacement
 	local angleDiff = math.min(a1m - a2m, 360 - a1m - a2m)
 	---@class ChainsawWeapon
 	local chainsawData = initChainsawWeapon(chainsaw)
+	chainsawData.MaxSwings = CHAINSAW:GetMaxSwings(player)
 	chainsawData.RotationOffset = angleDiff
 	chainsawData.DamageScale = damageScale
 	Mod:GetData(chainsaw).ChainsawData = chainsawData
@@ -447,6 +483,7 @@ function CHAINSAW:WeaponFire(player, damageScale)
 	local displacement = CHAINSAW:GetTearDisplacement(player, true)
 	local multiShotParams = player:GetMultiShotParams(WeaponType.WEAPON_KNIFE)
 	local data = CHAINSAW:GetPlayerData(player)
+	local maxFireDelay = CHAINSAW:GetMaxFireDelay(player)
 	data.Weapons = data.Weapons or {}
 	local tears = multiShotParams:GetNumTears()
 	for i = 0, tears - 1 do
@@ -464,8 +501,24 @@ function CHAINSAW:WeaponFire(player, damageScale)
 	end
 	local weapon = player:GetWeapon(1)
 	---@cast weapon Weapon
-	weapon:SetFireDelay(weapon:GetMaxFireDelay())
+	weapon:SetFireDelay(maxFireDelay)
 	return data.Weapons
+end
+
+---@param chainsawWeapon ChainsawWeapon
+---@param chainsaw EntityEffect
+---@param isShooting boolean
+---@param data PlayerChainsawData
+local function shouldRetract(chainsawWeapon, chainsaw, isShooting, data)
+	local sprite = chainsaw:GetSprite()
+	local maxSwings = chainsawWeapon.MaxSwings
+	local optionalRetract = not isShooting and data.MaxCharge == 0
+		and (sprite:IsEventTriggered("Retract 1")
+		or sprite:IsEventTriggered("Retract 2")
+		or sprite:IsEventTriggered("Retract 3"))
+	local forcedRetract = sprite:IsEventTriggered("Retract " .. maxSwings)
+	return optionalRetract
+		or forcedRetract
 end
 
 ---@param player EntityPlayer
@@ -493,16 +546,16 @@ function CHAINSAW:OnPlayerUpdate(player)
 
 	local fireDir = Mod:GetAttackDirection(player, true, true)
 	for i = #chainsaws, 1, -1 do
-		local playerChainsawData = chainsaws[i]
-		local chainsaw = playerChainsawData.Pointer and playerChainsawData.Pointer.Ref and
-			playerChainsawData.Pointer.Ref:ToEffect()
+		local chainsawWeapon = chainsaws[i]
+		local chainsaw = chainsawWeapon.Pointer and chainsawWeapon.Pointer.Ref and
+			chainsawWeapon.Pointer.Ref:ToEffect()
 		if chainsaw then
-			local angle = fireDir:Rotated(playerChainsawData.RotationOffset):GetAngleDegrees() - 90
+			local angle = fireDir:Rotated(chainsawWeapon.RotationOffset):GetAngleDegrees() - 90
 			local sprite = chainsaw:GetSprite()
 			chainsaw.Rotation = angle
 			sprite.Rotation = angle
 			chainsaw.PositionOffset = fireDir:Resized(10) + Vector(0, -10)
-			if (not isShooting and data.MaxCharge == 0 and sprite:IsEventTriggered("Early Retract") or sprite:IsEventTriggered("Retract")) then
+			if shouldRetract(chainsawWeapon, chainsaw, isShooting, data) then
 				chainsaw:Remove()
 			end
 		end

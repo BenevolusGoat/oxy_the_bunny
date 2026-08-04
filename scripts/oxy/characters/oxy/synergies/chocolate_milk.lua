@@ -54,8 +54,7 @@ local function chocPeffectUpdate(_, player, data, isShooting, onCooldown)
 			chainsaw.SpriteScale = chainsaw.SpriteScale * scale
 		end
 		data.Charge = 0
-		local durationMult = data.Weapons[1] and data.Weapons[1].Pointer.Ref:GetSprite().PlaybackSpeed or 1
-		player:SetHeadDirection(Mod:VectorToDirection(Mod:GetAttackDirection(player, true, true)), math.ceil(16 / durationMult), true)
+		player:SetHeadDirection(Mod:VectorToDirection(Mod:GetAttackDirection(player, true, true)), 16, true)
 	end
 	if isShooting and #data.Weapons > 0 then
 		player:SetHeadDirection(Mod:VectorToDirection(Mod:GetAttackDirection(player, true, true)), 2, true)

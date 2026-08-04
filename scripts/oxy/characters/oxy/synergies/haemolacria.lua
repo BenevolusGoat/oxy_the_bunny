@@ -20,7 +20,9 @@ local function haemoTrail(_, chainsaw)
 	local sprite = chainsaw:GetSprite()
 	local nullTip = sprite:GetNullFrame("tip")
 	if not nullTip then return end
-	Mod.Spawn.Effect(EffectVariant.HAEMO_TRAIL, 0, chainsaw.Position + (nullTip:GetPos()):Rotated(chainsaw.Rotation), nil, chainsaw)
+	local push = ((chainsaw.Position + nullTip:GetPos()) - chainsaw.Position):Resized(60  * sprite.Scale.X)
+	local trail = Mod.Spawn.Effect(EffectVariant.HAEMO_TRAIL, 0, chainsaw.Position + push + (nullTip:GetPos() * sprite.Scale):Rotated(chainsaw.Rotation), nil, chainsaw)
+	trail.SpriteScale = sprite.Scale
 end
 
 Mod:AddCallback(Mod.ModCallbacks.POST_CHAINSAW_UPDATE, haemoTrail)

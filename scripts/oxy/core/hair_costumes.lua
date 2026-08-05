@@ -131,13 +131,15 @@ function COSTUMES:ShouldRemoveCostume(player, itemConfigItem)
 
 	if headLayer then
 		local spritePathHead = headLayer:GetSpritesheetPath()
-		if not spritePathHead:find("costumes_" .. name) then
+		if not pcall(Renderer.LoadImage, string.gsub(spritePathHead, "costumes/", "costumes_" .. name .. "/")) then
+			Mod:DebugLog("Blocked costume", itemConfigItem.Name)
 			return true
 		end
 	end
 	if bodyLayer then
 		local spritePathBody = bodyLayer:GetSpritesheetPath()
-		if not spritePathBody:find("costumes_" .. name) then
+		if not pcall(Renderer.LoadImage, string.gsub(spritePathBody, "costumes/", "costumes_" .. name .. "/")) then
+			Mod:DebugLog("Blocked costume", itemConfigItem.Name)
 			return true
 		end
 	end

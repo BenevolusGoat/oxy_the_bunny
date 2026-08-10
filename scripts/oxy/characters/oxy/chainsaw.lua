@@ -584,9 +584,12 @@ Mod:AddPriorityCallback(ModCallbacks.MC_EVALUATE_CACHE, CallbackPriority.IMPORTA
 ---@param player EntityPlayer
 ---@param item CollectibleType
 local function updateChainsawStats(_, player, item)
-	if Mod.Item.CHAINSAW:CanUseChainsaw(player) then
+	local effects = player:GetEffects()
+	local hasNull = effects:HasNullEffect(CHAINSAW.NULL_ID)
+	local canUse = Mod.Item.CHAINSAW:CanUseChainsaw(player)
+	if canUse and not hasNull then
 		player:AddNullItemEffect(CHAINSAW.NULL_ID, false, 0, false)
-	else
+	elseif not canUse and hasNull then
 		player:GetEffects():RemoveNullEffect(CHAINSAW.NULL_ID, -1)
 	end
 end

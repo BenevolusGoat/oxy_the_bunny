@@ -1,0 +1,3 @@
+<backdrops gfxroot="gfx/backdrop/" gridgfxroot="gfx/grid/" effectsgfxroot="gfx/effects/">
+	<backdrop name="Oxy Gateway"  gfx="gateway.png" walls="1" wallvariants="4" floors="1" floorvariants="4" props = "props_01_basement.anm2" />
+</backdrops>
